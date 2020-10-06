@@ -10,7 +10,6 @@ client.on('error', (error) => {
 });
 
 setInterval(() => {
-  console.log('heartbeat');
   client.get('key');
 }, 2e4)
 
