@@ -1,35 +1,40 @@
 version: "3.7"
 services:
 
-  # Snapshot Hub
+  # Snapshot Hub API
   snap-hub:
     build: .
     container_name: snap-hub
     env_file:
       - .env.local
+    environment:
+      PORT: 8080
+      DATABASE_URL: redis://snap-redis:6379
+      JAWSDB_URL: postgres://admin:admin@snap-db:5432/testdb
     depends_on:
       - snap-redis
+      - snap-db
     ports:
       - "8080:8080"
 
-  # Snapshot Redis Instance
+  # Snapshot Hub Redis Instance
   snap-redis:
     image: redis:6.0
     container_name: snap-redis
   
-  # Snapshot MySQL Instance 
+  # Snapshot Hub MySQL  
   # snap-mysql:
   #   image: mysql:8.0.21
-  #   container_name: snap-mysql
+  #   container_name: snap-db
   #   environment:
   #     MYSQL_USER: "admin"
   #     MYSQL_PASSWORD: "admin"
   #     MYSQL_DATABASE: "testdb"
 
-  # Snapshot MySQL Instance 
-  snap-postgres:
+  # Snapshot Hub Postgres Database 
+  snap-db:
     image: postgres:12.2-alpine
-    container_name: snap-postgres
+    container_name: snap-db
     environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
