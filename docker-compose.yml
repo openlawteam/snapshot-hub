@@ -7,6 +7,10 @@ services:
     container_name: snapshot-hub
     env_file:
       - .env.local
+    environment:
+      PORT: 8080
+      DATABASE_URL: redis://snap-redis:6379
+      JAWSDB_URL: postgres://admin:admin@snap-db:5432/testdb
     depends_on:
       - snapshot-mysql
     ports:
