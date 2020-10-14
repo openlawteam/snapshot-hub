@@ -1,45 +1,31 @@
 version: "3.7"
 services:
 
-  # Snapshot Hub API
-  snap-hub:
+  # Snapshot hub
+  snapshot-hub:
     build: .
-    container_name: snap-hub
+    container_name: snapshot-hub
     env_file:
       - .env.local
     environment:
       PORT: 8080
-      DATABASE_URL: redis://snap-redis:6379
-      JAWSDB_URL: postgres://admin:admin@snap-db:5432/testdb
+      JAWSDB_URL: postgres://admin:admin@snapshot-postgres:5432/snapshot
     depends_on:
-      - snap-redis
-      - snap-db
+      - snapshot-postgres
     ports:
       - "8080:8080"
 
-  # Snapshot Hub Redis Instance
-  snap-redis:
-    image: redis:6.0
-    container_name: snap-redis
-  
-  # Snapshot Hub MySQL  
-  # snap-mysql:
-  #   image: mysql:8.0.21
-  #   container_name: snap-db
-  #   environment:
-  #     MYSQL_USER: "admin"
-  #     MYSQL_PASSWORD: "admin"
-  #     MYSQL_DATABASE: "testdb"
-
-  # Snapshot Hub Postgres Database 
-  snap-db:
+  # Snapshot Postgres instance
+  snapshot-postgres:
     image: postgres:12.2-alpine
-    container_name: snap-db
+    container_name: snapshot-postgres
     environment:
       POSTGRES_USER: "admin"
       POSTGRES_PASSWORD: "admin"
-      POSTGRES_DB: "testdb"
+      POSTGRES_DB: "snapshot"
+    volumes:
+        - ./server/helpers/database/:/docker-entrypoint-initdb.d
 
 networks:
   default:
-    name: snap-network
+    name: snapshot-network
