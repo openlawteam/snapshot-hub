@@ -19,14 +19,14 @@ services:
   snapshot-postgres:
     image: bitnami/postgresql:13
     container_name: snapshot-postgres
-    volumes:
-        - ./server/helpers/database/:/docker-entrypoint-initdb.d/
     environment:
       POSTGRESQL_USERNAME: admin
       POSTGRESQL_PASSWORD: "123123"
       POSTGRESQL_DATABASE: snapshot-db
     ports:
-      - 5432:543
+      - 5432:5432
+    volumes:
+        - ./server/helpers/database/:/docker-entrypoint-initdb.d/
     
 networks:
   default:
