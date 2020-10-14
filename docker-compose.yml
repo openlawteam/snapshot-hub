@@ -9,25 +9,25 @@ services:
       - .env.local
     environment:
       PORT: 8080
-      DATABASE_URL: redis://snap-redis:6379
-      JAWSDB_URL: postgres://admin:admin@snap-db:5432/testdb
+      JAWSDB_URL: postgres://admin:123123@snapshot-postgres:5432/snapshot-db
     depends_on:
       - snapshot-mysql
     ports:
-      - "8080:8080"
+      - 8080:8080
 
-  # Snapshot MySQL instance
-  snapshot-mysql:
-    image: mysql:8.0.21
-    container_name: snapshot-mysql
-    environment:
-      MYSQL_USER: "admin"
-      MYSQL_PASSWORD: "admin"
-      MYSQL_ROOT_PASSWORD: "admin"
-      MYSQL_DATABASE: "snapshot"
+  # Snapshot Postgres instance
+  snapshot-postgres:
+    image: bitnami/postgresql:13
+    container_name: snapshot-postgres
     volumes:
-        - ./server/helpers/database/:/docker-entrypoint-initdb.d
-
+        - ./server/helpers/database/:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRESQL_USERNAME: admin
+      POSTGRESQL_PASSWORD: "123123"
+      POSTGRESQL_DATABASE: snapshot-db
+    ports:
+      - 5432:543
+    
 networks:
   default:
     name: snapshot-network
