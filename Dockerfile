@@ -19,7 +19,7 @@ USER node
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install
+RUN npm ci --only=production
 
 # Bundle app source
 COPY --chown=node:node . .
