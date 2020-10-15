@@ -5,7 +5,8 @@ import db from './helpers/mysql';
 import relayer from './helpers/relayer';
 import { pinJson } from './helpers/ipfs';
 import { verify, jsonParse, sendError } from './helpers/utils';
-import { sendMessage } from './helpers/discord';
+// FIXME (fforbeck): disabled discord for now
+// import { sendMessage } from './helpers/discord';
 import { storeProposal, storeVote } from './helpers/adapters/mysql';
 import pkg from '../package.json';
 
@@ -177,7 +178,7 @@ router.post('/message', async (req, res) => {
     let message = `[${network}] ${msg.token}\n`;
     message += `**${msg.payload.name}**\n`;
     message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
-    sendMessage(message);
+    // sendMessage(message); FIXME (fforbeck): disabled discord for now
   }
 
   if (msg.type === 'vote') {
