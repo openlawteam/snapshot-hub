@@ -29,5 +29,5 @@ jobs:
           repository: ${{ env.DOCKER_REPO }}
           # Automatically tags the built image with the git short SHA prefixed with the branch name, e.g: master-xxxxxxx
           tags: ${{ env.GITHUB_REF_SLUG }}-${{ env.GITHUB_SHA_SHORT }}, dev
-          # Only push on git develop branch
-          push: ${{ startsWith(github.ref, 'refs/heads/develop') }}
+          # Only push on git master branch
+          push: ${{ startsWith(github.ref, 'refs/heads/master') }}
