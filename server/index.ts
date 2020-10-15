@@ -5,7 +5,6 @@ import db from './helpers/mysql';
 import relayer from './helpers/relayer';
 import { pinJson } from './helpers/ipfs';
 import { verifySignature, jsonParse, sendError, hashPersonalMessage } from './helpers/utils';
-import { sendMessage } from './helpers/discord';
 import { storeProposal, storeVote } from './helpers/adapters/mysql';
 import pkg from '../package.json';
 
@@ -185,8 +184,8 @@ router.post('/message', async (req, res) => {
     const networkStr = network === 'testnet' ? 'demo.' : '';
     let message = `${space} (${network})\n`;
     message += `**${msg.payload.name}**\n`;
-    message += `<https://${networkStr}snapshot.page/#/${space}/proposal/${authorIpfsRes}>`;
-    sendMessage(message);
+    message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
+    // sendMessage(message); FIXME (fforbeck): disabled discord for now
   }
 
   if (msg.type === 'vote') {
