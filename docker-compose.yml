@@ -11,7 +11,7 @@ services:
       PORT: 8080
       JAWSDB_URL: postgres://admin:123123@snapshot-postgres:5432/snapshot-db
     depends_on:
-      - snapshot-mysql
+      - snapshot-postgres
     ports:
       - 8080:8080
 
