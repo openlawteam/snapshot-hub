@@ -1,5 +1,5 @@
 # Node version matching the version declared in the package.json 
-FROM node:14.0-slim
+FROM node:14.0
 
 # Update O.S.
 RUN apt-get update && apt-get upgrade -y 
@@ -28,4 +28,4 @@ COPY --chown=node:node . .
 EXPOSE 8080
 
 # Start the aplication
-CMD ["npm", "run", "start" ]
+CMD ["npm", "start"]
