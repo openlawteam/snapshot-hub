@@ -14,6 +14,7 @@ const network = process.env.NETWORK || 'testnet';
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  console.log('GET /api');
   return res.json({
     name: pkg.name,
     network,
@@ -24,11 +25,13 @@ router.get('/', (req, res) => {
 });
 
 router.get('/spaces/:key?', (req, res) => {
+  console.log('GET /spaces/:key');
   const { key } = req.params;
   return res.json(key ? spaces[key] : spaces);
 });
 
 router.get('/:token/proposals', async (req, res) => {
+  console.log('GET /:token/proposals');
   const { token } = req.params;
   const query = "SELECT * FROM messages WHERE type = 'proposal' AND token = ? ORDER BY timestamp DESC";
   db.queryAsync(query, [token]).then(messages => {
@@ -54,6 +57,7 @@ router.get('/:token/proposals', async (req, res) => {
 });
 
 router.get('/:token/proposal/:id', async (req, res) => {
+  console.log('GET /:token/proposal/:id');
   const { token, id } = req.params;
   const query = `SELECT * FROM messages WHERE type = 'vote' AND token = ? AND JSON_EXTRACT(payload, "$.proposal") = ? ORDER BY timestamp ASC`;
   db.queryAsync(query, [token, id]).then(messages => {
@@ -79,6 +83,7 @@ router.get('/:token/proposal/:id', async (req, res) => {
 });
 
 router.post('/message', async (req, res) => {
+  console.log('POST /message');
   const body = req.body;
   const msg = jsonParse(body.msg);
   const ts = (Date.now() / 1e3).toFixed();
