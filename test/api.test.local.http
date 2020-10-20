@@ -1,0 +1,84 @@
+
+# REST Client tests on http://localhost:8080/ server
+# Use docker-composer up --build to launch the test server 
+@baseUrl = http://localhost:8080
+
+### Health Check (root)
+GET {{baseUrl}}/
+
+### Health Check (api)
+GET {{baseUrl}}/api
+
+### Send a msg (api)
+POST {{baseUrl}}/api/message HTTP/1.1
+content-type: application/json
+
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Test General Proposal Submission\",\"body\":\"This is a test\",\"choices\":[\"Yes\",\"No\"],\"start\":1603216589,\"end\":1603220189,\"snapshot\":7403957,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"General\"}},\"timestamp\":\"1603216588\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0xd40441460ed6662f6959740321a2d6248f202b3830535874dc8e7fcec2d0441456f0f6fe7fc46037f2c50ee920a668f9991c1cf837084e511e376f13479422391c"}
+
+## expected output
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# X-Frame-Options: DENY
+# Access-Control-Allow-Origin: *
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 61
+# ETag: W/"3d-FXE0ScjDBHlciMy03lPRiHK+444"
+# Date: Tue, 20 Oct 2020 18:37:17 GMT
+# Connection: close
+
+# {
+#   "ipfsHash": "QmP623ZrsYWe63NqXBeXZuRWLpdZBoiLjNRbzdqoABvcnd"
+# }
+
+### Get All proposals based on token
+GET {{baseUrl}}/api/0x8276d5e4133eba2043a2a9fccc55284c1243f1d4/proposals HTTP/1.1
+
+## expected output
+# HTTP/1.1 200 OK
+# X-Powered-By: Express
+# X-Frame-Options: DENY
+# Access-Control-Allow-Origin: *
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 728
+# ETag: W/"2d8-GZyBKffXlaGDV/zGclbMPa53c18"
+# Date: Tue, 20 Oct 2020 19:48:06 GMT
+# Connection: close
+
+# {
+#   "QmP623ZrsYWe63NqXBeXZuRWLpdZBoiLjNRbzdqoABvcnd": {
+#     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+#     "msg": {
+#       "version": "0.1.2",
+#       "timestamp": "1603216588",
+#       "token": "0x8276d5e4133eba2043a2a9fccc55284c1243f1d4",
+#       "type": "proposal",
+#       "payload": {
+#         "name": "Test General Proposal Submission",
+#         "body": "This is a test",
+#         "choices": [
+#           "Yes",
+#           "No"
+#         ],
+#         "start": 1603216589,
+#         "end": 1603220189,
+#         "snapshot": 7403957,
+#         "metadata": {
+#           "private": false,
+#           "type": "Governance",
+#           "subType": "General"
+#         }
+#       }
+#     },
+#     "sig": "0xd40441460ed6662f6959740321a2d6248f202b3830535874dc8e7fcec2d0441456f0f6fe7fc46037f2c50ee920a668f9991c1cf837084e511e376f13479422391c",
+#     "authorIpfsHash": "QmP623ZrsYWe63NqXBeXZuRWLpdZBoiLjNRbzdqoABvcnd",
+#     "relayerIpfsHash": "QmUxte4oGJzBEAsuSm1R8vwhvGQrjY6Px3Ck8Er6pqDnb7"
+#   }
+# }
+
+
+### Create a vote
+
+### Get proposal votes
+GET {{baseUrl}}/api/0x8276d5e4133eba2043a2a9fccc55284c1243f1d4/proposal/0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0  HTTP/1.1
+
+## expected output
