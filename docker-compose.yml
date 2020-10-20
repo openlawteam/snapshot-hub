@@ -25,8 +25,8 @@ services:
       POSTGRESQL_DATABASE: snapshot-db
     ports:
       - 5432:5432
-    volumes:
-        - ./server/helpers/database/:/docker-entrypoint-initdb.d/
+    # volumes:
+    #     - ./server/helpers/database/:/docker-entrypoint-initdb.d/
     
 networks:
   default:
