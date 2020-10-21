@@ -13,7 +13,7 @@ GET {{baseUrl}}/api
 POST {{baseUrl}}/api/message HTTP/1.1
 Content-Type: application/json
 
-{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Test General Proposal Submission\",\"body\":\"This is a test\",\"choices\":[\"Yes\",\"No\"],\"start\":1603216589,\"end\":1603220189,\"snapshot\":7403957,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"General\"}},\"timestamp\":\"1603216588\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0xd40441460ed6662f6959740321a2d6248f202b3830535874dc8e7fcec2d0441456f0f6fe7fc46037f2c50ee920a668f9991c1cf837084e511e376f13479422391c"}
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Testing a general proposal 2\",\"body\":\"Test test test\",\"choices\":[\"Yes\",\"No\"],\"start\":1603301264,\"end\":1603304864,\"snapshot\":7409598,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"General\"}},\"timestamp\":\"1603301263\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0x3850ca29c7c92487a96fa816abd0164f5bfccde25516e4fcb2cf81bd1a7d756b7d70c143b6a99b9444511327835ca3e15f9eef93ba2eac29cd9a53c9aeb728441c"}
 
 ### Create Governance Proposal 2
 POST {{baseUrl}}/api/message HTTP/1.1
@@ -24,14 +24,18 @@ Content-Type: application/json
 ### Get All proposals based on token
 GET {{baseUrl}}/api/0x8276d5e4133eba2043a2a9fccc55284c1243f1d4/proposals HTTP/1.1
 
-### Vote YES on Governance Proposal 2
-
+### Vote YES on General Proposal 1
 POST {{baseUrl}}/api/message HTTP/1.1
 Content-Type: application/json
 
-{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":1,\"proposal\":\"Qmecn8LiZey9SMtscFMKtdC1mwtrCApEk1siX1vjkX31QN\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603230712\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0x5a6e06f5d2a3a4f94935bd09833934b437b4422a04d94aa6e1b7bd24ec47bf6366766f806442eace9fce32572f5005ebadd305f4256fe35807ff188f200bb8651b"}
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":1,\"proposal\":\"QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603301300\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0xe44506143777b347364fadc6155b231e1535fc4b34b90f76f29a8313aec3a422353b12b7e255ba24d5ff2e10e93e5c060eb737b6720e871e325a24186223a1f91c"}
+
+
+### Vote NO on General Proposal 1
+POST {{baseUrl}}/api/message HTTP/1.1
+Content-Type: application/json
+
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":2,\"proposal\":\"QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603301319\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0x8f44396c30ad33cf5b9b13a082a44cf537b7be0e8ecaeb625f18c19452d36efa1c8c2cf561c044d55b4c08387aa66bb2d5773204847031c0c82d2302a64513791b"}
 
 ### Get proposal votes
-GET {{baseUrl}}/api/0x8276d5e4133eba2043a2a9fccc55284c1243f1d4/proposal/0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0  HTTP/1.1
-
-## expected output
+GET {{baseUrl}}/api/0x8276d5e4133eba2043a2a9fccc55284c1243f1d4/proposal/QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr  HTTP/1.1
