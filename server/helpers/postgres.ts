@@ -10,7 +10,6 @@ config.connectionLimit = 25;
 config.multipleStatements = true;
 config.database = config.path[0];
 config.host = config.hosts[0].name;
-console.log(config);
 bluebird.promisifyAll([Pool]);
 const db = new Pool(config);
 
