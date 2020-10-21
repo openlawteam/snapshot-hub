@@ -1,6 +1,5 @@
 import express from 'express';
 import spaces from '@snapshot-labs/snapshot-spaces';
-import db from './helpers/postgres';
 import relayer from './helpers/relayer';
 import { pinJson } from './helpers/ipfs';
 import { verify, jsonParse, sendError } from './helpers/utils';
