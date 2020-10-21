@@ -8,6 +8,7 @@ import {
   storeProposal,
   storeVote,
   getProposals,
+  getProposalsBy,
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
@@ -174,12 +175,10 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const query = `SELECT * FROM messages WHERE token = ? AND id = ? AND type = 'proposal'`;
-    const proposals = await db.queryAsync(query, [
-      msg.token,
-      msg.payload.proposal
-    ]);
-    if (!proposals[0]) return sendError(res, 'unknown proposal');
+    const proposals = await getProposalsBy(msg.token, msg.payload.proposal);
+    if (!proposals || proposals.length == 0)
+      return sendError(res, 'unknown proposal');
+
     const payload = jsonParse(proposals[0].payload);
     if (ts > payload.end || payload.start > ts)
       return sendError(res, 'not in voting window');

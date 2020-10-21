@@ -50,6 +50,13 @@ export async function getProposals(token: string) {
   return result.rows;
 }
 
+export async function getProposalsBy(token: string, id: string) {
+  const query = `SELECT * FROM messages WHERE token = $1 AND id = $2 AND type = 'proposal'`;
+  const result = await db.query(query, [token, id]);
+  console.log(result.rows.length);
+  return result.row;
+}
+
 export async function getProposalVotes(token: string, id: string) {
   const query = `SELECT * FROM messages WHERE type = 'vote' AND token = $1 AND payload ->> 'proposal' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [token, id]);
