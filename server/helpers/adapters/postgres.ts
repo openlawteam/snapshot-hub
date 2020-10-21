@@ -54,7 +54,7 @@ export async function getProposalsBy(token: string, id: string) {
   const query = `SELECT * FROM messages WHERE token = $1 AND id = $2 AND type = 'proposal'`;
   const result = await db.query(query, [token, id]);
   console.log(result.rows.length);
-  return result.row;
+  return result.rows;
 }
 
 export async function getProposalVotes(token: string, id: string) {
