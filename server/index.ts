@@ -60,7 +60,8 @@ router.get('/:token/proposals', async (req, res) => {
               },
               sig: message.sig,
               authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash
+              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+              deprecated: message.deprecated
             }
           ];
         })
@@ -89,7 +90,8 @@ router.get('/:token/proposal/:id', async (req, res) => {
               },
               sig: message.sig,
               authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash
+              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+              deprecated: message.deprecated
             }
           ];
         })

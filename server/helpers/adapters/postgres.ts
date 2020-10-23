@@ -6,7 +6,8 @@ function format(
   msg: any,
   token: string,
   messageType: string,
-  relayerIpfsHash: any
+  relayerIpfsHash: any,
+  deprecated: any
 ) {
   return [
     authorIpfsHash,
@@ -20,15 +21,16 @@ function format(
     body.sig,
     JSON.stringify({
       relayer_ipfs_hash: relayerIpfsHash
-    })
+    }),
+    JSON.stringify(deprecated)
   ];
 }
 
 async function insert(params: Array<object>) {
   if (params.length < 10) throw Error('Invalid parameters');
   const cmd =
-    'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata) VALUES ' +
-    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
+    'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata, deprecated) VALUES ' +
+    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
   return await db.query(cmd, params);
 }
 
@@ -42,7 +44,8 @@ export async function storeProposals(proposals) {
           p.msg,
           p.msg.token,
           p.msg.type,
-          p.relayerIpfsHash
+          p.relayerIpfsHash,
+          p.deprecated
         )
       )
     )
@@ -59,7 +62,8 @@ export async function storeVotes(votes) {
           v.msg,
           v.msg.token,
           'vote',
-          v.relayerIpfsHash
+          v.relayerIpfsHash,
+          v.deprecated
         )
       )
     )
@@ -79,7 +83,8 @@ export async function storeProposal(
       JSON.parse(body.msg),
       token,
       'proposal',
-      relayerIpfsHash
+      relayerIpfsHash,
+      {}
     )
   );
 }
@@ -92,7 +97,8 @@ export async function storeVote(token, body, authorIpfsHash, relayerIpfsHash) {
       JSON.parse(body.msg),
       token,
       'vote',
-      relayerIpfsHash
+      relayerIpfsHash,
+      {}
     )
   );
 }

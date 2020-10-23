@@ -1,4 +1,6 @@
 import { storeProposals, storeVotes } from '../adapters/postgres';
+import { pinJson } from '../ipfs';
+import relayer from '../relayer';
 import axios from 'axios';
 
 // DEV TARGET_SNAPSHOT_HUB_API: https://testnet.snapshot.page
@@ -14,7 +16,7 @@ const TARGET_SNAPSHOT_HUB_API = process.env.TARGET_SNAPSHOT_HUB_API;
 
 async function getProposals(token: string) {
   const url = `${TARGET_SNAPSHOT_HUB_API}/api/${token}/proposals`;
-  console.log(`@getProposals:: GET ${url}`);
+  //console.log(`@getProposals:: GET ${url}`);
   return await axios
     .get(url)
     .then(resp => {
@@ -37,7 +39,7 @@ async function getProposals(token: string) {
 
 async function getVotes(token: string, id: string) {
   const url = `${TARGET_SNAPSHOT_HUB_API}/api/${token}/proposal/${id}`;
-  console.log(`@getVotes:: GET ${url}`);
+  //console.log(`@getVotes:: GET ${url}`);
   return await axios
     .get(url)
     .then(resp => {
@@ -57,26 +59,103 @@ async function getVotes(token: string, id: string) {
     });
 }
 
+const sleep = (ms: number = Math.floor(Math.random() * 100) + 1) =>
+  new Promise(resolve => setTimeout(resolve, ms));
+
+async function pinData(body, id) {
+  const data = JSON.parse(JSON.stringify(body)); //copy
+  console.log(`Pin: ${data.msg.type}:${id}`);
+
+  const authorIpfsRes = await sleep().then(_ =>
+    pinJson(`snapshot/${data.sig}`, {
+      address: data.address,
+      msg: data.msg,
+      sig: data.sig,
+      version: '2'
+    })
+  );
+
+  const relayerSig = await relayer.signMessage(authorIpfsRes);
+  const relayerIpfsRes = await sleep().then(_ =>
+    pinJson(`snapshot/${relayerSig}`, {
+      address: relayer.address,
+      msg: authorIpfsRes,
+      sig: relayerSig,
+      version: '2'
+    })
+  );
+
+  // save the old hashes before updating with the new ones
+  data['deprecated'] = {
+    deprecatedAuthorIpfsHash: data.authorIpfsHash,
+    deprecatedRelayerIpfsHash: data.relayerIpfsHash
+  };
+
+  data['authorIpfsHash'] = authorIpfsRes;
+  data['relayerIpfsHash'] = relayerIpfsRes;
+
+  if (data.msg.type === 'proposal') data['newId'] = authorIpfsRes;
+  if (data.msg.type === 'vote') data.msg.payload['proposal'] = id;
+
+  console.log(`Pinned ${id}:${data.msg.type}:${authorIpfsRes}`);
+  return data;
+}
+
 export async function migrateProposals(token: string) {
   if (!token) throw Error(`Proposals not found for token ${token}`);
 
   console.log(`Start migration for token ${token}`);
 
-  const proposals = await getProposals(token);
-  if (proposals.length == 0)
-    throw Error(`0 proposals found for token ${token}`);
+  const getAllProposals = () => {
+    console.log(`Getting all proposals...`);
+    return getProposals(token);
+  };
 
-  console.log(`Saving ${proposals.length} proposals...`);
-  await storeProposals(proposals);
+  const pinProposal = async p => {
+    console.log(`Pinning proposal ${p.id}...`);
+    return await pinData(p, p.id).then(pinned => sleep().then(_ => pinned));
+  };
 
-  await Promise.all(
-    proposals.map(p =>
-      getVotes(token, p.id).then(votes => {
-        console.log(`Saving ${votes.length} votes from proposal ${p.id}`);
-        storeVotes(votes);
-      })
-    )
-  ).then(_ => console.log('Migration completed'));
+  const saveProposal = p => {
+    console.log(`Saving pinned proposal ${p.id} ...`);
+    return storeProposals([p]).then(_ => p);
+  };
 
-  //TODO call the pining service to pin votes and proposals
+  const getAllVotes = async p => {
+    console.log(`Getting all votes from proposal ${p.id}`);
+    return await getVotes(token, p.id).then(votes => {
+      return { p, votes };
+    });
+  };
+
+  const pinVotes = async res => {
+    const { p, votes } = res;
+    console.log(
+      `Pinning ${votes.length} votes from proposal ${p.newId}:${p.id}`
+    );
+    const pins = [];
+    for (let i = 0; i < votes.length; i++) {
+      await sleep(15000);
+      const v = await pinData(votes[i], p.newId);
+      pins.push(v);
+    }
+    return pins;
+  };
+
+  const saveVotes = votes => {
+    console.log(`Saving ${votes.length} votes...`);
+    return storeVotes(votes);
+  };
+
+  await getAllProposals().then(proposals =>
+    Promise.all(
+      proposals.map(p =>
+        pinProposal(p)
+          .then(pinnedProposal => saveProposal(pinnedProposal))
+          .then(savedProposal => getAllVotes(savedProposal))
+          .then(allVotes => pinVotes(allVotes))
+          .then(pinnedVotes => saveVotes(pinnedVotes))
+      )
+    ).then(ids => console.log('Migration completed', ids.length))
+  );
 }

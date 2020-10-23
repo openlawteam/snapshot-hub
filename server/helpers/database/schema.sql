@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS messages (
   payload JSON,
   sig VARCHAR(256) NOT NULL,
   metadata JSON,
+  deprecated JSON,
   PRIMARY KEY (id)
 );
 

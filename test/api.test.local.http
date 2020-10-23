@@ -47,11 +47,11 @@ Content-Type: application/json
 {"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":2,\"proposal\":\"QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603301319\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0x8f44396c30ad33cf5b9b13a082a44cf537b7be0e8ecaeb625f18c19452d36efa1c8c2cf561c044d55b4c08387aa66bb2d5773204847031c0c82d2302a64513791b"}
 
 ### Get proposal votes
-GET {{baseUrl}}/api/{{token}}/proposal/QmWWDM8rcrSjXVo4ygFg9jgqvjvq7AdrF66spACeaLgBpH  HTTP/1.1
+GET {{baseUrl}}/api/{{token}}/proposal/QmYWyqesuVTvngwKFhhmAzDrLbJTJYav4d3P21swF4HiYd  HTTP/1.1
 
-"QmQs1mnLfkZHPKzaiinUw6fvS1FCSpWUcWD7yF7LhG9rZM",
-"QmagPitbzYXh39yzcd1tu9W2RzFBA49P4qGiSVQkdFm3Lf",
-"QmVBJBqa1xx3T2MBCvFoqnHKTUw2NhUXo6WRD4cXuXENJk",
-"Qmd4AngpoK2dkUcAXcw76jfWnsXGAp8VKN1pxAKNmg4iki",
-"QmeTLYqnrnxR9q4vskShMhkgmUiaX23FGeNLgRcwzCoXiR",
-"QmWWDM8rcrSjXVo4ygFg9jgqvjvq7AdrF66spACeaLgBpH"
+"QmQs1mnLfkZHPKzaiinUw6fvS1FCSpWUcWD7yF7LhG9rZM" -> "QmZeMUwErFFopM1nhvqPKEhEMoyUXsHZwNQ9DdjjA4qQbo",
+"QmagPitbzYXh39yzcd1tu9W2RzFBA49P4qGiSVQkdFm3Lf" -> "QmSbgyAxq1jnwsrt3vYFm9GaGrJAdTmm6HN17rxeUA3PbN",
+"QmVBJBqa1xx3T2MBCvFoqnHKTUw2NhUXo6WRD4cXuXENJk" -> "QmXBpZ2fFUR5s3uEiuSCdr1XF3HnSyQYev5qxMG6L9swS1",
+"Qmd4AngpoK2dkUcAXcw76jfWnsXGAp8VKN1pxAKNmg4iki" -> "QmbguBpXbyvGEPXJEDBLGRgyTbaKhjZoi8pPmXokYgym9V",
+"QmeTLYqnrnxR9q4vskShMhkgmUiaX23FGeNLgRcwzCoXiR" -> "Qmakd8TYdkQ4c6rPyUmAeD5eC8PomDDUwmibns1pVwEz5Y",
+"QmWWDM8rcrSjXVo4ygFg9jgqvjvq7AdrF66spACeaLgBpH" -> "QmYWyqesuVTvngwKFhhmAzDrLbJTJYav4d3P21swF4HiYd"
