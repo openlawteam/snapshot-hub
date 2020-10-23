@@ -9,7 +9,8 @@ services:
       - .env.local
     environment:
       PORT: 8080
-      JAWSDB_URL: postgres://admin:123123@snapshot-postgres:5432/snapshot-db
+      JAWSDB_URL: postgres://admin:admin@snapshot-postgres:5432/snapshot-db
+      TARGET_SNAPSHOT_HUB_API: https://hub.snapshot.page # https://testnet.snapshot.page
     depends_on:
       - snapshot-postgres
     ports:
@@ -21,13 +22,27 @@ services:
     container_name: snapshot-postgres
     environment:
       POSTGRESQL_USERNAME: admin
-      POSTGRESQL_PASSWORD: "123123"
+      POSTGRESQL_PASSWORD: "admin"
       POSTGRESQL_DATABASE: snapshot-db
     ports:
       - 5432:5432
-    # volumes:
-    #     - ./server/helpers/database/:/docker-entrypoint-initdb.d/
-    
+
+  snapshot-pgadmin:
+    image: dpage/pgadmin4
+    container_name: snapshot-pgadmin
+    environment:
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_UPGRADE_CHECK_ENABLED: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: "40"
+      PGADMIN_CONFIG_FILE_LOG_LEVEL: "40"
+      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - 5050:80
+    depends_on:
+      - snapshot-postgres
+
 networks:
-  default:
-    name: snapshot-network
+    default:
+      name: snapshot-network

@@ -1,6 +1,6 @@
 import db from '../postgres';
 
-async function insert(
+function format(
   authorIpfsHash: string,
   body: any,
   msg: any,
@@ -8,14 +8,12 @@ async function insert(
   messageType: string,
   relayerIpfsHash: any
 ) {
-  const query =
-    'INSERT INTO messages (id, address, version, timestamp, token, type, payload, sig, metadata) VALUES ' +
-    '($1, $2, $3, $4, $5, $6, $7, $8, $9) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
-  await db.query(query, [
+  return [
     authorIpfsHash,
     body.address,
     msg.version,
     msg.timestamp,
+    token, // using token as default value for "space" column
     token,
     messageType,
     JSON.stringify(msg.payload),
@@ -23,7 +21,49 @@ async function insert(
     JSON.stringify({
       relayer_ipfs_hash: relayerIpfsHash
     })
-  ]);
+  ];
+}
+
+async function insert(params: Array<object>) {
+  if (params.length < 10) throw Error('Invalid parameters');
+  const cmd =
+    'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata) VALUES ' +
+    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
+  return await db.query(cmd, params);
+}
+
+export async function storeProposals(proposals) {
+  return await Promise.all(
+    proposals.map(p =>
+      insert(
+        format(
+          p.authorIpfsHash,
+          p,
+          p.msg,
+          p.msg.token,
+          p.msg.type,
+          p.relayerIpfsHash
+        )
+      )
+    )
+  );
+}
+
+export async function storeVotes(votes) {
+  return await Promise.all(
+    votes.map(v =>
+      insert(
+        format(
+          v.authorIpfsHash,
+          v,
+          v.msg,
+          v.msg.token,
+          'vote',
+          v.relayerIpfsHash
+        )
+      )
+    )
+  );
 }
 
 export async function storeProposal(
@@ -32,13 +72,28 @@ export async function storeProposal(
   authorIpfsHash,
   relayerIpfsHash
 ) {
-  await insert(
-    authorIpfsHash,
-    body,
-    JSON.parse(body.msg),
-    token,
-    'proposal',
-    relayerIpfsHash
+  return await insert(
+    format(
+      authorIpfsHash,
+      body,
+      JSON.parse(body.msg),
+      token,
+      'proposal',
+      relayerIpfsHash
+    )
+  );
+}
+
+export async function storeVote(token, body, authorIpfsHash, relayerIpfsHash) {
+  return await insert(
+    format(
+      authorIpfsHash,
+      body,
+      JSON.parse(body.msg),
+      token,
+      'vote',
+      relayerIpfsHash
+    )
   );
 }
 
@@ -62,15 +117,4 @@ export async function getProposalVotes(token: string, id: string) {
   const result = await db.query(query, [token, id]);
   console.log(result.rows.length);
   return result.rows;
-}
-
-export async function storeVote(token, body, authorIpfsHash, relayerIpfsHash) {
-  await insert(
-    authorIpfsHash,
-    body,
-    JSON.parse(body.msg),
-    token,
-    'vote',
-    relayerIpfsHash
-  );
 }

@@ -11,6 +11,7 @@ import {
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
+import { migrateProposals } from './helpers/migration/migrate';
 
 const network = process.env.NETWORK || 'testnet';
 const router = express.Router();
@@ -24,6 +25,13 @@ router.get('/', (req, res) => {
     tag: 'alpha',
     relayer: relayer.address
   });
+});
+
+router.put('/:token/migrate', async (req, res) => {
+  const { token } = req.params;
+  console.log('GET /:token/migrate', token);
+  migrateProposals(token);
+  return res.sendStatus(201);
 });
 
 router.get('/spaces/:key?', (req, res) => {

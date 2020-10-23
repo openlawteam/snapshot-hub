@@ -2,7 +2,7 @@
 # REST Client tests on http://localhost:8080/ server
 # Use docker-composer up --build to launch the test server 
 #@baseUrl = http://localhost:8080
-@baseUrl = https://snapshot-hub.dev.thelao.io
+@baseUrl = https://testnet.snapshot.page
 
 ### Health Check (root)
 GET {{baseUrl}}/
