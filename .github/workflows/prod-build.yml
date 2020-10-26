@@ -3,7 +3,7 @@ name: DockerHub Prod Build
 on:
   push:
     tags:
-      - v*
+      - '*'
 
 env:
   DOCKER_REPO: openlaw/snapshot-hub
@@ -30,4 +30,4 @@ jobs:
           # Automatically tags the built image with the git short SHA prefixed with the branch name, e.g: vX.Y.Z, latest
           tags: ${{ env.GITHUB_REF_SLUG }}, latest
           # Only push image on git v* tag
-          push: ${{ startsWith(github.ref, 'refs/tags/v*') }}
+          push: ${{ startsWith(github.ref, 'refs/tags/') }}
