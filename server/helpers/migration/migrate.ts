@@ -3,6 +3,11 @@ import { pinJson } from '../ipfs';
 import relayer from '../relayer';
 import axios from 'axios';
 
+//TODO: load token map according to each env: dev/prod
+const tokens = {
+  thelao: '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4'
+};
+
 // DEV TARGET_SNAPSHOT_HUB_API: https://testnet.snapshot.page
 // DEV TOKEN: 0x8276d5e4133eba2043a2a9fccc55284c1243f1d4
 
@@ -14,8 +19,8 @@ import axios from 'axios';
 
 const TARGET_SNAPSHOT_HUB_API = process.env.TARGET_SNAPSHOT_HUB_API;
 
-async function getProposals(token: string) {
-  const url = `${TARGET_SNAPSHOT_HUB_API}/api/${token}/proposals`;
+async function getProposals(space: string) {
+  const url = `${TARGET_SNAPSHOT_HUB_API}/api/${space}/proposals`;
   //console.log(`@getProposals:: GET ${url}`);
   return await axios
     .get(url)
@@ -37,8 +42,8 @@ async function getProposals(token: string) {
     });
 }
 
-async function getVotes(token: string, id: string) {
-  const url = `${TARGET_SNAPSHOT_HUB_API}/api/${token}/proposal/${id}`;
+async function getVotes(space: string, id: string) {
+  const url = `${TARGET_SNAPSHOT_HUB_API}/api/${space}/proposal/${id}`;
   //console.log(`@getVotes:: GET ${url}`);
   return await axios
     .get(url)
@@ -101,14 +106,14 @@ async function pinData(body, id) {
   return data;
 }
 
-export async function migrateProposals(token: string) {
-  if (!token) throw Error(`Proposals not found for token ${token}`);
+export async function migrateProposals(space: string) {
+  if (!space || !tokens[space]) throw Error(`invalid space ${space}`);
 
-  console.log(`Start migration for token ${token}`);
+  console.log(`Start migration for space ${space}`);
 
   const getAllProposals = () => {
     console.log(`Getting all proposals...`);
-    return getProposals(token);
+    return getProposals(space);
   };
 
   const pinProposal = async p => {
@@ -118,12 +123,12 @@ export async function migrateProposals(token: string) {
 
   const saveProposal = p => {
     console.log(`Saving pinned proposal ${p.id} ...`);
-    return storeProposals([p]).then(_ => p);
+    return storeProposals(space, [p]).then(_ => p);
   };
 
   const getAllVotes = async p => {
     console.log(`Getting all votes from proposal ${p.id}`);
-    return await getVotes(token, p.id).then(votes => {
+    return await getVotes(space, p.id).then(votes => {
       return { p, votes };
     });
   };
@@ -144,7 +149,7 @@ export async function migrateProposals(token: string) {
 
   const saveVotes = votes => {
     console.log(`Saving ${votes.length} votes...`);
-    return storeVotes(votes);
+    return storeVotes(space, votes);
   };
 
   await getAllProposals().then(proposals =>

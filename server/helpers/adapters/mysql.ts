@@ -2,6 +2,7 @@ import db from '../mysql';
 
 export async function storeProposal(
   space,
+  token,
   body,
   authorIpfsHash,
   relayerIpfsHash
@@ -14,7 +15,8 @@ export async function storeProposal(
       address: body.address,
       version: msg.version,
       timestamp: msg.timestamp,
-      token: space,
+      space,
+      token,
       type: 'proposal',
       payload: JSON.stringify(msg.payload),
       sig: body.sig,
@@ -36,7 +38,13 @@ export async function getProposalVotes(token: string, id: string) {
   return db.queryAsync(query, [token, id]);
 }
 
-export async function storeVote(space, body, authorIpfsHash, relayerIpfsHash) {
+export async function storeVote(
+  space,
+  token,
+  body,
+  authorIpfsHash,
+  relayerIpfsHash
+) {
   const msg = JSON.parse(body.msg);
   const query = 'INSERT IGNORE INTO messages SET ?;';
   await db.queryAsync(query, [
@@ -45,7 +53,8 @@ export async function storeVote(space, body, authorIpfsHash, relayerIpfsHash) {
       address: body.address,
       version: msg.version,
       timestamp: msg.timestamp,
-      token: space,
+      space,
+      token,
       type: 'vote',
       payload: JSON.stringify(msg.payload),
       sig: body.sig,

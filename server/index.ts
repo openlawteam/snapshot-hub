@@ -2,7 +2,12 @@ import express from 'express';
 import spaces from '@snapshot-labs/snapshot-spaces';
 import relayer from './helpers/relayer';
 import { pinJson } from './helpers/ipfs';
-import { verify, jsonParse, sendError } from './helpers/utils';
+import {
+  verifySignature,
+  jsonParse,
+  sendError,
+  hashPersonalMessage
+} from './helpers/utils';
 import {
   storeProposal,
   storeVote,
@@ -14,6 +19,12 @@ import pkg from '../package.json';
 import { migrateProposals } from './helpers/migration/migrate';
 
 const network = process.env.NETWORK || 'testnet';
+
+//TODO: load token map according to each env: dev/prod
+const tokens = {
+  '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4': 'thelao'
+};
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -27,10 +38,10 @@ router.get('/', (req, res) => {
   });
 });
 
-router.put('/:token/migrate', async (req, res) => {
-  const { token } = req.params;
-  console.log('GET /:token/migrate', token);
-  migrateProposals(token);
+router.put('/:space/migrate', async (req, res) => {
+  const { space } = req.params;
+  console.log('GET /:space/migrate', space);
+  migrateProposals(space);
   return res.sendStatus(201);
 });
 
@@ -40,10 +51,10 @@ router.get('/spaces/:key?', (req, res) => {
   return res.json(key ? spaces[key] : spaces);
 });
 
-router.get('/:token/proposals', async (req, res) => {
-  const { token } = req.params;
-  console.log('GET /:token/proposals', token);
-  getProposals(token).then(messages => {
+router.get('/:space/proposals', async (req, res) => {
+  const { space } = req.params;
+  console.log('GET /:space/proposals', space);
+  getProposals(space).then(messages => {
     res.json(
       Object.fromEntries(
         messages.map(message => {
@@ -70,10 +81,10 @@ router.get('/:token/proposals', async (req, res) => {
   });
 });
 
-router.get('/:token/proposal/:id', async (req, res) => {
-  const { token, id } = req.params;
-  console.log('GET /:token/proposal/:id', token, id);
-  getProposalVotes(token, id).then(messages => {
+router.get('/:space/proposal/:id', async (req, res) => {
+  const { space, id } = req.params;
+  console.log('GET /:space/proposal/:id', space, id);
+  getProposalVotes(space, id).then(messages => {
     res.json(
       Object.fromEntries(
         messages.map(message => {
@@ -118,6 +129,8 @@ router.post('/message', async (req, res) => {
   )
     return sendError(res, 'wrong signed message');
 
+  if (!tokens[msg.token]) return sendError(res, 'unknown space');
+
   if (
     !msg.timestamp ||
     typeof msg.timestamp !== 'string' ||
@@ -131,7 +144,13 @@ router.post('/message', async (req, res) => {
   if (!msg.type || !['proposal', 'vote'].includes(msg.type))
     return sendError(res, 'wrong message type');
 
-  if (!(await verify(body.address, body.msg, body.sig)))
+  if (
+    !(await verifySignature(
+      body.address,
+      body.sig,
+      hashPersonalMessage(body.msg)
+    ))
+  )
     return sendError(res, 'wrong signature');
 
   if (msg.type === 'proposal') {
@@ -191,6 +210,8 @@ router.post('/message', async (req, res) => {
       return sendError(res, 'not in voting window');
   }
 
+  const space = tokens[msg.token];
+
   const authorIpfsRes = await pinJson(`snapshot/${body.sig}`, {
     address: body.address,
     msg: body.msg,
@@ -207,16 +228,17 @@ router.post('/message', async (req, res) => {
   });
 
   if (msg.type === 'proposal') {
-    await storeProposal(msg.token, body, authorIpfsRes, relayerIpfsRes);
+    await storeProposal(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
 
-    let message = `[${network}] ${msg.token}\n`;
+    //const networkStr = network === 'testnet' ? 'demo.' : '';
+    let message = `${space} (${network})\n`;
     message += `**${msg.payload.name}**\n`;
     message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
     console.log(`New proposal: ${message}`);
   }
 
   if (msg.type === 'vote') {
-    await storeVote(msg.token, body, authorIpfsRes, relayerIpfsRes);
+    await storeVote(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
   }
 
   console.log(
