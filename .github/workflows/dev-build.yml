@@ -2,8 +2,11 @@ name: DockerHub Dev Build
 
 on:
   push:
+    tags-ignore:
+      - '*' 
     branches:
       - master
+    
 
 env:
   DOCKER_REPO: openlaw/snapshot-hub
