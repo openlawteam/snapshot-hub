@@ -28,10 +28,12 @@ const spaces = JSON.parse(
   fs.readFileSync(path.join(__dirname, `./spaces/${env}.json`)).toString()
 );
 
-const tokens = Object.entries(spaces).map(space => [
-  getAddress(space[1].token),
-  space[0]
-]);
+const tokens = Object.entries(spaces)
+  .map(space => [getAddress(space[1].token).toLowerCase(), space[0]])
+  .reduce((p, c) => {
+    p[c[0]] = c[1];
+    return p;
+  }, {});
 
 console.log(`Spaces: ${tokens}`);
 
@@ -139,6 +141,7 @@ router.post('/message', async (req, res) => {
   )
     return sendError(res, 'wrong signed message');
 
+  console.log(tokens[msg.token]);
   if (!tokens[msg.token]) return sendError(res, 'unknown space');
 
   if (
