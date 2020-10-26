@@ -10,6 +10,11 @@ import {
   sendError,
   hashPersonalMessage
 } from './helpers/utils';
+/**
+ * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
+ * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
+ * is a bit different for each database.
+ */
 import {
   storeProposal,
   storeVote,
@@ -18,24 +23,32 @@ import {
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
+/**
+ * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
+ * to trigger the migration process via a PUT call. The migration happens async and gets logged to the server logs.
+ */
 import { migrateProposals } from './helpers/migration/migrate';
 
 const network = process.env.NETWORK || 'testnet';
 
+/**
+ * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
+ * Since this implementation is used by OpenLaw only, that dependency was removed and the spaces are loaded from the
+ * ./spaces folder based on the environment: prod or dev.
+ * - prod.json contains the spaces that are using in production mode with the moloch addresses from main net.
+ * - dev.json contains the spaces that are using in development mode with the moloch addresses from test nets.
+ */
 const env = process.env.DEV ? 'dev' : 'prod';
-
 const spaces = JSON.parse(
   fs.readFileSync(path.join(__dirname, `./spaces/${env}.json`)).toString()
 );
-
 const tokens = Object.entries(spaces)
   .map(space => [getAddress(space[1].token).toLowerCase(), space[0]])
   .reduce((p, c) => {
     p[c[0]] = c[1];
     return p;
   }, {});
-
-console.log(`Spaces: ${tokens}`);
+console.log(`Spaces: ${JSON.stringify(tokens)}`);
 
 const router = express.Router();
 
@@ -124,10 +137,10 @@ router.get('/:space/proposal/:id', async (req, res) => {
 });
 
 router.post('/message', async (req, res) => {
-  console.log('POST /message');
   const body = req.body;
   const msg = jsonParse(body.msg);
   const ts = (Date.now() / 1e3).toFixed();
+  console.log('POST /message ', msg.type);
   // const minBlock = (3600 * 24) / 15;
 
   if (!body || !body.address || !body.msg || !body.sig)
@@ -141,8 +154,8 @@ router.post('/message', async (req, res) => {
   )
     return sendError(res, 'wrong signed message');
 
-  console.log(tokens[msg.token]);
-  if (!tokens[msg.token]) return sendError(res, 'unknown space');
+  const space = tokens[msg.token];
+  if (!space) return sendError(res, 'unknown space');
 
   if (
     !msg.timestamp ||
@@ -214,7 +227,7 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const proposals = await getProposalsBy(msg.token, msg.payload.proposal);
+    const proposals = await getProposalsBy(space, msg.payload.proposal);
     if (!proposals || proposals.length == 0)
       return sendError(res, 'unknown proposal');
 
@@ -222,8 +235,6 @@ router.post('/message', async (req, res) => {
     if (ts > payload.end || payload.start > ts)
       return sendError(res, 'not in voting window');
   }
-
-  const space = tokens[msg.token];
 
   const authorIpfsRes = await pinJson(`snapshot/${body.sig}`, {
     address: body.address,
@@ -243,7 +254,11 @@ router.post('/message', async (req, res) => {
   if (msg.type === 'proposal') {
     await storeProposal(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
 
-    //const networkStr = network === 'testnet' ? 'demo.' : '';
+    /**
+     * OpenLaw does not use discord for notifications, so the dependency was disabled for now
+     * and the message is just printed out to the server log.
+     * Later the discord notification can be enabled again if needed.
+     */
     let message = `${space} (${network})\n`;
     message += `**${msg.payload.name}**\n`;
     message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;

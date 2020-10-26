@@ -40,8 +40,7 @@ GET {{baseUrl}}/api/{{space}}/proposals HTTP/1.1
 POST {{baseUrl}}/api/message HTTP/1.1
 Content-Type: application/json
 
-{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":1,\"proposal\":\"QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603301300\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0xe44506143777b347364fadc6155b231e1535fc4b34b90f76f29a8313aec3a422353b12b7e255ba24d5ff2e10e93e5c060eb737b6720e871e325a24186223a1f91c"}
-
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"choice\":2,\"proposal\":\"Qmf21zroL18c8C561Boq1pViUW9JeuBHhTXMDdfkx3vV48\",\"metadata\":{\"memberAddress\":\"0xed7b3f2902f2e1b17b027bd0c125b674d293bda0\"}},\"timestamp\":\"1603743259\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"type\":\"vote\",\"version\":\"0.1.2\"}","sig":"0xd3c2a907b94e7cb9d9e908c9ec6acea100bd2d65ddf6eda126b028bd2805bdd53bc2cf473ca9ed881ef1d796985e6e6b153dc21c80ceff53bdd4043c431477e81b"}
 
 ### Vote NO on General Proposal 1
 POST {{baseUrl}}/api/message HTTP/1.1
