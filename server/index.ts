@@ -2,7 +2,12 @@ import express from 'express';
 import spaces from '@snapshot-labs/snapshot-spaces';
 import relayer from './helpers/relayer';
 import { pinJson } from './helpers/ipfs';
-import { verifySignature, jsonParse, sendError, hashPersonalMessage } from './helpers/utils';
+import {
+  verifySignature,
+  jsonParse,
+  sendError,
+  hashPersonalMessage
+} from './helpers/utils';
 import {
   storeProposal,
   storeVote,
@@ -13,9 +18,12 @@ import {
 import pkg from '../package.json';
 
 const network = process.env.NETWORK || 'testnet';
-const tokens = Object.fromEntries(
-  Object.entries(spaces).map(space => [space[1].token, space[0]])
-);
+
+//TODO: load token map according to each env: dev/prod
+const tokens = {
+  '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4': 'thelao'
+};
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -35,10 +43,10 @@ router.get('/spaces/:key?', (req, res) => {
   return res.json(key ? spaces[key] : spaces);
 });
 
-router.get('/:token/proposals', async (req, res) => {
-  const { token } = req.params;
-  console.log('GET /:token/proposals', token);
-  getProposals(token).then(messages => {
+router.get('/:space/proposals', async (req, res) => {
+  const { space } = req.params;
+  console.log('GET /:space/proposals', space);
+  getProposals(space).then(messages => {
     res.json(
       Object.fromEntries(
         messages.map(message => {
@@ -64,10 +72,10 @@ router.get('/:token/proposals', async (req, res) => {
   });
 });
 
-router.get('/:token/proposal/:id', async (req, res) => {
-  const { token, id } = req.params;
-  console.log('GET /:token/proposal/:id', token, id);
-  getProposalVotes(token, id).then(messages => {
+router.get('/:space/proposal/:id', async (req, res) => {
+  const { space, id } = req.params;
+  console.log('GET /:space/proposal/:id', space, id);
+  getProposalVotes(space, id).then(messages => {
     res.json(
       Object.fromEntries(
         messages.map(message => {
@@ -111,10 +119,13 @@ router.post('/message', async (req, res) => {
   )
     return sendError(res, 'wrong signed message');
 
-  if (!tokens[msg.token])
-    return sendError(res, 'unknown space');
+  if (!tokens[msg.token]) return sendError(res, 'unknown space');
 
-  if (!msg.timestamp || typeof msg.timestamp !== 'string' || msg.timestamp > (ts + 30))
+  if (
+    !msg.timestamp ||
+    typeof msg.timestamp !== 'string' ||
+    msg.timestamp > ts + 30
+  )
     return sendError(res, 'wrong timestamp');
 
   if (!msg.version || msg.version !== pkg.version)
@@ -123,7 +134,13 @@ router.post('/message', async (req, res) => {
   if (!msg.type || !['proposal', 'vote'].includes(msg.type))
     return sendError(res, 'wrong message type');
 
-  if (!await verifySignature(body.address, body.sig, hashPersonalMessage(body.msg)))
+  if (
+    !(await verifySignature(
+      body.address,
+      body.sig,
+      hashPersonalMessage(body.msg)
+    ))
+  )
     return sendError(res, 'wrong signature');
 
   if (msg.type === 'proposal') {
@@ -203,7 +220,7 @@ router.post('/message', async (req, res) => {
   if (msg.type === 'proposal') {
     await storeProposal(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
 
-    const networkStr = network === 'testnet' ? 'demo.' : '';
+    //const networkStr = network === 'testnet' ? 'demo.' : '';
     let message = `${space} (${network})\n`;
     message += `**${msg.payload.name}**\n`;
     message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
