@@ -1,0 +1,22 @@
+{
+	"thelao": {
+		"token": "0x8276d5e4133eba2043a2a9fccc55284c1243f1d4",
+		"name": "The LAO",
+		"network": "1",
+		"symbol": "LAO",
+		"skin": "thelao",
+		"strategies": [{
+			"name": "moloch",
+			"params": {
+				"address": "0x8276d5e4133eba2043a2a9fccc55284c1243f1d4",
+				"symbol": "LAO",
+				"decimals": 18
+			}
+		}],
+		"filters": {
+			"defaultTab": "all",
+			"minScore": 1
+		}
+	}
+
+}

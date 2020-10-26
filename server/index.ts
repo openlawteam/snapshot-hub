@@ -1,7 +1,9 @@
 import express from 'express';
-import spaces from '@snapshot-labs/snapshot-spaces';
 import relayer from './helpers/relayer';
+import path from 'path';
+import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
+import { getAddress } from '@ethersproject/address';
 import {
   verifySignature,
   jsonParse,
@@ -20,10 +22,18 @@ import { migrateProposals } from './helpers/migration/migrate';
 
 const network = process.env.NETWORK || 'testnet';
 
-//TODO: load token map according to each env: dev/prod
-const tokens = {
-  '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4': 'thelao'
-};
+const env = process.env.DEV ? 'dev' : 'prod';
+
+const spaces = JSON.parse(
+  fs.readFileSync(path.join(__dirname, `./spaces/${env}.json`)).toString()
+);
+
+const tokens = Object.entries(spaces).map(space => [
+  getAddress(space[1].token),
+  space[0]
+]);
+
+console.log(`Spaces: ${tokens}`);
 
 const router = express.Router();
 
