@@ -23,7 +23,9 @@ PUT {{baseUrl}}/api/{{space}}/migrate HTTP/1.1
 POST {{baseUrl}}/api/message HTTP/1.1
 Content-Type: application/json
 
-{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Testing a general proposal 2\",\"body\":\"Test test test\",\"choices\":[\"Yes\",\"No\"],\"start\":1603301264,\"end\":1603304864,\"snapshot\":7409598,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"General\"}},\"timestamp\":\"1603301263\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0x3850ca29c7c92487a96fa816abd0164f5bfccde25516e4fcb2cf81bd1a7d756b7d70c143b6a99b9444511327835ca3e15f9eef93ba2eac29cd9a53c9aeb728441c"}
+{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Test New Proposal after Migration\",\"body\":\"Testing a new proposal after running the migration script to move current proposals to OpenLaw infra.\",\"choices\":[\"Yes\",\"No\"],\"start\":1603739626,\"end\":1603743226,\"snapshot\":7438796,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"Governance\"}},\"timestamp\":\"1603739626\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0x8d45a5846bd23dcac5a445a06bc0129c5c3aa7cc0ed4462645c19cac360e37645696dcb7bcb348dfe22f43ce578edc8629dfcada9a5d5731ea4c3e6482df9b3d1b"}
+
+//{"address":"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0","msg":"{\"payload\":{\"name\":\"Testing a general proposal 2\",\"body\":\"Test test test\",\"choices\":[\"Yes\",\"No\"],\"start\":1603301264,\"end\":1603304864,\"snapshot\":7409598,\"metadata\":{\"private\":false,\"type\":\"Governance\",\"subType\":\"General\"}},\"timestamp\":\"1603301263\",\"token\":\"0x8276d5e4133eba2043a2a9fccc55284c1243f1d4\",\"type\":\"proposal\",\"version\":\"0.1.2\"}","sig":"0x3850ca29c7c92487a96fa816abd0164f5bfccde25516e4fcb2cf81bd1a7d756b7d70c143b6a99b9444511327835ca3e15f9eef93ba2eac29cd9a53c9aeb728441c"}
 
 ### Create Governance Proposal 2
 POST {{baseUrl}}/api/message HTTP/1.1
