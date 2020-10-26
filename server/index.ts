@@ -38,17 +38,17 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/spaces/:key?', (req, res) => {
+  const { key } = req.params;
+  console.log('GET /spaces/:key', key);
+  return res.json(key ? spaces[key] : spaces);
+});
+
 router.put('/:space/migrate', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/migrate', space);
   migrateProposals(space);
   return res.sendStatus(201);
-});
-
-router.get('/spaces/:key?', (req, res) => {
-  const { key } = req.params;
-  console.log('GET /spaces/:key', key);
-  return res.json(key ? spaces[key] : spaces);
 });
 
 router.get('/:space/proposals', async (req, res) => {

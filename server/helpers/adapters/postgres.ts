@@ -94,7 +94,13 @@ export async function storeProposal(
   );
 }
 
-export async function storeVote(space, token, body, authorIpfsHash, relayerIpfsHash) {
+export async function storeVote(
+  space,
+  token,
+  body,
+  authorIpfsHash,
+  relayerIpfsHash
+) {
   return await insert(
     format(
       authorIpfsHash,

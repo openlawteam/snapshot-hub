@@ -33,7 +33,7 @@ async function getProposals(space: string) {
         //console.log(`Proposal: ${JSON.stringify(p)}`);
         proposals.push(p);
       });
-
+      console.log(`Proposals found: ${proposals.length}`);
       return proposals;
     })
     .catch(e => {
@@ -55,7 +55,7 @@ async function getVotes(space: string, id: string) {
         //console.log(`Vote: ${JSON.stringify(v)}`);
         votes.push(v);
       });
-
+      console.log(`Votes found: ${votes.length}`);
       return votes;
     })
     .catch(e => {
@@ -69,8 +69,6 @@ const sleep = (ms: number = Math.floor(Math.random() * 100) + 1) =>
 
 async function pinData(body, id) {
   const data = JSON.parse(JSON.stringify(body)); //copy
-  console.log(`Pin: ${data.msg.type}:${id}`);
-
   const authorIpfsRes = await sleep().then(_ =>
     pinJson(`snapshot/${data.sig}`, {
       address: data.address,
@@ -102,7 +100,7 @@ async function pinData(body, id) {
   if (data.msg.type === 'proposal') data['newId'] = authorIpfsRes;
   if (data.msg.type === 'vote') data.msg.payload['proposal'] = id;
 
-  console.log(`Pinned ${id}:${data.msg.type}:${authorIpfsRes}`);
+  console.log(`Pinned ${id}`);
   return data;
 }
 
@@ -136,7 +134,7 @@ export async function migrateProposals(space: string) {
   const pinVotes = async res => {
     const { p, votes } = res;
     console.log(
-      `Pinning ${votes.length} votes from proposal ${p.newId}:${p.id}`
+      `Pinning ${votes.length} votes from proposal ${p.id}:${p.newId}`
     );
     const pins = [];
     for (let i = 0; i < votes.length; i++) {
@@ -144,6 +142,7 @@ export async function migrateProposals(space: string) {
       const v = await pinData(votes[i], p.newId);
       pins.push(v);
     }
+    console.log(`Pinned all ${votes.length} from ${p.id}:${p.newId}`);
     return pins;
   };
 
