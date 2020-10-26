@@ -14,4 +14,4 @@ export default (app, server) => {
   app.use('/api', api);
   // @ts-ignore
   app.get('/*', (req, res) => res.sendStatus(200));
-}
+};

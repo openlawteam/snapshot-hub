@@ -16,6 +16,7 @@ import {
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
+import { migrateProposals } from './helpers/migration/migrate';
 
 const network = process.env.NETWORK || 'testnet';
 
@@ -43,6 +44,13 @@ router.get('/spaces/:key?', (req, res) => {
   return res.json(key ? spaces[key] : spaces);
 });
 
+router.put('/:space/migrate', async (req, res) => {
+  const { space } = req.params;
+  console.log('GET /:space/migrate', space);
+  migrateProposals(space);
+  return res.sendStatus(201);
+});
+
 router.get('/:space/proposals', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/proposals', space);
@@ -63,7 +71,8 @@ router.get('/:space/proposals', async (req, res) => {
               },
               sig: message.sig,
               authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash
+              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+              deprecated: message.deprecated
             }
           ];
         })
@@ -92,7 +101,8 @@ router.get('/:space/proposal/:id', async (req, res) => {
               },
               sig: message.sig,
               authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash
+              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+              deprecated: message.deprecated
             }
           ];
         })

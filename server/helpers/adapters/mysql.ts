@@ -27,6 +27,17 @@ export async function storeProposal(
   ]);
 }
 
+export async function getProposals(token: string) {
+  const query =
+    "SELECT * FROM messages WHERE type = 'proposal' AND token = ? ORDER BY timestamp DESC";
+  return db.queryAsync(query, [token]);
+}
+
+export async function getProposalVotes(token: string, id: string) {
+  const query = `SELECT * FROM messages WHERE type = 'vote' AND token = ? AND JSON_EXTRACT(payload, "$.proposal") = ? ORDER BY timestamp ASC`;
+  return db.queryAsync(query, [token, id]);
+}
+
 export async function storeVote(
   space,
   token,
