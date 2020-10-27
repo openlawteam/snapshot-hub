@@ -5,7 +5,8 @@ import axios from 'axios';
 
 //TODO: load token map according to each env: dev/prod
 const tokens = {
-  thelao: '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4'
+  thelao: '0x8276d5e4133eba2043a2a9fccc55284c1243f1d4',
+  flamingo: '0x43310bd1c8f261ee7b9025662207ed95329aa193'
 };
 
 // DEV TARGET_SNAPSHOT_HUB_API: https://testnet.snapshot.page
