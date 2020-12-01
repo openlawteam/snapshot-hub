@@ -1,0 +1,57 @@
+{
+	"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+	"msg": {
+		"payload": {
+			"name": "Test New Proposal after Migration",
+			"body": "Testing a new proposal after running the migration script to move current proposals to OpenLaw infra.",
+			"choices": ["Yes", "No"],
+			"start": 1603739626,
+			"end": 1603743226,
+			"snapshot": 7438796,
+			"metadata": {
+				"private": false,
+				"type": "Governance",
+				"subType": "Governance"
+			}
+		},
+		"timestamp": "1603739626",
+		"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+		"type": "proposal",
+		"version": "0.1.2"
+	},
+	"sig": "0x8d45a5846bd23dcac5a445a06bc0129c5c3aa7cc0ed4462645c19cac360e37645696dcb7bcb348dfe22f43ce578edc8629dfcada9a5d5731ea4c3e6482df9b3d1b"
+},
+{
+	"address": "0x3098C683320703B2B0922f7a2CE67D2ee321EaA9",
+	"msg": {
+		"payload": {
+			"name": "Example Project",
+			"body": "xyz\n\nasdasd\n\nasdasd",
+			"choices": ["Yes", "No"],
+			"start": 1605099037,
+			"end": 1605131437,
+			"snapshot": 7529379,
+			"metadata": {
+				"uuid": "c51c5424-ea9d-4498-b812-af41da595827",
+				"private": false,
+				"type": "Governance",
+				"subType": "Governance"
+			},
+			"nameHash": "09c1deff0f404061c09d412e4278fb34e2aa221210560fafa54b698344aa1b84",
+			"bodyHash": "3afaa0946328d03f82ad967d77b08c639ce64d1834060d2d82112ac7a1835678",
+			"metadataHash": {
+				"type": "Buffer",
+				"data": [169, 190, 27, 34, 188, 237, 141, 234, 223, 241, 100, 40, 52, 80, 115, 27, 244, 183, 162, 176, 62, 8, 197, 239, 182, 41, 2, 222, 93, 237, 106, 247]
+			}
+		},
+		"timestamp": 1605099037,
+		"space": "myspace",
+		"type": "proposal",
+		"version": "0.1.3",
+		"chainId": 5777,
+		"verifyingContract": "0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05",
+		"versionHash": "43251e1d6aeb913700f8232e8b3bd98924bc6535146912962d45442a3bd8c84a",
+		"spaceHash": "d2e1a4108d7426eff706e6f9fdaeeeccb42c2e8ea8e235a368ba5f5d746dd8af"
+	},
+	"sig": "0xe2ac44c779e81e890df231e0cfe65a897908aa46d79ffbf60f27367d347082a76a58521cbacefa0f40eec6d663f832773f855ada7d0cced8c63648fa43fbcd211c"
+},

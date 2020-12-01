@@ -22,6 +22,7 @@ export function clone(item) {
 }
 
 export function sendError(res, description, status = 500) {
+  console.error(description);
   return res.status(status).json({
     error: 'unauthorized',
     error_description: description

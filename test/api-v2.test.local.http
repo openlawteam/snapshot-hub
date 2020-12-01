@@ -1,0 +1,35 @@
+
+# REST Client tests on http://localhost:8080/ server
+# Use docker-composer up --build to launch the test server 
+@baseUrl = http://localhost:8080
+### dev
+#@token = 0x8276d5e4133eba2043a2a9fccc55284c1243f1d4
+### prod thelao
+@token = 0x8f56682a50becb1df2fb8136954f2062871bc7fc
+@space = thelao
+### prod flamingo
+#@token = 0x43310bd1c8f261ee7b9025662207ed95329aa193
+
+### Health Check (root)
+GET {{baseUrl}}/
+
+### Health Check (api)
+GET {{baseUrl}}/api
+
+### Migration(api)
+PUT {{baseUrl}}/api/{{space}}/migrate HTTP/1.1
+
+### Create a General Proposal 1
+POST {{baseUrl}}/api/message HTTP/1.1
+Content-Type: application/json
+
+{"address":"0x3098C683320703B2B0922f7a2CE67D2ee321EaA9","msg":"{\"payload\":{\"name\":\"Example Project\",\"body\":\"xyz\\n\\nasdasd\\n\\nasdasd\",\"choices\":[\"Yes\",\"No\"],\"start\":1605099037,\"end\":1605131437,\"snapshot\":7529379,\"metadata\":{\"uuid\":\"c51c5424-ea9d-4498-b812-af41da595827\",\"private\":false,\"type\":\"Governance\",\"subType\":\"Governance\"},\"nameHash\":\"09c1deff0f404061c09d412e4278fb34e2aa221210560fafa54b698344aa1b84\",\"bodyHash\":\"3afaa0946328d03f82ad967d77b08c639ce64d1834060d2d82112ac7a1835678\",\"metadataHash\":\"a9be1b22bced8deadff164283450731bf4b7a2b03e08c5efb62902de5ded6af7\"},\"timestamp\":\"1607028555\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"myspace\",\"type\":\"proposal\",\"version\":\"0.2.0\",\"chainId\":5777,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"versionHash\":\"177d57055bb57caacc5f72e04f893f984b95e26f8749bff5b374a6d1548ea727\",\"spaceHash\":\"d2e1a4108d7426eff706e6f9fdaeeeccb42c2e8ea8e235a368ba5f5d746dd8af\"}","sig":"0x5b38712f5e64f4efdd6469bad42de6b2617daf1e7835c352aa33065ec88bad6e329caa2a6c5547ba7213921fc71e7a90b65ca9d789789489d30925e2687cae261b"}
+
+### Get All proposals based on space name
+GET {{baseUrl}}/api/{{space}}/proposals HTTP/1.1
+
+### Vote YES on General Proposal 1
+POST {{baseUrl}}/api/message HTTP/1.1
+Content-Type: application/json
+
+{"address":"0x3098C683320703B2B0922f7a2CE67D2ee321EaA9","msg":"{\"payload\":{\"choice\":1,\"proposal\":\"QmZSVGjAyQPQtsLjBmmoPqNJar2haGTM2yQJK9kfYW81PB\",\"metadata\":{\"memberAddress\":\"0xDe6ab16a4015c680daab58021815D09ddB57db8E\"},\"metadataHash\":\"d26c1dcdc2a5339c34b3d1cd67a7a20b7e7450f3f4f371d104b9337fb8ef72a2\"},\"timestamp\":\"1607029136\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"myspace\",\"type\":\"vote\",\"version\":\"0.2.0\",\"chainId\":5777,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"versionHash\":\"177d57055bb57caacc5f72e04f893f984b95e26f8749bff5b374a6d1548ea727\",\"spaceHash\":\"d2e1a4108d7426eff706e6f9fdaeeeccb42c2e8ea8e235a368ba5f5d746dd8af\"}","sig":"0x754a0afec6a59106cbe17ef305dae8aafab233c861bec5c8b85a20718aba66cd2ea7d00529b617cb8bf2c46929612277c1d93bc5044ddb2fe75a42b449b23a221c"}
