@@ -10,6 +10,7 @@ import {
   sendError,
   hashPersonalMessage
 } from './helpers/utils';
+import { verifySignatureERC712 } from './helpers/erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
@@ -170,14 +171,24 @@ router.post('/message', async (req, res) => {
   if (!msg.type || !['proposal', 'vote'].includes(msg.type))
     return sendError(res, 'wrong message type');
 
-  if (
-    !(await verifySignature(
+  let isValidSignature = false;
+  if (body.verifycontract && body.chainId) {
+    isValidSignature = verifySignatureERC712(
+      hashPersonalMessage(body.msg), //msg
+      body.address,
+      body.verifycontract,
+      body.chainId,
+      body.sig
+    );
+  } else {
+    isValidSignature = await verifySignature(
       body.address,
       body.sig,
       hashPersonalMessage(body.msg)
-    ))
-  )
-    return sendError(res, 'wrong signature');
+    );
+  }
+
+  if (!isValidSignature) return sendError(res, 'wrong signature');
 
   if (msg.type === 'proposal') {
     if (
