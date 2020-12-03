@@ -220,7 +220,8 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'vote') {
     if (
-      Object.keys(msg.payload).length !== 3 ||
+      //[choice, proposal, metadata, metadataHash]
+      Object.keys(msg.payload).length !== 4 ||
       !msg.payload.proposal ||
       !msg.payload.choice ||
       !msg.payload.metadata
