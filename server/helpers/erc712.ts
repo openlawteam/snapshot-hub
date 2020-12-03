@@ -1,4 +1,5 @@
-import sigUtil from 'eth-sig-util';
+import { keccakFromString } from 'ethereumjs-util';
+import { recoverTypedSignature_v4, TypedDataUtils } from 'eth-sig-util';
 
 //FIXME: This is a copy of ERC12 Signature Verification https://github.com/openlawteam/laoland/commits/vote-erc712
 //FIXME: once snapshot.js gets published with ERC712 validation we should replace this class with the new library.
@@ -13,19 +14,19 @@ const getProposalDomainType = (verifyingContract, chainId) => {
 
   const MessageType = {
     Message: [
-      { name: 'versionHash', type: 'bytes32' },
+      { name: 'versionHash', type: 'string' },
       { name: 'timestamp', type: 'uint256' },
-      { name: 'spaceHash', type: 'bytes32' },
+      { name: 'spaceHash', type: 'string' },
       { name: 'payload', type: 'MessagePayload' }
     ],
     MessagePayload: [
-      { name: 'nameHash', type: 'bytes32' },
-      { name: 'bodyHash', type: 'bytes32' },
+      { name: 'nameHash', type: 'string' },
+      { name: 'bodyHash', type: 'string' },
       { name: 'choices', type: 'string[]' },
       { name: 'start', type: 'uint256' },
       { name: 'end', type: 'uint256' },
       { name: 'snapshot', type: 'uint256' },
-      { name: 'metadataHash', type: 'bytes32' }
+      { name: 'metadataHash', type: 'string' }
     ]
   };
 
@@ -69,7 +70,7 @@ const getDomainType = (message, verifyingContract, chainId) => {
   }
 };
 
-export const verifySignatureERC712 = (
+export const verifySignature = (
   message,
   address,
   verifyingContract,
@@ -89,10 +90,76 @@ export const verifySignatureERC712 = (
     types: MessageType
   };
 
-  const recoverAddress = sigUtil.recoverTypedSignature_v4({
+  const recoverAddress = recoverTypedSignature_v4({
     data: msgParams,
     sig: signature
   });
 
   return address.toLowerCase() === recoverAddress.toLowerCase();
+};
+
+const hexKeccak = obj => {
+  return keccakFromString(obj).toString('hex');
+};
+
+const prepareProposalPayload = payload => {
+  return Object.assign(payload, {
+    nameHash: hexKeccak(payload.name),
+    bodyHash: hexKeccak(payload.body),
+    metadataHash: hexKeccak(JSON.stringify(payload.metadata))
+  });
+};
+
+const prepareProposalMessage = message => {
+  return Object.assign(message, {
+    versionHash: hexKeccak(message.version),
+    spaceHash: hexKeccak(message.space),
+    payload: prepareProposalPayload(message.payload)
+  });
+};
+
+const prepareVotePayload = (payload, verifyingContract, chainId) => {
+  return Object.assign(payload, {
+    metadataHash: hexKeccak(JSON.stringify(payload.metadata)),
+    proposalHash: getMessageERC712Hash(
+      payload.proposal,
+      verifyingContract,
+      chainId
+    )
+  });
+};
+
+const prepareVoteMessage = (message, verifyingContract, chainId) => {
+  return Object.assign(message, {
+    versionHash: hexKeccak(message.version),
+    spaceHash: hexKeccak(message.space),
+    payload: prepareVotePayload(message.payload, verifyingContract, chainId)
+  });
+};
+
+const prepareMessage = (message, verifyingContract, chainId) => {
+  switch (message.type) {
+    case 'vote':
+      return prepareVoteMessage(message, verifyingContract, chainId);
+    case 'proposal':
+      return prepareProposalMessage(message);
+    default:
+      throw new Error('unknown type ' + message.type);
+  }
+};
+
+export const getMessageERC712Hash = (message, verifyingContract, chainId) => {
+  const m = prepareMessage(message, verifyingContract, chainId);
+  const { DomainType, MessageType } = getDomainType(
+    m,
+    verifyingContract,
+    chainId
+  );
+  const msgParams = {
+    domain: DomainType,
+    message: m,
+    primaryType: 'Message',
+    types: MessageType
+  };
+  return '0x' + TypedDataUtils.sign(msgParams).toString('hex');
 };

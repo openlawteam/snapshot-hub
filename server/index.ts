@@ -4,13 +4,8 @@ import path from 'path';
 import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
-import {
-  verifySignature,
-  jsonParse,
-  sendError,
-  hashPersonalMessage
-} from './helpers/utils';
-import { verifySignatureERC712 } from './helpers/erc712';
+import { jsonParse, sendError } from './helpers/utils';
+import { verifySignature } from './helpers/erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
@@ -148,7 +143,10 @@ router.post('/message', async (req, res) => {
     return sendError(res, 'wrong message body');
 
   if (
-    Object.keys(msg).length !== 5 ||
+    //[payload, timestamp, token, space, type,
+    // version, chainId, verifyingContract,
+    // versionHash, spaceHash] == 10
+    Object.keys(msg).length !== 10 ||
     !msg.token ||
     !msg.payload ||
     Object.keys(msg.payload).length === 0
@@ -172,19 +170,13 @@ router.post('/message', async (req, res) => {
     return sendError(res, 'wrong message type');
 
   let isValidSignature = false;
-  if (body.verifycontract && body.chainId) {
-    isValidSignature = verifySignatureERC712(
-      hashPersonalMessage(body.msg), //msg
+  if (msg.verifyingContract && msg.chainId) {
+    isValidSignature = verifySignature(
+      msg,
       body.address,
-      body.verifycontract,
-      body.chainId,
+      msg.verifyingContract,
+      msg.chainId,
       body.sig
-    );
-  } else {
-    isValidSignature = await verifySignature(
-      body.address,
-      body.sig,
-      hashPersonalMessage(body.msg)
     );
   }
 
@@ -192,7 +184,10 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'proposal') {
     if (
-      Object.keys(msg.payload).length !== 7 ||
+      //[name, body, choices, start, end,
+      // snapshot, metadata, nameHash,
+      // bodyHash, metadataHash] == 10
+      Object.keys(msg.payload).length !== 10 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
       !msg.payload.snapshot ||

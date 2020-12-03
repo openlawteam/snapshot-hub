@@ -1,13 +1,14 @@
 {
   "name": "snapshot-hub",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": "balancer-labs/snapshot-hub",
   "license": "MIT",
   "scripts": {
     "lint": "vue-cli-service lint ./server/**/*.ts",
     "express": "vue-cli-service express:watch",
     "express:run": "vue-cli-service express:run",
-    "start": "vue-cli-service express:run"
+    "start": "vue-cli-service express:run",
+    "test": "mocha"
   },
   "dependencies": {
     "@ethersproject/abi": "^5.0.1",
@@ -34,7 +35,7 @@
     "discord.js": "^12.3.1",
     "eslint": "^6.7.2",
     "eth-sig-util": "^3.0.0",
-    "ethereumjs-util": "^7.0.6",
+    "ethereumjs-util": "^7.0.7",
     "ethers": "^5.0.17",
     "frameguard": "^3.1.0",
     "lodash": "^4.17.15",
