@@ -17,7 +17,9 @@ const getProposalDomainType = (verifyingContract, chainId) => {
       { name: 'versionHash', type: 'string' },
       { name: 'timestamp', type: 'uint256' },
       { name: 'spaceHash', type: 'string' },
-      { name: 'payload', type: 'MessagePayload' }
+      { name: 'payload', type: 'MessagePayload' },
+      { name: 'token', type: 'string' },
+      { name: 'type', type: 'string' }
     ],
     MessagePayload: [
       { name: 'nameHash', type: 'string' },
@@ -44,15 +46,17 @@ const getVoteDomainType = (verifyingContract, chainId) => {
   // The named list of all type definitions
   const MessageType = {
     Message: [
-      { name: 'versionHash', type: 'bytes32' },
+      { name: 'versionHash', type: 'string' },
       { name: 'timestamp', type: 'uint256' },
-      { name: 'spaceHash', type: 'bytes32' },
-      { name: 'payload', type: 'MessagePayload' }
+      { name: 'spaceHash', type: 'string' },
+      { name: 'payload', type: 'MessagePayload' },
+      { name: 'token', type: 'string' },
+      { name: 'type', type: 'string' }
     ],
     MessagePayload: [
       { name: 'choice', type: 'uint256' },
-      { name: 'proposalHash', type: 'bytes32' },
-      { name: 'metadataHash', type: 'bytes32' }
+      { name: 'proposal', type: 'string' },
+      { name: 'metadataHash', type: 'string' }
     ]
   };
 
@@ -118,29 +122,24 @@ const prepareProposalMessage = message => {
   });
 };
 
-const prepareVotePayload = (payload, verifyingContract, chainId) => {
+const prepareVotePayload = payload => {
   return Object.assign(payload, {
-    metadataHash: hexKeccak(JSON.stringify(payload.metadata)),
-    proposalHash: getMessageERC712Hash(
-      payload.proposal,
-      verifyingContract,
-      chainId
-    )
+    metadataHash: hexKeccak(JSON.stringify(payload.metadata))
   });
 };
 
-const prepareVoteMessage = (message, verifyingContract, chainId) => {
+const prepareVoteMessage = message => {
   return Object.assign(message, {
     versionHash: hexKeccak(message.version),
     spaceHash: hexKeccak(message.space),
-    payload: prepareVotePayload(message.payload, verifyingContract, chainId)
+    payload: prepareVotePayload(message.payload)
   });
 };
 
-const prepareMessage = (message, verifyingContract, chainId) => {
+const prepareMessage = message => {
   switch (message.type) {
     case 'vote':
-      return prepareVoteMessage(message, verifyingContract, chainId);
+      return prepareVoteMessage(message);
     case 'proposal':
       return prepareProposalMessage(message);
     default:
@@ -149,7 +148,7 @@ const prepareMessage = (message, verifyingContract, chainId) => {
 };
 
 export const getMessageERC712Hash = (message, verifyingContract, chainId) => {
-  const m = prepareMessage(message, verifyingContract, chainId);
+  const m = prepareMessage(message);
   const { DomainType, MessageType } = getDomainType(
     m,
     verifyingContract,
