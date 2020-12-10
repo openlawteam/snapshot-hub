@@ -21,8 +21,8 @@ export function clone(item) {
   return JSON.parse(JSON.stringify(item));
 }
 
-export function sendError(res, description) {
-  return res.status(500).json({
+export function sendError(res, description, status = 500) {
+  return res.status(status).json({
     error: 'unauthorized',
     error_description: description
   });
@@ -45,22 +45,27 @@ export async function verifySignature(
   hash: string
   // chainId: number
 ): Promise<boolean> {
-  const rpcUrl =
-    'https://eth-mainnet.alchemyapi.io/v2/4bdDVB5QAaorY2UE-GBUbM2yQB3QJqzv';
-  const provider = new providers.JsonRpcProvider(rpcUrl);
-  const bytecode = await provider.getCode(address);
-  if (
-    !bytecode ||
-    bytecode === '0x' ||
-    bytecode === '0x0' ||
-    bytecode === '0x00'
-  ) {
-    const signer = recoverPublicKey(sig, hash);
-    return signer.toLowerCase() === address.toLowerCase();
-  } else {
-    console.log('Smart contract signature');
-    return isValidSignature(address, sig, hash, provider);
-  }
+  const provider = new providers.JsonRpcProvider(process.env.ALCHEMY_API_URL);
+  return provider
+    .getCode(address)
+    .then(bytecode => {
+      if (
+        !bytecode ||
+        bytecode === '0x' ||
+        bytecode === '0x0' ||
+        bytecode === '0x00'
+      ) {
+        const signer = recoverPublicKey(sig, hash);
+        return signer.toLowerCase() === address.toLowerCase();
+      } else {
+        console.log('Smart contract signature');
+        return isValidSignature(address, sig, hash, provider);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      return false;
+    });
 }
 
 export function encodePersonalMessage(msg: string): string {

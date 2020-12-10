@@ -177,7 +177,7 @@ router.post('/message', async (req, res) => {
       hashPersonalMessage(body.msg)
     ))
   )
-    return sendError(res, 'wrong signature');
+    return sendError(res, 'wrong signature', 400);
 
   if (msg.type === 'proposal') {
     if (
