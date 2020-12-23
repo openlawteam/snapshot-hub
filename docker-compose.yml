@@ -10,14 +10,14 @@ services:
     environment:
       PORT: 8080
       DEV: "true"
-      ALLOWED_DOMAINS: "http://localhost"
+      ALLOWED_DOMAINS: "http://localhost:8081,http://localhost:8080"
       JAWSDB_URL: postgres://admin:admin@snapshot-postgres:5432/snapshot-db
       TARGET_SNAPSHOT_HUB_API: https://hub.snapshot.page # https://testnet.snapshot.page
       ALCHEMY_API_URL: https://eth-rinkeby.alchemyapi.io/v2/cdrXBHcsaHGES6pIAEvZiQEhOesgNgEg
     depends_on:
       - snapshot-postgres
     ports:
-      - 8080:8080
+      - 8081:8080
 
   # Snapshot Postgres instance
   snapshot-postgres:

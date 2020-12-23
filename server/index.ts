@@ -5,7 +5,7 @@ import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
 import { jsonParse, sendError } from './helpers/utils';
-import { verifySignature } from './helpers/erc712';
+import verifySignature from './helpers/erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
@@ -15,7 +15,8 @@ import {
   storeProposal,
   storeVote,
   getProposals,
-  getProposalsBy,
+  getProposalsById,
+  getProposalsByAction,
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
@@ -102,6 +103,36 @@ router.get('/:space/proposals', async (req, res) => {
   });
 });
 
+router.get('/:space/proposals/:actionId', async (req, res) => {
+  const { space, actionId } = req.params;
+  console.log('GET /:space/proposals/:actionId', space, actionId);
+  getProposalsByAction(space, actionId).then(messages => {
+    res.json(
+      Object.fromEntries(
+        messages.map(message => {
+          return [
+            message.id,
+            {
+              address: message.address,
+              msg: {
+                version: message.version,
+                timestamp: message.timestamp.toString(),
+                token: message.token,
+                type: message.type,
+                payload: message.payload
+              },
+              sig: message.sig,
+              authorIpfsHash: message.id,
+              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+              deprecated: message.deprecated
+            }
+          ];
+        })
+      )
+    );
+  });
+});
+
 router.get('/:space/proposal/:id', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/proposal/:id', space, id);
@@ -142,10 +173,11 @@ router.post('/message', async (req, res) => {
   if (!body || !body.address || !body.msg || !body.sig)
     return sendError(res, 'wrong message body');
 
+  console.log(msg);
+
   if (
     //[payload, timestamp, token, space, type,
-    // version, chainId, verifyingContract,
-    // versionHash, spaceHash] == 10
+    // actionId, version, chainId, verifyingContract, spaceHash] == 10
     Object.keys(msg).length !== 10 ||
     !msg.token ||
     !msg.payload ||
@@ -175,6 +207,7 @@ router.post('/message', async (req, res) => {
       msg,
       body.address,
       msg.verifyingContract,
+      msg.actionId,
       msg.chainId,
       body.sig
     );
@@ -185,9 +218,8 @@ router.post('/message', async (req, res) => {
   if (msg.type === 'proposal') {
     if (
       //[name, body, choices, start, end,
-      // snapshot, metadata, nameHash,
-      // bodyHash, metadataHash] == 10
-      Object.keys(msg.payload).length !== 10 ||
+      // snapshot, metadata, nameHash, bodyHash] == 9
+      Object.keys(msg.payload).length !== 9 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
       !msg.payload.snapshot ||
@@ -220,9 +252,9 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'vote') {
     if (
-      //[choice, proposal, metadata, metadataHash]
-      Object.keys(msg.payload).length !== 4 ||
-      !msg.payload.proposal ||
+      //[choice, proposal, proposalHash]
+      Object.keys(msg.payload).length !== 3 ||
+      !msg.payload.proposalIpfsHash ||
       !msg.payload.choice ||
       !msg.payload.metadata
     )
@@ -234,7 +266,10 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const proposals = await getProposalsBy(space, msg.payload.proposal);
+    const proposals = await getProposalsById(
+      space,
+      msg.payload.proposalIpfsHash
+    );
     if (!proposals || proposals.length == 0)
       return sendError(res, 'unknown proposal');
 

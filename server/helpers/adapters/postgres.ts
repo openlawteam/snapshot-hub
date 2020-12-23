@@ -123,7 +123,15 @@ export async function getProposals(space: string) {
   return result.rows;
 }
 
-export async function getProposalsBy(space: string, id: string) {
+export async function getProposalsByAction(space: string, actionId: string) {
+  const query =
+    "SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND payload ->> 'actionId' = $2 ORDER BY timestamp DESC";
+  const result = await db.query(query, [space, actionId]);
+  console.log(result.rows.length);
+  return result.rows;
+}
+
+export async function getProposalsById(space: string, id: string) {
   const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = 'proposal'`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
