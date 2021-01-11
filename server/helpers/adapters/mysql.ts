@@ -5,7 +5,8 @@ export async function storeProposal(
   token,
   body,
   authorIpfsHash,
-  relayerIpfsHash
+  relayerIpfsHash,
+  actionId
 ) {
   const msg = JSON.parse(body.msg);
   const query = 'INSERT IGNORE INTO messages SET ?;';
@@ -20,6 +21,7 @@ export async function storeProposal(
       type: 'proposal',
       payload: JSON.stringify(msg.payload),
       sig: body.sig,
+      actionId: actionId,
       metadata: JSON.stringify({
         relayer_ipfs_hash: relayerIpfsHash
       })
@@ -43,7 +45,8 @@ export async function storeVote(
   token,
   body,
   authorIpfsHash,
-  relayerIpfsHash
+  relayerIpfsHash,
+  actionId
 ) {
   const msg = JSON.parse(body.msg);
   const query = 'INSERT IGNORE INTO messages SET ?;';
@@ -58,6 +61,7 @@ export async function storeVote(
       type: 'vote',
       payload: JSON.stringify(msg.payload),
       sig: body.sig,
+      actionId: actionId,
       metadata: JSON.stringify({
         relayer_ipfs_hash: relayerIpfsHash
       })

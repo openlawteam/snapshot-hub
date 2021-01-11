@@ -24,8 +24,6 @@ import pkg from '../package.json';
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
  * to trigger the migration process via a PUT call. The migration happens async and gets logged to the server logs.
  */
-import { migrateProposals } from './helpers/migration/migrate';
-
 const network = process.env.NETWORK || 'testnet';
 
 /**
@@ -64,13 +62,6 @@ router.get('/spaces/:key?', (req, res) => {
   const { key } = req.params;
   console.log('GET /spaces/:key', key);
   return res.json(key ? spaces[key] : spaces);
-});
-
-router.put('/:space/migrate', async (req, res) => {
-  const { space } = req.params;
-  console.log('GET /:space/migrate', space);
-  migrateProposals(space);
-  return res.sendStatus(201);
 });
 
 router.get('/:space/proposals', async (req, res) => {
@@ -133,9 +124,9 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
   });
 });
 
-router.get('/:space/proposal/:id', async (req, res) => {
+router.get('/:space/proposal/:id/votes', async (req, res) => {
   const { space, id } = req.params;
-  console.log('GET /:space/proposal/:id', space, id);
+  console.log('GET /:space/proposal/:id/votes', space, id);
   getProposalVotes(space, id).then(messages => {
     res.json(
       Object.fromEntries(
@@ -294,7 +285,14 @@ router.post('/message', async (req, res) => {
   });
 
   if (msg.type === 'proposal') {
-    await storeProposal(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
+    await storeProposal(
+      space,
+      msg.token,
+      body,
+      authorIpfsRes,
+      relayerIpfsRes,
+      msg.actionId
+    );
 
     /**
      * OpenLaw does not use discord for notifications, so the dependency was disabled for now
@@ -308,14 +306,22 @@ router.post('/message', async (req, res) => {
   }
 
   if (msg.type === 'vote') {
-    await storeVote(space, msg.token, body, authorIpfsRes, relayerIpfsRes);
+    await storeVote(
+      space,
+      msg.token,
+      body,
+      authorIpfsRes,
+      relayerIpfsRes,
+      msg.actionId
+    );
   }
 
   console.log(
     `Address "${body.address}"\n`,
     `Token "${msg.token}"\n`,
     `Type "${msg.type}"\n`,
-    `IPFS hash "${authorIpfsRes}"`
+    `IPFS hash "${authorIpfsRes}",\n`,
+    `ActionId: ${msg.actionId}`
   );
 
   return res.json({ ipfsHash: authorIpfsRes });

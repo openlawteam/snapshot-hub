@@ -8,6 +8,7 @@ function format(
   token: string,
   messageType: string,
   relayerIpfsHash: any,
+  actionId: string,
   deprecated: any
 ) {
   return [
@@ -23,6 +24,7 @@ function format(
     JSON.stringify({
       relayer_ipfs_hash: relayerIpfsHash
     }),
+    actionId,
     JSON.stringify(deprecated)
   ];
 }
@@ -30,8 +32,8 @@ function format(
 async function insert(params: Array<object>) {
   if (params.length < 10) throw Error('Invalid parameters');
   const cmd =
-    'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata, deprecated) VALUES ' +
-    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
+    'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata, "actionId", deprecated) VALUES ' +
+    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
   return await db.query(cmd, params);
 }
 
@@ -47,6 +49,7 @@ export async function storeProposals(space, proposals) {
           p.msg.token,
           p.msg.type,
           p.relayerIpfsHash,
+          p.msg.actionId,
           p.deprecated
         )
       )
@@ -66,6 +69,7 @@ export async function storeVotes(space, votes) {
           v.msg.token,
           'vote',
           v.relayerIpfsHash,
+          v.msg.actionId,
           v.deprecated
         )
       )
@@ -78,7 +82,8 @@ export async function storeProposal(
   token,
   body,
   authorIpfsHash,
-  relayerIpfsHash
+  relayerIpfsHash,
+  actionId
 ) {
   return await insert(
     format(
@@ -89,6 +94,7 @@ export async function storeProposal(
       token,
       'proposal',
       relayerIpfsHash,
+      actionId,
       {}
     )
   );
@@ -99,7 +105,8 @@ export async function storeVote(
   token,
   body,
   authorIpfsHash,
-  relayerIpfsHash
+  relayerIpfsHash,
+  actionId
 ) {
   return await insert(
     format(
@@ -110,22 +117,21 @@ export async function storeVote(
       token,
       'vote',
       relayerIpfsHash,
+      actionId,
       {}
     )
   );
 }
 
 export async function getProposals(space: string) {
-  const query =
-    "SELECT * FROM messages WHERE type = 'proposal' AND space = $1 ORDER BY timestamp DESC";
+  const query = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 ORDER BY timestamp DESC`;
   const result = await db.query(query, [space]);
   console.log(result.rows.length);
   return result.rows;
 }
 
 export async function getProposalsByAction(space: string, actionId: string) {
-  const query =
-    "SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND payload ->> 'actionId' = $2 ORDER BY timestamp DESC";
+  const query = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
   const result = await db.query(query, [space, actionId]);
   console.log(result.rows.length);
   return result.rows;
@@ -139,7 +145,7 @@ export async function getProposalsById(space: string, id: string) {
 }
 
 export async function getProposalVotes(space: string, id: string) {
-  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposal' = $2 ORDER BY timestamp ASC`;
+  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalIpfsHash' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;
