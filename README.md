@@ -23,13 +23,19 @@ Content-Type: application/json
 ```
 
 ```json
-TODO
+{
+  "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+  "msg": "{\"payload\":{\"name\":\"Asd\",\"body\":\"asd\",\"choices\":[\"Yes\",\"No\"],\"metadata\":{\"private\":1,\"type\":\"governance\",\"subType\":\"governance\"},\"nameHash\":\"0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad\",\"bodyHash\":\"0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d\"},\"timestamp\":\"1610476321\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"draft\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x4b06809c3104de1eaf356c04efd4fa3b56d67554fcf451d978fc02826c2d43ce\"}",
+  "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c"
+}
 ```
 
 Response
 
 ```json
-TODO
+{
+  "ipfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA"
+}
 ```
 
 #### Create Proposal
@@ -106,33 +112,33 @@ GET {{baseUrl}}/api/:space/drafts HTTP/1.1
 
 Response
 
-```
+```json
 {
-	"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610473885",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "draft",
-			"payload": {
-				"name": "Test",
-				"body": "Test",
-				"choices": ["Yes", "No"],
-				"metadata": {
-					"private": 0,
-					"type": "general",
-					"subType": "general"
-				},
-				"nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-				"bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
-			}
-		},
-		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-		"authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-		"relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	}
+  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610476321",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "draft",
+      "payload": {
+        "name": "Asd",
+        "body": "asd",
+        "choices": ["Yes", "No"],
+        "metadata": {
+          "private": 1,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
+        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
+      }
+    },
+    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
+    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
+    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
 }
 ```
 
@@ -146,33 +152,33 @@ GET {{baseUrl}}/api/:space/drafts/:actionId HTTP/1.1
 
 Response
 
-```
+```json
 {
-	"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610473885",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "draft",
-			"payload": {
-				"name": "Test",
-				"body": "Test",
-				"choices": ["Yes", "No"],
-				"metadata": {
-					"private": 0,
-					"type": "general",
-					"subType": "general"
-				},
-				"nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-				"bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
-			}
-		},
-		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-		"authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-		"relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	}
+  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610476321",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "draft",
+      "payload": {
+        "name": "Asd",
+        "body": "asd",
+        "choices": ["Yes", "No"],
+        "metadata": {
+          "private": 1,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
+        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
+      }
+    },
+    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
+    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
+    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
 }
 ```
 
@@ -188,29 +194,29 @@ Response
 
 ```json
 {
-  "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
+  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
       "version": "0.2.0",
-      "timestamp": "1610473885",
+      "timestamp": "1610476321",
       "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
       "type": "draft",
       "payload": {
-        "name": "Test",
-        "body": "Test",
+        "name": "Asd",
+        "body": "asd",
         "choices": ["Yes", "No"],
         "metadata": {
-          "private": 0,
-          "type": "general",
-          "subType": "general"
+          "private": 1,
+          "type": "governance",
+          "subType": "governance"
         },
-        "nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-        "bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
+        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
+        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
       }
     },
-    "sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-    "authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-    "relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
+    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
+    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
+    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
 }

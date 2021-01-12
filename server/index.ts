@@ -162,7 +162,12 @@ router.post('/message', async (req, res) => {
   if (!msg.version || msg.version !== pkg.version)
     return sendError(res, 'wrong version');
 
-  if (!msg.type || !['proposal', 'vote'].includes(msg.type))
+  if (
+    !msg.type ||
+    !Object.keys(msgTypes)
+      .map(k => msgTypes[k])
+      .includes(msg.type)
+  )
     return sendError(res, 'wrong message type');
 
   let isValidSignature = false;
@@ -185,7 +190,6 @@ router.post('/message', async (req, res) => {
       Object.keys(msg.payload).length !== 6 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
-      !msg.payload.snapshot ||
       !msg.payload.metadata
     )
       return sendError(res, 'wrong draft format');
