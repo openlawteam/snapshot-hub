@@ -206,10 +206,35 @@ router.post('/message', async (req, res) => {
 
   if (!isValidSignature) return sendError(res, 'wrong signature', 400);
 
+  if (msg.type === 'draft') {
+    if (
+      //[name, body, choices, metadata, nameHash, bodyHash] == 6
+      Object.keys(msg.payload).length !== 6 ||
+      !msg.payload.choices ||
+      msg.payload.choices.length < 2 ||
+      !msg.payload.snapshot ||
+      !msg.payload.metadata
+    )
+      return sendError(res, 'wrong draft format');
+
+    if (
+      !msg.payload.name ||
+      msg.payload.name.length > 256 ||
+      !msg.payload.body ||
+      msg.payload.body.length > 4e4
+    )
+      return sendError(res, 'wrong draft size');
+
+    if (
+      typeof msg.payload.metadata !== 'object' ||
+      JSON.stringify(msg.payload.metadata).length > 2e4
+    )
+      return sendError(res, 'wrong draft metadata');
+  }
+
   if (msg.type === 'proposal') {
     if (
-      //[name, body, choices, start, end,
-      // snapshot, metadata, nameHash, bodyHash] == 9
+      //[name, body, choices, start, end, snapshot, metadata, name, body] == 9
       Object.keys(msg.payload).length !== 9 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
