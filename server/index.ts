@@ -12,6 +12,7 @@ import verifySignature from './helpers/erc712';
  * is a bit different for each database.
  */
 import {
+  storeDraft,
   storeProposal,
   storeVote,
   getMessages,
@@ -236,6 +237,8 @@ router.post('/message', async (req, res) => {
       msg.payload.start >= msg.payload.end
     )
       return sendError(res, 'wrong proposal period');
+
+    //TODO: find all drafts linked to this proposal and invalidate them?
   }
 
   if (msg.type === 'vote') {
@@ -254,9 +257,10 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const proposals = await getProposalsById(
+    const proposals = await getMessagesById(
       space,
-      msg.payload.proposalIpfsHash
+      msg.payload.proposalIpfsHash,
+      msgTypes.PROPOSAL
     );
     if (!proposals || proposals.length == 0)
       return sendError(res, 'unknown proposal');
@@ -280,6 +284,27 @@ router.post('/message', async (req, res) => {
     sig: relayerSig,
     version: '2'
   });
+
+  if (msg.type === 'draft') {
+    await storeDraft(
+      space,
+      msg.token,
+      body,
+      authorIpfsRes,
+      relayerIpfsRes,
+      msg.actionId
+    );
+
+    /**
+     * OpenLaw does not use discord for notifications, so the dependency was disabled for now
+     * and the message is just printed out to the server log.
+     * Later the discord notification can be enabled again if needed.
+     */
+    let message = `${space} (${network})\n`;
+    message += `**${msg.payload.name}**\n`;
+    message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
+    console.log(`New draft: ${message}`);
+  }
 
   if (msg.type === 'proposal') {
     await storeProposal(

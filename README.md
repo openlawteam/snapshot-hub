@@ -24,8 +24,8 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"name\":\"My first proposal\",\"body\":\"The proposal description is written here\",\"choices\":[\"Yes\",\"No\"],\"start\":\"1610383585\",\"end\":\"1610387185\",\"snapshot\":1,\"metadata\":{\"private\":1,\"type\":\"general\",\"subType\":\"general\"},\"nameHash\":\"0x5fb543f8b091ff403d63b09fe3e07ac3bbea966e8f27f68a97c613897dcaff8b\",\"bodyHash\":\"0xee5b1ff80a6c5f67203a2b5ee76add9fb87ad2cf35d88b7ea6284ab1f99812eb\"},\"timestamp\":\"1610383585\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"test-space\",\"type\":\"proposal\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x43728127e62962888e5037562ea09ff02e1533a40a9d70b2d8069e5df847306b\"}",
-  "sig": "0x2198b3daa91060e50c799e1c85edfd9934e6616a8c6043de8c442bae91ef87653d8f95b293513dca850d895ca2c802a86a956f7efa7185f6751fff74e8a0ad0a1b"
+  "msg": "{\"payload\":{\"name\":\"Test\",\"body\":\"Test\",\"choices\":[\"Yes\",\"No\"],\"start\":\"1610473245\",\"end\":\"1610476845\",\"snapshot\":1,\"metadata\":{\"private\":0,\"type\":\"governance\",\"subType\":\"governance\"},\"nameHash\":\"0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12\",\"bodyHash\":\"0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12\"},\"timestamp\":\"1610473245\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"proposal\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x4b06809c3104de1eaf356c04efd4fa3b56d67554fcf451d978fc02826c2d43ce\"}",
+  "sig": "0x1eeed4339765643d53fd03a356fcc7d571e593d5ad29d99028e7d3b39bbd3944078b0c1f02cea8aa95c4a0c57b916eec10b61f913242515810f98db6d61a347c1b"
 }
 ```
 
@@ -33,7 +33,7 @@ Response
 
 ```json
 {
-  "ipfsHash": "QmVKAT3WmVtMWZmc4ag6PyG3X44D9vAgWE8LTeg54oJG8z"
+  "ipfsHash": "QmPki7TQRz74en9hpkLMNwpvkdjxxKSWciXEiMs5seFodN"
 }
 ```
 

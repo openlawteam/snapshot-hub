@@ -37,6 +37,26 @@ async function insert(params: Array<object>) {
   return await db.query(cmd, params);
 }
 
+export async function storeDrafts(space, drafts) {
+  return await Promise.all(
+    drafts.map(d =>
+      insert(
+        format(
+          d.authorIpfsHash,
+          d,
+          d.msg,
+          space,
+          d.msg.token,
+          d.msg.type,
+          d.relayerIpfsHash,
+          d.msg.actionId,
+          d.deprecated
+        )
+      )
+    )
+  );
+}
+
 export async function storeProposals(space, proposals) {
   return await Promise.all(
     proposals.map(p =>
@@ -73,6 +93,29 @@ export async function storeVotes(space, votes) {
           v.deprecated
         )
       )
+    )
+  );
+}
+
+export async function storeDraft(
+  space,
+  token,
+  body,
+  authorIpfsHash,
+  relayerIpfsHash,
+  actionId
+) {
+  return await insert(
+    format(
+      authorIpfsHash,
+      body,
+      JSON.parse(body.msg),
+      space,
+      token,
+      'draft',
+      relayerIpfsHash,
+      actionId,
+      {}
     )
   );
 }
@@ -124,7 +167,7 @@ export async function storeVote(
 }
 
 export async function getMessages(space: string, msgType: string) {
-  const query = `SELECT * FROM messages WHERE type = '$1' AND space = $2 ORDER BY timestamp DESC`;
+  const query = `SELECT * FROM messages WHERE type = $1 AND space = $2 ORDER BY timestamp DESC`;
   const result = await db.query(query, [msgType, space]);
   console.log(result.rows.length);
   return result.rows;
@@ -135,7 +178,7 @@ export async function getMessagesByAction(
   actionId: string,
   msgType: string
 ) {
-  const query = `SELECT * FROM messages WHERE type = '$1' AND space = $2 AND "actionId" = $3 ORDER BY timestamp DESC`;
+  const query = `SELECT * FROM messages WHERE type = $1 AND space = $2 AND "actionId" = $3 ORDER BY timestamp DESC`;
   const result = await db.query(query, [msgType, space, actionId]);
   console.log(result.rows.length);
   return result.rows;
@@ -146,7 +189,7 @@ export async function getMessagesById(
   id: string,
   msgType: string
 ) {
-  const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = '$3'`;
+  const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = $3`;
   const result = await db.query(query, [space, id, msgType]);
   console.log(result.rows.length);
   return result.rows;
