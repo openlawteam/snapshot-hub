@@ -104,7 +104,8 @@ export const toMessageJson = (messages: any): any =>
           },
           sig: message.sig,
           authorIpfsHash: message.id,
-          relayerIpfsHash: message.metadata.relayer_ipfs_hash
+          relayerIpfsHash: message.metadata.relayer_ipfs_hash,
+          actionId: message.actionId
         }
       ];
     })
