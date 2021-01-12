@@ -31,7 +31,7 @@ const getVoteDomainDefinition = (verifyingContract, actionId, chainId) => {
       { name: 'timestamp', type: 'uint256' },
       { name: 'token', type: 'string' },
       { name: 'type', type: 'string' },
-      { name: 'spaceHash', type: 'bytes32' },
+      { name: 'space', type: 'string' },
       { name: 'payload', type: 'MessagePayload' }
     ],
     MessagePayload: [
@@ -50,12 +50,12 @@ const getProposalDomainDefinition = (verifyingContract, actionId, chainId) => {
   const types = {
     Message: [
       { name: 'timestamp', type: 'uint256' },
-      { name: 'spaceHash', type: 'bytes32' },
+      { name: 'space', type: 'string' },
       { name: 'payload', type: 'MessagePayload' }
     ],
     MessagePayload: [
-      { name: 'nameHash', type: 'bytes32' },
-      { name: 'bodyHash', type: 'bytes32' },
+      { name: 'name', type: 'string' },
+      { name: 'body', type: 'string' },
       { name: 'choices', type: 'string[]' },
       { name: 'start', type: 'uint256' },
       { name: 'end', type: 'uint256' },
@@ -67,8 +67,30 @@ const getProposalDomainDefinition = (verifyingContract, actionId, chainId) => {
   return { domain, types };
 };
 
+const getDraftDomainDefinition = (verifyingContract, actionId, chainId) => {
+  const domain = getMessageDomainType(chainId, verifyingContract, actionId);
+
+  const types = {
+    Message: [
+      { name: 'timestamp', type: 'uint256' },
+      { name: 'space', type: 'string' },
+      { name: 'payload', type: 'MessagePayload' }
+    ],
+    MessagePayload: [
+      { name: 'name', type: 'string' },
+      { name: 'body', type: 'string' },
+      { name: 'choices', type: 'string[]' }
+    ],
+    EIP712Domain: getDomainType()
+  };
+
+  return { domain, types };
+};
+
 const getDomainDefinition = (message, verifyingContract, actionId, chainId) => {
   switch (message.type) {
+    case 'draft':
+      return getDraftDomainDefinition(verifyingContract, actionId, chainId);
     case 'vote':
       return getVoteDomainDefinition(verifyingContract, actionId, chainId);
     case 'proposal':
