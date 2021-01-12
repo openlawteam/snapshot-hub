@@ -123,23 +123,31 @@ export async function storeVote(
   );
 }
 
-export async function getProposals(space: string) {
-  const query = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 ORDER BY timestamp DESC`;
-  const result = await db.query(query, [space]);
+export async function getMessages(space: string, msgType: string) {
+  const query = `SELECT * FROM messages WHERE type = '$1' AND space = $2 ORDER BY timestamp DESC`;
+  const result = await db.query(query, [msgType, space]);
   console.log(result.rows.length);
   return result.rows;
 }
 
-export async function getProposalsByAction(space: string, actionId: string) {
-  const query = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
-  const result = await db.query(query, [space, actionId]);
+export async function getMessagesByAction(
+  space: string,
+  actionId: string,
+  msgType: string
+) {
+  const query = `SELECT * FROM messages WHERE type = '$1' AND space = $2 AND "actionId" = $3 ORDER BY timestamp DESC`;
+  const result = await db.query(query, [msgType, space, actionId]);
   console.log(result.rows.length);
   return result.rows;
 }
 
-export async function getProposalsById(space: string, id: string) {
-  const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = 'proposal'`;
-  const result = await db.query(query, [space, id]);
+export async function getMessagesById(
+  space: string,
+  id: string,
+  msgType: string
+) {
+  const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = '$3'`;
+  const result = await db.query(query, [space, id, msgType]);
   console.log(result.rows.length);
   return result.rows;
 }

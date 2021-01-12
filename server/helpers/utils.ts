@@ -87,3 +87,25 @@ export function hashPersonalMessage(msg: string): string {
   const hash = ethUtil.keccak256(buf);
   return ethUtil.bufferToHex(hash);
 }
+
+export const toMessageJson = (messages: any): any =>
+  Object.fromEntries(
+    messages.map(message => {
+      return [
+        message.type === 'vote' ? message.address : message.id,
+        {
+          address: message.address,
+          msg: {
+            version: message.version,
+            timestamp: message.timestamp.toString(),
+            token: message.token,
+            type: message.type,
+            payload: message.payload
+          },
+          sig: message.sig,
+          authorIpfsHash: message.id,
+          relayerIpfsHash: message.metadata.relayer_ipfs_hash
+        }
+      ];
+    })
+  );

@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
-import { jsonParse, sendError } from './helpers/utils';
+import { jsonParse, sendError, toMessageJson } from './helpers/utils';
 import verifySignature from './helpers/erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
@@ -14,9 +14,9 @@ import verifySignature from './helpers/erc712';
 import {
   storeProposal,
   storeVote,
-  getProposals,
-  getProposalsById,
-  getProposalsByAction,
+  getMessages,
+  getMessagesById,
+  getMessagesByAction,
   getProposalVotes
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
@@ -47,6 +47,12 @@ console.log(`Spaces: ${JSON.stringify(tokens)}`);
 
 const router = express.Router();
 
+const msgTypes = {
+  DRAFT: 'draft',
+  PROPOSAL: 'proposal',
+  VOTE: 'vote'
+};
+
 router.get('/', (req, res) => {
   console.log('GET /api');
   return res.json({
@@ -64,94 +70,60 @@ router.get('/spaces/:key?', (req, res) => {
   return res.json(key ? spaces[key] : spaces);
 });
 
+router.get('/:space/drafts', async (req, res) => {
+  const { space } = req.params;
+  console.log('GET /:space/drafts', space);
+  getMessages(space, msgTypes.DRAFT)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
+});
+
+router.get('/:space/drafts/:actionId', async (req, res) => {
+  const { space, actionId } = req.params;
+  console.log('GET /:space/drafts/:actionId', space, actionId);
+  getMessagesByAction(space, actionId, msgTypes.DRAFT)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
+});
+
+router.get('/:space/draft/:id', async (req, res) => {
+  const { space, id } = req.params;
+  console.log('GET /:space/drafts/:id', space, id);
+  getMessagesById(space, id, msgTypes.DRAFT)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
+});
+
 router.get('/:space/proposals', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/proposals', space);
-  getProposals(space).then(messages => {
-    res.json(
-      Object.fromEntries(
-        messages.map(message => {
-          return [
-            message.id,
-            {
-              address: message.address,
-              msg: {
-                version: message.version,
-                timestamp: message.timestamp.toString(),
-                token: message.token,
-                type: message.type,
-                payload: message.payload
-              },
-              sig: message.sig,
-              authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
-              deprecated: message.deprecated
-            }
-          ];
-        })
-      )
-    );
-  });
+  getMessages(space, msgTypes.PROPOSAL)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
 });
 
 router.get('/:space/proposals/:actionId', async (req, res) => {
   const { space, actionId } = req.params;
   console.log('GET /:space/proposals/:actionId', space, actionId);
-  getProposalsByAction(space, actionId).then(messages => {
-    res.json(
-      Object.fromEntries(
-        messages.map(message => {
-          return [
-            message.id,
-            {
-              address: message.address,
-              msg: {
-                version: message.version,
-                timestamp: message.timestamp.toString(),
-                token: message.token,
-                type: message.type,
-                payload: message.payload
-              },
-              sig: message.sig,
-              authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
-              deprecated: message.deprecated
-            }
-          ];
-        })
-      )
-    );
-  });
+  getMessagesByAction(space, actionId, msgTypes.PROPOSAL)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
+});
+
+router.get('/:space/proposal/:id', async (req, res) => {
+  const { space, id } = req.params;
+  console.log('GET /:space/proposal/:id', space, id);
+  getMessagesById(space, id, msgTypes.PROPOSAL)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
 });
 
 router.get('/:space/proposal/:id/votes', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/proposal/:id/votes', space, id);
-  getProposalVotes(space, id).then(messages => {
-    res.json(
-      Object.fromEntries(
-        messages.map(message => {
-          return [
-            message.address,
-            {
-              address: message.address,
-              msg: {
-                version: message.version,
-                timestamp: message.timestamp.toString(),
-                token: message.token,
-                type: message.type,
-                payload: message.payload
-              },
-              sig: message.sig,
-              authorIpfsHash: message.id,
-              relayerIpfsHash: message.metadata.relayer_ipfs_hash,
-              deprecated: message.deprecated
-            }
-          ];
-        })
-      )
-    );
-  });
+  getProposalVotes(space, id)
+    .then(toMessageJson)
+    .then(obj => res.json(obj));
 });
 
 router.post('/message', async (req, res) => {
