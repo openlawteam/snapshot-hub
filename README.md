@@ -11,8 +11,8 @@
 Required Attributes
 
 - **body**: `address`, `msg`, `sig`
-- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`, `spaceHash`
-- **payload**: `name`, `body`, `choices`, `metadata`, `nameHash`, `bodyHash`
+- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`
+- **payload**: `name`, `body`, `choices`, `metadata`
 - **type**: must be `draft`
 
 Request
@@ -25,7 +25,7 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"name\":\"Asd\",\"body\":\"asd\",\"choices\":[\"Yes\",\"No\"],\"metadata\":{\"private\":1,\"type\":\"governance\",\"subType\":\"governance\"},\"nameHash\":\"0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad\",\"bodyHash\":\"0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d\"},\"timestamp\":\"1610476321\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"draft\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x4b06809c3104de1eaf356c04efd4fa3b56d67554fcf451d978fc02826c2d43ce\"}",
+  "msg": "{\"payload\":{\"name\":\"Asd\",\"body\":\"asd\",\"choices\":[\"Yes\",\"No\"],\"metadata\":{\"private\":1,\"type\":\"governance\",\"subType\":\"governance\"},},\"timestamp\":\"1610476321\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"draft\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
   "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c"
 }
 ```
@@ -43,8 +43,8 @@ Response
 Required Attributes
 
 - **body**: `address`, `msg`, `sig`
-- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`, `spaceHash`
-- **payload**: `name`, `body`, `choices`, `start`, `end`, `snapshot`, `metadata`, `nameHash`, `bodyHash`
+- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`
+- **payload**: `name`, `body`, `choices`, `start`, `end`, `snapshot`, `metadata`
 - **type**: must be `proposal`
 
 Request
@@ -57,7 +57,7 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"name\":\"Test\",\"body\":\"Test\",\"choices\":[\"Yes\",\"No\"],\"start\":\"1610473885\",\"end\":\"1610477485\",\"snapshot\":1,\"metadata\":{\"private\":0,\"type\":\"general\",\"subType\":\"general\"},\"nameHash\":\"0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12\",\"bodyHash\":\"0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12\"},\"timestamp\":\"1610473885\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"proposal\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x4b06809c3104de1eaf356c04efd4fa3b56d67554fcf451d978fc02826c2d43ce\"}",
+  "msg": "{\"payload\":{\"name\":\"Test\",\"body\":\"Test\",\"choices\":[\"Yes\",\"No\"],\"start\":\"1610473885\",\"end\":\"1610477485\",\"snapshot\":1,\"metadata\":{\"private\":0,\"type\":\"general\",\"subType\":\"general\"},},\"timestamp\":\"1610473885\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"proposal\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
   "sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c"
 }
 ```
@@ -75,7 +75,7 @@ Response
 Required Attributes
 
 - **body**: `address`, `msg`, `sig`
-- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`, `spaceHash`
+- **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`
 - **payload**: `choice`, `proposalIpfsHash`, `metadata`
 - **type**: must be `vote`
 
@@ -89,7 +89,7 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"choice\":\"no\",\"proposalIpfsHash\":\"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH\",\"metadata\":{\"memberAddress\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\"}},\"timestamp\":\"1610473893\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"vote\",\"version\":\"0.2.0\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"spaceHash\":\"0x4b06809c3104de1eaf356c04efd4fa3b56d67554fcf451d978fc02826c2d43ce\"}",
+  "msg": "{\"payload\":{\"choice\":\"no\",\"proposalIpfsHash\":\"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH\",\"metadata\":{\"memberAddress\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\"}},\"timestamp\":\"1610473893\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"vote\",\"version\":\"0.2.0\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
   "sig": "0x32e5453f73fae96ba450b0a568b03b684f3e72a825e84b5762574b01a67b121e37c884af8b3357292311538b4d1eec3cfe403c0501b9877289050ab0ec4ffd7b1c"
 }
 ```
@@ -129,9 +129,7 @@ Response
           "private": 1,
           "type": "governance",
           "subType": "governance"
-        },
-        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
-        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
+        }
       }
     },
     "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
@@ -169,9 +167,7 @@ Response
           "private": 1,
           "type": "governance",
           "subType": "governance"
-        },
-        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
-        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
+        }
       }
     },
     "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
@@ -209,9 +205,7 @@ Response
           "private": 1,
           "type": "governance",
           "subType": "governance"
-        },
-        "nameHash": "0x4c8408afbfb3ee7295557333f0b498afb62f4eb4262905cb15db2e966db432ad",
-        "bodyHash": "0x87c2d362de99f75a4f2755cdaaad2d11bf6cc65dc71356593c445535ff28f43d"
+        }
       }
     },
     "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
@@ -253,8 +247,6 @@ Response
 					"type": "general",
 					"subType": "general"
 				},
-				"nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-				"bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
 			}
 		},
 		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
@@ -296,8 +288,6 @@ Response
 					"type": "general",
 					"subType": "general"
 				},
-				"nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-				"bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
 			}
 		},
 		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
@@ -338,9 +328,7 @@ Response
           "private": 0,
           "type": "general",
           "subType": "general"
-        },
-        "nameHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12",
-        "bodyHash": "0x85cc825a98ec217d960f113f5f80a95d7fd18e3725d37df428eb14f880bdfc12"
+        }
       }
     },
     "sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",

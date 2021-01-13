@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS messages (
   sig VARCHAR(256) NOT NULL,
   metadata JSON,
   "actionId" VARCHAR(64) NOT NULL,
-  deprecated JSON,
+  data JSONB,
   PRIMARY KEY (id)
 );
 

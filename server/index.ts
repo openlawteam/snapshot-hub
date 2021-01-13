@@ -5,7 +5,7 @@ import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
 import { jsonParse, sendError, toMessageJson } from './helpers/utils';
-import verifySignature from './helpers/erc712';
+import { verifySignature } from '@fforbeck/snapshot-js-erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
@@ -245,7 +245,7 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong proposal period');
 
-    //TODO: find all drafts linked to this proposal and invalidate them?
+    //TODO: find all drafts linked to this proposal and mark as sponsored
   }
 
   if (msg.type === 'vote') {

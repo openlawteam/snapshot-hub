@@ -4,32 +4,32 @@ import { convertUtf8ToHex } from '@walletconnect/utils';
 import * as ethUtil from 'ethereumjs-util';
 import { isValidSignature } from './eip1271';
 
-export function jsonParse(input, fallback?) {
+export const jsonParse = (input, fallback?) => {
   try {
     return JSON.parse(input);
   } catch (err) {
     return fallback || {};
   }
-}
+};
 
-export async function verify(address, msg, sig) {
+export const verify = async (address, msg, sig) => {
   const recovered = await verifyMessage(msg, sig);
   return recovered === address;
-}
+};
 
-export function clone(item) {
+export const clone = item => {
   return JSON.parse(JSON.stringify(item));
-}
+};
 
-export function sendError(res, description, status = 500) {
+export const sendError = (res, description, status = 500) => {
   console.error(description);
   return res.status(status).json({
     error: 'unauthorized',
     error_description: description
   });
-}
+};
 
-export function recoverPublicKey(sig: string, hash: string): string {
+export const recoverPublicKey = (sig: string, hash: string): string => {
   const params = ethUtil.fromRpcSig(sig);
   const result = ethUtil.ecrecover(
     ethUtil.toBuffer(hash),
@@ -38,14 +38,14 @@ export function recoverPublicKey(sig: string, hash: string): string {
     params.s
   );
   return ethUtil.bufferToHex(ethUtil.publicToAddress(result));
-}
+};
 
-export async function verifySignature(
+export const verifySignature = async (
   address: string,
   sig: string,
   hash: string
   // chainId: number
-): Promise<boolean> {
+): Promise<boolean> => {
   const provider = new providers.JsonRpcProvider(process.env.ALCHEMY_API_URL);
   return provider
     .getCode(address)
@@ -67,9 +67,9 @@ export async function verifySignature(
       console.error(error);
       return false;
     });
-}
+};
 
-export function encodePersonalMessage(msg: string): string {
+export const encodePersonalMessage = (msg: string): string => {
   const data = ethUtil.toBuffer(convertUtf8ToHex(msg));
   const buf = Buffer.concat([
     Buffer.from(
@@ -79,14 +79,14 @@ export function encodePersonalMessage(msg: string): string {
     data
   ]);
   return ethUtil.bufferToHex(buf);
-}
+};
 
-export function hashPersonalMessage(msg: string): string {
+export const hashPersonalMessage = (msg: string): string => {
   const data = encodePersonalMessage(msg);
   const buf = ethUtil.toBuffer(data);
   const hash = ethUtil.keccak256(buf);
   return ethUtil.bufferToHex(hash);
-}
+};
 
 export const toMessageJson = (messages: any): any =>
   Object.fromEntries(
