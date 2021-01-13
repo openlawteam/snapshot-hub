@@ -54,15 +54,18 @@ const msgTypes = {
   VOTE: 'vote'
 };
 
-router.get('/', (req, res) => {
-  console.log('GET /api');
-  return res.json({
+const apiStatus = (req, res) =>
+  res.json({
     name: pkg.name,
     network,
     version: pkg.version,
     tag: 'alpha',
     relayer: relayer.address
   });
+
+router.get('/', (req, res) => {
+  console.log('GET /api');
+  return apiStatus(req, res);
 });
 
 router.get('/spaces/:key?', (req, res) => {
@@ -140,9 +143,9 @@ router.post('/message', async (req, res) => {
   console.log(msg);
 
   if (
-    //[payload, timestamp, token, space, type,
-    // actionId, version, chainId, verifyingContract, spaceHash] == 10
-    Object.keys(msg).length !== 10 ||
+    //[payload, timestamp, token, space, type, actionId,
+    // version, chainId, verifyingContract] == 9
+    Object.keys(msg).length !== 9 ||
     !msg.token ||
     !msg.payload ||
     Object.keys(msg.payload).length === 0
@@ -186,8 +189,8 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'draft') {
     if (
-      //[name, body, choices, metadata, nameHash, bodyHash] == 6
-      Object.keys(msg.payload).length !== 6 ||
+      //[name, body, choices, metadata] == 4
+      Object.keys(msg.payload).length !== 4 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
       !msg.payload.metadata
@@ -211,8 +214,8 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'proposal') {
     if (
-      //[name, body, choices, start, end, snapshot, metadata, name, body] == 9
-      Object.keys(msg.payload).length !== 9 ||
+      //[name, body, choices, start, end, snapshot, metadata] == 7
+      Object.keys(msg.payload).length !== 7 ||
       !msg.payload.choices ||
       msg.payload.choices.length < 2 ||
       !msg.payload.snapshot ||
@@ -247,7 +250,7 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'vote') {
     if (
-      //[choice, proposal, proposalHash]
+      //[choice, proposal, proposalIpfsHash] == 3
       Object.keys(msg.payload).length !== 3 ||
       !msg.payload.proposalIpfsHash ||
       !msg.payload.choice ||
