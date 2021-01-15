@@ -19,10 +19,12 @@ import {
   storeDraft,
   storeProposal,
   storeVote,
+  sponsorDraftIfAny,
   getMessages,
   getMessagesById,
   getMessagesByAction,
-  getProposalVotes
+  getProposalVotes,
+  getAllDraftsExceptSponsored
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 /**
@@ -81,7 +83,7 @@ router.get('/spaces/:key?', (req, res) => {
 router.get('/:space/drafts', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/drafts', space);
-  getMessages(space, msgTypes.DRAFT)
+  getAllDraftsExceptSponsored(space)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -248,8 +250,6 @@ router.post('/message', async (req, res) => {
       msg.payload.start >= msg.payload.end
     )
       return sendError(res, 'wrong proposal period');
-
-    //TODO: find all drafts linked to this proposal and mark as sponsored
   }
 
   if (msg.type === 'vote') {
@@ -340,6 +340,9 @@ router.post('/message', async (req, res) => {
       relayerIpfsRes,
       msg.actionId
     );
+
+    await sponsorDraftIfAny(space, erc712DraftHash);
+
     return res.json({
       uniqueId: erc712Hash,
       uniqueIdDraft: erc712DraftHash
