@@ -1,7 +1,7 @@
 import db from '../postgres';
 
 function format(
-  authorIpfsHash: string,
+  erc712Hash: string,
   body: any,
   msg: any,
   space: string,
@@ -12,7 +12,7 @@ function format(
   data: any
 ) {
   return [
-    authorIpfsHash,
+    erc712Hash,
     body.address,
     msg.version,
     msg.timestamp,
@@ -22,7 +22,7 @@ function format(
     JSON.stringify(msg.payload),
     body.sig,
     JSON.stringify({
-      relayer_ipfs_hash: relayerIpfsHash
+      relayerIpfsHash: relayerIpfsHash
     }),
     actionId,
     data
@@ -37,68 +37,9 @@ async function insert(params: Array<object>) {
   return await db.query(cmd, params);
 }
 
-export async function storeDrafts(space, drafts) {
-  return await Promise.all(
-    drafts.map(d =>
-      insert(
-        format(
-          d.authorIpfsHash,
-          d,
-          d.msg,
-          space,
-          d.msg.token,
-          d.msg.type,
-          d.relayerIpfsHash,
-          d.msg.actionId,
-          d.data
-        )
-      )
-    )
-  );
-}
-
-export async function storeProposals(space, proposals) {
-  return await Promise.all(
-    proposals.map(p =>
-      insert(
-        format(
-          p.authorIpfsHash,
-          p,
-          p.msg,
-          space,
-          p.msg.token,
-          p.msg.type,
-          p.relayerIpfsHash,
-          p.msg.actionId,
-          p.data
-        )
-      )
-    )
-  );
-}
-
-export async function storeVotes(space, votes) {
-  return await Promise.all(
-    votes.map(v =>
-      insert(
-        format(
-          v.authorIpfsHash,
-          v,
-          v.msg,
-          space,
-          v.msg.token,
-          'vote',
-          v.relayerIpfsHash,
-          v.msg.actionId,
-          v.data
-        )
-      )
-    )
-  );
-}
-
 export async function storeDraft(
   space,
+  erc712Hash,
   token,
   body,
   authorIpfsHash,
@@ -107,7 +48,7 @@ export async function storeDraft(
 ) {
   return await insert(
     format(
-      authorIpfsHash,
+      erc712Hash,
       body,
       JSON.parse(body.msg),
       space,
@@ -115,13 +56,15 @@ export async function storeDraft(
       'draft',
       relayerIpfsHash,
       actionId,
-      { sponsored: false }
+      { sponsored: false, authorIpfsHash: authorIpfsHash }
     )
   );
 }
 
 export async function storeProposal(
   space,
+  erc712Hash,
+  erc712DraftHash,
   token,
   body,
   authorIpfsHash,
@@ -130,7 +73,7 @@ export async function storeProposal(
 ) {
   return await insert(
     format(
-      authorIpfsHash,
+      erc712Hash,
       body,
       JSON.parse(body.msg),
       space,
@@ -138,13 +81,14 @@ export async function storeProposal(
       'proposal',
       relayerIpfsHash,
       actionId,
-      {}
+      { authorIpfsHash: authorIpfsHash, erc712DraftHash: erc712DraftHash }
     )
   );
 }
 
 export async function storeVote(
   space,
+  erc712Hash,
   token,
   body,
   authorIpfsHash,
@@ -153,7 +97,7 @@ export async function storeVote(
 ) {
   return await insert(
     format(
-      authorIpfsHash,
+      erc712Hash,
       body,
       JSON.parse(body.msg),
       space,
@@ -161,7 +105,7 @@ export async function storeVote(
       'vote',
       relayerIpfsHash,
       actionId,
-      {}
+      { authorIpfsHash: authorIpfsHash }
     )
   );
 }
@@ -196,7 +140,7 @@ export async function getMessagesById(
 }
 
 export async function getProposalVotes(space: string, id: string) {
-  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalIpfsHash' = $2 ORDER BY timestamp ASC`;
+  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalHash' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;

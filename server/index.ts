@@ -5,7 +5,11 @@ import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
 import { jsonParse, sendError, toMessageJson } from './helpers/utils';
-import { verifySignature } from '@fforbeck/snapshot-js-erc712';
+import {
+  verifySignature,
+  getDraftERC712Hash,
+  getMessageERC712Hash
+} from '@openlaw/snapshot-js-erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
@@ -249,7 +253,6 @@ router.post('/message', async (req, res) => {
   }
 
   if (msg.type === 'vote') {
-    console.log(msg.payload);
     if (
       //[choice, metadata, proposalHash] == 3
       Object.keys(msg.payload).length !== 3 ||
@@ -294,56 +297,73 @@ router.post('/message', async (req, res) => {
   });
 
   if (msg.type === 'draft') {
+    const erc712Hash = getMessageERC712Hash(
+      msg,
+      msg.verifyingContract,
+      msg.actionId,
+      msg.chainId
+    );
     await storeDraft(
       space,
+      erc712Hash,
       msg.token,
       body,
       authorIpfsRes,
       relayerIpfsRes,
       msg.actionId
     );
-
-    /**
-     * OpenLaw does not use discord for notifications, so the dependency was disabled for now
-     * and the message is just printed out to the server log.
-     * Later the discord notification can be enabled again if needed.
-     */
-    let message = `${space} (${network})\n`;
-    message += `**${msg.payload.name}**\n`;
-    message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
-    console.log(`New draft: ${message}`);
+    return res.json({
+      uniqueId: erc712Hash
+    });
   }
 
   if (msg.type === 'proposal') {
+    const erc712Hash = getMessageERC712Hash(
+      msg,
+      msg.verifyingContract,
+      msg.actionId,
+      msg.chainId
+    );
+    const erc712DraftHash = getDraftERC712Hash(
+      msg,
+      msg.verifyingContract,
+      msg.actionId,
+      msg.chainId
+    );
     await storeProposal(
       space,
+      erc712Hash,
+      erc712DraftHash,
       msg.token,
       body,
       authorIpfsRes,
       relayerIpfsRes,
       msg.actionId
     );
-
-    /**
-     * OpenLaw does not use discord for notifications, so the dependency was disabled for now
-     * and the message is just printed out to the server log.
-     * Later the discord notification can be enabled again if needed.
-     */
-    let message = `${space} (${network})\n`;
-    message += `**${msg.payload.name}**\n`;
-    message += `<https://ipfs.fleek.co/ipfs/${authorIpfsRes}>`;
-    console.log(`New proposal: ${message}`);
+    return res.json({
+      uniqueId: erc712Hash,
+      uniqueIdDraft: erc712DraftHash
+    });
   }
 
   if (msg.type === 'vote') {
+    const erc712Hash = getMessageERC712Hash(
+      msg,
+      msg.verifyingContract,
+      msg.actionId,
+      msg.chainId
+    );
     await storeVote(
       space,
+      erc712Hash,
       msg.token,
       body,
       authorIpfsRes,
       relayerIpfsRes,
       msg.actionId
     );
+
+    return res.json({ uniqueId: erc712Hash });
   }
 
   console.log(
@@ -353,8 +373,6 @@ router.post('/message', async (req, res) => {
     `IPFS hash "${authorIpfsRes}",\n`,
     `ActionId: ${msg.actionId}`
   );
-
-  return res.json({ ipfsHash: authorIpfsRes });
 });
 
 export default router;

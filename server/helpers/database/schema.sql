@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS messages (
-  id VARCHAR(64) NOT NULL,
+  id VARCHAR(66) NOT NULL,
   address VARCHAR(64) NOT NULL,
   version VARCHAR(6) NOT NULL,
   timestamp BIGINT NOT NULL,

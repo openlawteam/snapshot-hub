@@ -25,16 +25,18 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"name\":\"Asd\",\"body\":\"asd\",\"choices\":[\"Yes\",\"No\"],\"metadata\":{\"private\":1,\"type\":\"governance\",\"subType\":\"governance\"},},\"timestamp\":\"1610476321\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"draft\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
-  "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c"
+  "msg": "{\"payload\":{\"body\":\"AAAA\",\"choices\":[\"Yes\",\"No\"],\"metadata\":{\"uuid\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\",\"private\":0,\"type\":\"governance\",\"subType\":\"governance\"},\"name\":\"AAA\"},\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":3,\"space\":\"thelao\",\"timestamp\":\"1610736721\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"type\":\"draft\",\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"version\":\"0.2.0\"}",
+  "sig": "0xb8afb9098b70f1e46df8e5586f0737ad7209fa3405cdbff05405e9c542dc0f0a301e413cfe85a59f94b086154683b0c6af995dfb7373770c7f3fb26b12fab81d1b"
 }
 ```
 
 Response
 
+- **uniqueId**: the erc712 hash of the Draft message.
+
 ```json
 {
-  "ipfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA"
+  "uniqueId": "0xc90ff1f7af9e15bad7bd799bb41da7c034c9112e1f16e36ed50d3f8ae9725c50"
 }
 ```
 
@@ -57,16 +59,20 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"name\":\"Test\",\"body\":\"Test\",\"choices\":[\"Yes\",\"No\"],\"start\":\"1610473885\",\"end\":\"1610477485\",\"snapshot\":1,\"metadata\":{\"private\":0,\"type\":\"general\",\"subType\":\"general\"},},\"timestamp\":\"1610473885\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"proposal\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"version\":\"0.2.0\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
-  "sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c"
+  "msg": "{\"payload\":{\"body\":\"SSS\",\"choices\":[\"Yes\",\"No\"],\"end\":1610740456,\"metadata\":{\"uuid\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\",\"private\":0,\"type\":\"general\",\"subType\":\"general\"},\"name\":\"SSS\",\"start\":1610736856,\"snapshot\":1222},\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":3,\"space\":\"thelao\",\"timestamp\":\"1610736856\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"type\":\"proposal\",\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"version\":\"0.2.0\"}",
+  "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b"
 }
 ```
 
 Response
 
+- **uniqueId**: the erc712 hash of the Proposal message.
+- **uniqueIdDraft**: the erc712 hash of the Draft. If the proposal does not have a draft, it gets generated either way because the draft content is contained in the proposal content.
+
 ```json
 {
-  "ipfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH"
+  "uniqueId": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+  "uniqueIdDraft": "0x8a08d261151050b116587a14e54af9f3171727f8581aeb8f797a47499df59c6d"
 }
 ```
 
@@ -76,8 +82,9 @@ Required Attributes
 
 - **body**: `address`, `msg`, `sig`
 - **msg**: `payload`, `timestamp`, `token`, `space`, `type`, `actionId`, `version`, `chainId`, `verifyingContract`
-- **payload**: `choice`, `proposalIpfsHash`, `metadata`
+- **payload**: `choice`, `proposalHash`, `metadata`
 - **type**: must be `vote`
+- **proposalHash**: the erc712 hash of the Proposal.
 
 Request
 
@@ -89,16 +96,18 @@ Content-Type: application/json
 ```json
 {
   "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-  "msg": "{\"payload\":{\"choice\":\"no\",\"proposalIpfsHash\":\"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH\",\"metadata\":{\"memberAddress\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\"}},\"timestamp\":\"1610473893\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"space\":\"thelao\",\"type\":\"vote\",\"version\":\"0.2.0\",\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":1337,\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",}",
-  "sig": "0x32e5453f73fae96ba450b0a568b03b684f3e72a825e84b5762574b01a67b121e37c884af8b3357292311538b4d1eec3cfe403c0501b9877289050ab0ec4ffd7b1c"
+  "msg": "{\"payload\":{\"choice\":2,\"proposalHash\":\"0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c\",\"metadata\":{\"memberAddress\":\"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0\"}},\"actionId\":\"0x4539Bac77398aF6d582842F174464b29cf3887ce\",\"chainId\":3,\"space\":\"thelao\",\"timestamp\":\"1610737020\",\"token\":\"0x8f56682a50becb1df2fb8136954f2062871bc7fc\",\"type\":\"vote\",\"verifyingContract\":\"0xcFc2206eAbFDc5f3d9e7fA54f855A8C15D196c05\",\"version\":\"0.2.0\"}",
+  "sig": "0x2f2eeda5e5fce7ff2cd53a2c98b9d32a325b83a1e2c9b80f7f14773a0d5347cb604c711ec9b024f985c413667f9410b610213892629c5bff779e764139c36d051b"
 }
 ```
 
 Response
 
+- **uniqueId**: the erc712 hash of the Vote message.
+
 ```json
 {
-  "ipfsHash": "QmQxx26HpNVBHYW997aYXmRvdKQj3Qh2HfV4BPVVgQM3Pz"
+  "uniqueId": "0x0a7abbbfbad762379af65b5dcc51a513983b9ce5e927843310927a01841daf5c"
 }
 ```
 
@@ -114,27 +123,52 @@ Response
 
 ```json
 {
-  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
+  "0xc90ff1f7af9e15bad7bd799bb41da7c034c9112e1f16e36ed50d3f8ae9725c50": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
       "version": "0.2.0",
-      "timestamp": "1610476321",
+      "timestamp": "1610736721",
       "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
       "type": "draft",
       "payload": {
-        "name": "Asd",
+        "body": "AAAA",
+        "choices": ["Yes", "No"],
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "AAA"
+      }
+    },
+    "sig": "0xb8afb9098b70f1e46df8e5586f0737ad7209fa3405cdbff05405e9c542dc0f0a301e413cfe85a59f94b086154683b0c6af995dfb7373770c7f3fb26b12fab81d1b",
+    "authorIpfsHash": "0xc90ff1f7af9e15bad7bd799bb41da7c034c9112e1f16e36ed50d3f8ae9725c50",
+    "relayerIpfsHash": "QmWvJoc2cTveACbFCGFSCEaGVDPVRUc19QPfRjPe14wUHG",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  },
+  "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736150",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "draft",
+      "payload": {
         "body": "asd",
         "choices": ["Yes", "No"],
         "metadata": {
-          "private": 1,
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
           "type": "governance",
           "subType": "governance"
-        }
+        },
+        "name": "asd"
       }
     },
-    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
-    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
-    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
+    "sig": "0x5d7e062bab36007845cf1d324f56bbe32da7aab317aab5459f31d02bb7633ccd33cd9a53166bb9077964c430d3690598588604d7d54e215aa21c9e49f1ab00ea1c",
+    "authorIpfsHash": "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb",
+    "relayerIpfsHash": "QmbQvvEajHWgAVs7nsJFpDqhqBrtJouSrLMb7z7mUjVBpZ",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
 }
@@ -152,27 +186,52 @@ Response
 
 ```json
 {
-  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
+  "0xc90ff1f7af9e15bad7bd799bb41da7c034c9112e1f16e36ed50d3f8ae9725c50": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
       "version": "0.2.0",
-      "timestamp": "1610476321",
+      "timestamp": "1610736721",
       "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
       "type": "draft",
       "payload": {
-        "name": "Asd",
+        "body": "AAAA",
+        "choices": ["Yes", "No"],
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "AAA"
+      }
+    },
+    "sig": "0xb8afb9098b70f1e46df8e5586f0737ad7209fa3405cdbff05405e9c542dc0f0a301e413cfe85a59f94b086154683b0c6af995dfb7373770c7f3fb26b12fab81d1b",
+    "authorIpfsHash": "0xc90ff1f7af9e15bad7bd799bb41da7c034c9112e1f16e36ed50d3f8ae9725c50",
+    "relayerIpfsHash": "QmWvJoc2cTveACbFCGFSCEaGVDPVRUc19QPfRjPe14wUHG",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  },
+  "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736150",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "draft",
+      "payload": {
         "body": "asd",
         "choices": ["Yes", "No"],
         "metadata": {
-          "private": 1,
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
           "type": "governance",
           "subType": "governance"
-        }
+        },
+        "name": "asd"
       }
     },
-    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
-    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
-    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
+    "sig": "0x5d7e062bab36007845cf1d324f56bbe32da7aab317aab5459f31d02bb7633ccd33cd9a53166bb9077964c430d3690598588604d7d54e215aa21c9e49f1ab00ea1c",
+    "authorIpfsHash": "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb",
+    "relayerIpfsHash": "QmbQvvEajHWgAVs7nsJFpDqhqBrtJouSrLMb7z7mUjVBpZ",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
 }
@@ -190,27 +249,28 @@ Response
 
 ```json
 {
-  "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA": {
+  "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
       "version": "0.2.0",
-      "timestamp": "1610476321",
+      "timestamp": "1610736150",
       "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
       "type": "draft",
       "payload": {
-        "name": "Asd",
         "body": "asd",
         "choices": ["Yes", "No"],
         "metadata": {
-          "private": 1,
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
           "type": "governance",
           "subType": "governance"
-        }
+        },
+        "name": "asd"
       }
     },
-    "sig": "0xe03d2f2ee2b1cc198569bf3f4afcacf08c9478dbcf8638d1dd9dc1d3f62b1f1854c5a612856c6a52927cae43cc280e9c13bfbce882048973d90a7a80e733cb151c",
-    "authorIpfsHash": "QmW3TNowy1SYDPrDcBaUGygUGsYe2M7HCD67MwDQyVrbLA",
-    "relayerIpfsHash": "QmPQrC3UcUDF2N4GJ6G7hUw1iooQ6GBYDzkh1GZob8Hjv8",
+    "sig": "0x5d7e062bab36007845cf1d324f56bbe32da7aab317aab5459f31d02bb7633ccd33cd9a53166bb9077964c430d3690598588604d7d54e215aa21c9e49f1ab00ea1c",
+    "authorIpfsHash": "0xe2169035d5cfdf546ffa448c8b705b135960d815e7de6a47271b8b94eca0f6fb",
+    "relayerIpfsHash": "QmbQvvEajHWgAVs7nsJFpDqhqBrtJouSrLMb7z7mUjVBpZ",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
 }
@@ -228,32 +288,60 @@ Response
 
 ```
 {
-	"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
+	"0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
 		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
 		"msg": {
 			"version": "0.2.0",
-			"timestamp": "1610473885",
+			"timestamp": "1610736856",
 			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
 			"type": "proposal",
 			"payload": {
-				"name": "Test",
-				"body": "Test",
+				"body": "SSS",
 				"choices": ["Yes", "No"],
-				"start": "1610473885",
-				"end": "1610477485",
-				"snapshot": 1,
+				"end": 1610740456,
 				"metadata": {
+					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
 					"private": 0,
 					"type": "general",
 					"subType": "general"
 				},
+				"name": "SSS",
+				"start": 1610736856,
+				"snapshot": 1222
 			}
 		},
-		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-		"authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-		"relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
+		"sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+		"authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+		"relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
 		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	}
+	},
+	"0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
+		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+		"msg": {
+			"version": "0.2.0",
+			"timestamp": "1610736470",
+			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+			"type": "proposal",
+			"payload": {
+				"body": "aaaaaaaa",
+				"choices": ["Yes", "No"],
+				"end": 1610740070,
+				"metadata": {
+					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+					"private": 0,
+					"type": "governance",
+					"subType": "governance"
+				},
+				"name": "aaaa",
+				"start": 1610736470,
+				"snapshot": 1222
+			}
+		},
+		"sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
+		"authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+		"relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
+		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+	},
 }
 ```
 
@@ -269,32 +357,60 @@ Response
 
 ```
 {
-	"QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
+	"0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
 		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
 		"msg": {
 			"version": "0.2.0",
-			"timestamp": "1610473885",
+			"timestamp": "1610736856",
 			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
 			"type": "proposal",
 			"payload": {
-				"name": "Test",
-				"body": "Test",
+				"body": "SSS",
 				"choices": ["Yes", "No"],
-				"start": "1610473885",
-				"end": "1610477485",
-				"snapshot": 1,
+				"end": 1610740456,
 				"metadata": {
+					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
 					"private": 0,
 					"type": "general",
 					"subType": "general"
 				},
+				"name": "SSS",
+				"start": 1610736856,
+				"snapshot": 1222
 			}
 		},
-		"sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-		"authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-		"relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
+		"sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+		"authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+		"relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
 		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	}
+	},
+	"0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
+		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+		"msg": {
+			"version": "0.2.0",
+			"timestamp": "1610736470",
+			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+			"type": "proposal",
+			"payload": {
+				"body": "aaaaaaaa",
+				"choices": ["Yes", "No"],
+				"end": 1610740070,
+				"metadata": {
+					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+					"private": 0,
+					"type": "governance",
+					"subType": "governance"
+				},
+				"name": "aaaa",
+				"start": 1610736470,
+				"snapshot": 1222
+			}
+		},
+		"sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
+		"authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+		"relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
+		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+	},
 }
 ```
 
@@ -310,30 +426,31 @@ Response
 
 ```json
 {
-  "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH": {
+  "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
       "version": "0.2.0",
-      "timestamp": "1610473885",
+      "timestamp": "1610736856",
       "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
       "type": "proposal",
       "payload": {
-        "name": "Test",
-        "body": "Test",
+        "body": "SSS",
         "choices": ["Yes", "No"],
-        "start": "1610473885",
-        "end": "1610477485",
-        "snapshot": 1,
+        "end": 1610740456,
         "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
           "private": 0,
           "type": "general",
           "subType": "general"
-        }
+        },
+        "name": "SSS",
+        "start": 1610736856,
+        "snapshot": 1222
       }
     },
-    "sig": "0x7871d6d93738ebeeaf35964ca158ebd23f8227acd8ce483c852c62d5db67662c6eb3e34a57e958f703929dffcf671cc4b60a3acc3834bf8c7a181dfd40b807511c",
-    "authorIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-    "relayerIpfsHash": "QmQA3kSmCAU6o1Bzm6Kf3WhwGynvbMwfx5xcML23Li4iY4",
+    "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+    "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+    "relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
 }
@@ -349,28 +466,28 @@ GET {{baseUrl}}/api/:space/proposal/:id/votes HTTP/1.1
 
 Response
 
-```
+```json
 {
-	"0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610473893",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "vote",
-			"payload": {
-				"choice": "no",
-				"proposalIpfsHash": "QmZWrANXdRwwRCABUEDyELn6MDghSwH5tH7PkBFy3v2jkH",
-				"metadata": {
-					"memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
-				}
-			}
-		},
-		"sig": "0x32e5453f73fae96ba450b0a568b03b684f3e72a825e84b5762574b01a67b121e37c884af8b3357292311538b4d1eec3cfe403c0501b9877289050ab0ec4ffd7b1c",
-		"authorIpfsHash": "QmQxx26HpNVBHYW997aYXmRvdKQj3Qh2HfV4BPVVgQM3Pz",
-		"relayerIpfsHash": "QmWwVapgthezcunSwUtMamcrCDJHqJMLb4kbGWiyPt4H84",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	}
+  "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610737020",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "vote",
+      "payload": {
+        "choice": 2,
+        "proposalHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+        "metadata": {
+          "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+        }
+      }
+    },
+    "sig": "0x2f2eeda5e5fce7ff2cd53a2c98b9d32a325b83a1e2c9b80f7f14773a0d5347cb604c711ec9b024f985c413667f9410b610213892629c5bff779e764139c36d051b",
+    "authorIpfsHash": "0x0a7abbbfbad762379af65b5dcc51a513983b9ce5e927843310927a01841daf5c",
+    "relayerIpfsHash": "QmSxbsjgpGUzKRoURFbhhvcp3dyJzFLh8UjfATfyN4brRj",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
 }
 ```
 
@@ -384,64 +501,61 @@ GET {{baseUrl}}/api/spaces HTTP/1.1
 
 Response
 
-```
+```json
 {
-	"thelao": {
-		"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-		"name": "The LAO",
-		"network": "1",
-		"symbol": "LAO",
-		"skin": "thelao",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-				"symbol": "LAO",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	},
-	"flamingo": {
-		"token": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
-		"name": "Flamingo DAO",
-		"network": "1",
-		"symbol": "FLA-C",
-		"skin": "flamingo",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
-				"symbol": "FLA",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	},
-	"neptune": {
-		"token": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
-		"name": "Liquidity DAO",
-		"network": "1",
-		"symbol": "NEP",
-		"skin": "neptune",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
-				"symbol": "NEP",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	}
+  "thelao": {
+    "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+    "name": "The LAO",
+    "network": "1",
+    "symbol": "LAO",
+    "skin": "thelao",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+          "symbol": "LAO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": { "defaultTab": "all", "minScore": 1 }
+  },
+  "flamingo": {
+    "token": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
+    "name": "Flamingo DAO",
+    "network": "1",
+    "symbol": "FLA-C",
+    "skin": "flamingo",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
+          "symbol": "FLA",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": { "defaultTab": "all", "minScore": 1 }
+  },
+  "neptune": {
+    "token": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+    "name": "Liquidity DAO",
+    "network": "1",
+    "symbol": "NEP",
+    "skin": "neptune",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+          "symbol": "NEP",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": { "defaultTab": "all", "minScore": 1 }
+  }
 }
 ```
