@@ -249,10 +249,11 @@ router.post('/message', async (req, res) => {
   }
 
   if (msg.type === 'vote') {
+    console.log(msg.payload);
     if (
-      //[choice, proposal, proposalIpfsHash] == 3
+      //[choice, metadata, proposalHash] == 3
       Object.keys(msg.payload).length !== 3 ||
-      !msg.payload.proposalIpfsHash ||
+      !msg.payload.proposalHash ||
       !msg.payload.choice ||
       !msg.payload.metadata
     )
@@ -266,7 +267,7 @@ router.post('/message', async (req, res) => {
 
     const proposals = await getMessagesById(
       space,
-      msg.payload.proposalIpfsHash,
+      msg.payload.proposalHash,
       msgTypes.PROPOSAL
     );
     if (!proposals || proposals.length == 0)
