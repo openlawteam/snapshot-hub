@@ -40,7 +40,10 @@ const network = process.env.NETWORK || 'testnet';
  * - prod.json contains the spaces that are using in production mode with the moloch addresses from main net.
  * - dev.json contains the spaces that are using in development mode with the moloch addresses from test nets.
  */
-const env = process.env.DEV ? 'dev' : 'prod';
+const env = process.env.ENV;
+if (!env)
+  throw Error('Missing env var [ENV], possible values: local, dev, prod');
+
 const spaces = JSON.parse(
   fs.readFileSync(path.join(__dirname, `./spaces/${env}.json`)).toString()
 );

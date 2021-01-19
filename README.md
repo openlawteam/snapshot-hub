@@ -6,8 +6,8 @@
 # The API Server port
 PORT=8080
 
-# To indicate if it is being executed in a Development environment
-DEV=true
+# To indicate in which environment it is being executed: local, dev, or prod
+ENV=local
 
 # The PK of the account that will be used to sign the messages, for example:
 RELAYER_PK=0x49b803c4495fbedafbfbb9399fcc212286b4bc21caafe06e609762d913ed0ef7

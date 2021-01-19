@@ -9,7 +9,7 @@ services:
       - .env.local
     environment:
       PORT: 8080
-      DEV: "true"
+      ENV: "local" # local | dev | prod
       JAWSDB_URL: postgres://admin:admin@snapshot-postgres:5432/snapshot-db
     depends_on:
       - snapshot-postgres
