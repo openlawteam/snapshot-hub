@@ -1,5 +1,41 @@
 # snapshot-hub
 
+### Environment Variables
+
+```
+# The API Server port
+PORT=8080
+
+# To indicate if it is being executed in a Development environment
+DEV=true
+
+# The PK of the account that will be used to sign the messages, for example:
+RELAYER_PK=0x49b803c4495fbedafbfbb9399fcc212286b4bc21caafe06e609762d913ed0ef7
+
+# The network name that will be used by the relayer (use testnet for: rinkeby or ropsten), and mainnet for the main eth network
+NETWORK=testnet
+
+# The postgres url: postgres://user:pwd@host:5432/db-name
+JAWSDB_URL=postgres://admin:admin@snapshot-postgres:5432/snapshot
+
+# You can use pinata or fleek
+PINNING_SERVICE=pinata
+
+# Pinata API Keys
+PINATA_SECRET_API_KEY=(https://pinata.cloud/)
+PINATA_API_KEY=(https://pinata.cloud/)
+
+# Fleek API Keys (you don't need to set Fleek and Pinata keys, pick only one pinning service)
+FLEEK_API_KEY=(https://fleek.co/)
+FLEEK_API_SECRET=(https://fleek.co/)
+
+# The list of domains that should be allowed to send requests to the API
+ALLOWED_DOMAINS=http://localhost:3000
+
+# The relayer API (alternative to Infura)
+ALCHEMY_API_URL=https://eth-rinkeby.alchemyapi.io/v2/<your-api-key>
+```
+
 ### Running
 
 > \$ docker-compose up --build
