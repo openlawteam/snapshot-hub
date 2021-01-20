@@ -24,6 +24,7 @@ import {
   getMessagesById,
   getMessagesByAction,
   getProposalVotes,
+  getProposalByDraft,
   getAllDraftsExceptSponsored
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
@@ -125,10 +126,20 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
 
 router.get('/:space/proposal/:id', async (req, res) => {
   const { space, id } = req.params;
-  console.log('GET /:space/proposal/:id', space, id);
-  getMessagesById(space, id, msgTypes.PROPOSAL)
-    .then(toMessageJson)
-    .then(obj => res.json(obj));
+  const isUniqueDraftId = req.query.isUniqueDraftId;
+
+  console.log(
+    'GET /:space/proposal/:id?isUniqueDraftId=',
+    space,
+    id,
+    isUniqueDraftId
+  );
+
+  const resultsPromise = isUniqueDraftId
+    ? getProposalByDraft(space, id)
+    : getMessagesById(space, id, msgTypes.PROPOSAL);
+
+  resultsPromise.then(toMessageJson).then(obj => res.json(obj));
 });
 
 router.get('/:space/proposal/:id/votes', async (req, res) => {

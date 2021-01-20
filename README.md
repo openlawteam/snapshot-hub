@@ -492,6 +492,48 @@ Response
 }
 ```
 
+#### Get Proposal by Draft Id
+
+Request
+
+```
+GET {{baseUrl}}/api/:space/proposal/:id?isUniqueDraftId=true HTTP/1.1
+```
+
+Response
+
+```json
+{
+  "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1611091325",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "ASd",
+        "choices": ["Yes", "No"],
+        "end": 1611094925,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "ASd",
+        "start": 1611091325,
+        "snapshot": 1
+      }
+    },
+    "sig": "0xf2469a902f630f4d29e439baf9f94dd405901c8e6e0d702c8b47676ea7e35f271c858babcc168a8dd0e1689d1e66f7dfc1a876c4b62c7f1c9042afbd2dffff491c",
+    "authorIpfsHash": "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682",
+    "relayerIpfsHash": "QmU5Zd4zYP812RCKNM8esELNPuqASGfDxRiQDFQRCvGbvY",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
+}
+```
+
 #### Get All Proposal Votes by Proposal Id
 
 Request

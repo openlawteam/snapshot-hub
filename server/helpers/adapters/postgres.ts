@@ -146,6 +146,13 @@ export const getMessagesById = async (
   return result.rows;
 };
 
+export const getProposalByDraft = async (space: string, id: string) => {
+  const query = `SELECT * FROM messages WHERE space = $1 AND type = 'proposal' AND data ->> 'erc712DraftHash' = $2`;
+  const result = await db.query(query, [space, id]);
+  console.log(result.rows.length);
+  return result.rows;
+};
+
 export const getProposalVotes = async (space: string, id: string) => {
   const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalHash' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
