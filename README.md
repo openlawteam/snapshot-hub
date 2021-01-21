@@ -494,10 +494,12 @@ Response
 
 #### Get Proposal by Draft Id
 
+Returns the proposal based on the Draft Id ERC712 hash. When there is a proposal with `data.erc712DraftHash` that matches the specified id, it returns the proposal. Otherwise, it searches and returns the proposal that have matching `id` - which is the ERC712 hash.
+
 Request
 
 ```
-GET {{baseUrl}}/api/:space/proposal/:id?isUniqueDraftId=true HTTP/1.1
+GET {{baseUrl}}/api/:space/proposal/:id?searchUniqueDraftId=true HTTP/1.1
 ```
 
 Response

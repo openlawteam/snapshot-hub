@@ -126,17 +126,20 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
 
 router.get('/:space/proposal/:id', async (req, res) => {
   const { space, id } = req.params;
-  const isUniqueDraftId = req.query.isUniqueDraftId;
+  const searchUniqueDraftId = req.query.searchUniqueDraftId;
 
   console.log(
-    'GET /:space/proposal/:id?isUniqueDraftId=',
+    'GET /:space/proposal/:id?searchUniqueDraftId=',
     space,
     id,
-    isUniqueDraftId
+    searchUniqueDraftId
   );
 
-  const resultsPromise = isUniqueDraftId
-    ? getProposalByDraft(space, id)
+  const resultsPromise = searchUniqueDraftId
+    ? getProposalByDraft(space, id).then(results => {
+        if (results && results.length > 0) return results;
+        else return getMessagesById(space, id, msgTypes.PROPOSAL);
+      })
     : getMessagesById(space, id, msgTypes.PROPOSAL);
 
   resultsPromise.then(toMessageJson).then(obj => res.json(obj));
