@@ -110,3 +110,47 @@ export const toMessageJson = (messages: any): any =>
       ];
     })
   );
+
+export const toVoteMessageJson = (message: any): any => {
+  return {
+    [message.address]: {
+      id: message.id,
+      address: message.address,
+      msg: {
+        version: message.version,
+        timestamp: message.timestamp.toString(),
+        token: message.token,
+        type: message.type,
+        payload: message.payload
+      },
+      sig: message.sig,
+      authorIpfsHash: message.id,
+      relayerIpfsHash: message.metadata.relayerIpfsHash,
+      actionId: message.actionId
+    }
+  };
+};
+
+export const toProposalWithVotesMessageJson = (messages: any): any =>
+  Object.fromEntries(
+    messages.map(message => {
+      return [
+        message.id,
+        {
+          address: message.address,
+          msg: {
+            version: message.version,
+            timestamp: message.timestamp.toString(),
+            token: message.token,
+            type: message.type,
+            payload: message.payload
+          },
+          votes: message.votes,
+          sig: message.sig,
+          authorIpfsHash: message.id,
+          relayerIpfsHash: message.metadata.relayerIpfsHash,
+          actionId: message.actionId
+        }
+      ];
+    })
+  );

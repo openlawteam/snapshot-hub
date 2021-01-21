@@ -536,6 +536,145 @@ Response
 }
 ```
 
+#### Get All Proposals Including Votes
+
+Request
+
+```
+GET {{baseUrl}}/api/:space/proposals?includeVotes=true
+```
+
+Response
+
+```json
+{
+  "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1611091325",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "ASd",
+        "choices": ["Yes", "No"],
+        "end": 1611094925,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "ASd",
+        "start": 1611091325,
+        "snapshot": 1
+      }
+    },
+    "votes": [
+      {
+        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+          "id": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
+          "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "msg": {
+            "version": "0.2.0",
+            "timestamp": "1611091343",
+            "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+            "type": "vote",
+            "payload": {
+              "choice": 1,
+              "proposalHash": "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682",
+              "metadata": {
+                "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+              }
+            }
+          },
+          "sig": "0x42199c5e99a31e22989e820c673583b3a9c7a4895daa4ccd2473c2c613e72fb07b0d6f54fc96c02d894bcfd1dc4b1d17fcce2d80cb71622293ebfd90f172dde71b",
+          "authorIpfsHash": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
+          "relayerIpfsHash": "Qmb4FAM3eKAChQytihnH89FNd8ogQLAAfHDo2g4BsJxFCb",
+          "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+        }
+      }
+    ],
+    "sig": "0xf2469a902f630f4d29e439baf9f94dd405901c8e6e0d702c8b47676ea7e35f271c858babcc168a8dd0e1689d1e66f7dfc1a876c4b62c7f1c9042afbd2dffff491c",
+    "authorIpfsHash": "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682",
+    "relayerIpfsHash": "QmU5Zd4zYP812RCKNM8esELNPuqASGfDxRiQDFQRCvGbvY",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
+}
+```
+
+#### Get Proposal Including Votes
+
+Request
+
+```
+GET {{baseUrl}}/api/:space/proposal/:id?includeVotes=true
+```
+
+Response
+
+```json
+[
+  {
+    "id": "0xe16c4630ceddb2de33f423255fd8ce55488f6c541699ef51541a5cfe5a8d5ec7",
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "version": "0.2.0",
+    "timestamp": "1611249380",
+    "space": "thelao",
+    "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+    "type": "proposal",
+    "payload": {
+      "body": "Test",
+      "choices": ["Yes", "No"],
+      "end": 1611252980,
+      "metadata": {
+        "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+        "private": 0,
+        "type": "general",
+        "subType": "general"
+      },
+      "name": "Test",
+      "start": 1611249380,
+      "snapshot": 1
+    },
+    "sig": "0x837f60248b78f18d87a6849bd9737722e85b0651a0cc16512eb79144e89d51727ba16ff2172b4adfaa87aff85cd73d243513a1d2b61140e864156e854ee1a1881c",
+    "metadata": {
+      "relayerIpfsHash": "QmXNJMJzcVg6zXgoJPp7gpLyMauZakZ1Fe96mD22XsyZSz"
+    },
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce",
+    "data": {
+      "authorIpfsHash": "Qmdxnihpn3iQmAguvzc3pW93rJhkkTNh5HBDZ79FhgAkMA",
+      "erc712DraftHash": "0x4c7ac6b3494903b26ed8d6f3d68e404405e8a48f37a60280eaf87290aec1d4e9"
+    },
+    "votes": [
+      {
+        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+          "id": "0x8d5d95a56c1324b76e17b88dc5acf785feb89c5cd1b977f255a935e727af98e2",
+          "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "msg": {
+            "version": "0.2.0",
+            "timestamp": "1611249399",
+            "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+            "type": "vote",
+            "payload": {
+              "choice": 1,
+              "proposalHash": "0xe16c4630ceddb2de33f423255fd8ce55488f6c541699ef51541a5cfe5a8d5ec7",
+              "metadata": {
+                "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+              }
+            }
+          },
+          "sig": "0x58fcdf71117eafbe9a0922496207754cbe9774f44bad4d8d535b392dda22d14077f5b97ddaf91e41696493df01ba9d93fd64ddff3efad854af50e55d239c18eb1b",
+          "authorIpfsHash": "0x8d5d95a56c1324b76e17b88dc5acf785feb89c5cd1b977f255a935e727af98e2",
+          "relayerIpfsHash": "QmNi3Yj59g1yXt797dc1H41NpiFkNXxMU7gNdF6SiMB8WP",
+          "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+        }
+      }
+    ]
+  }
+]
+```
+
 #### Get All Proposal Votes by Proposal Id
 
 Request

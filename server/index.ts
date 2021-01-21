@@ -4,7 +4,12 @@ import path from 'path';
 import fs from 'fs';
 import { pinJson } from './helpers/ipfs';
 import { getAddress } from '@ethersproject/address';
-import { jsonParse, sendError, toMessageJson } from './helpers/utils';
+import {
+  jsonParse,
+  sendError,
+  toMessageJson,
+  toProposalWithVotesMessageJson
+} from './helpers/utils';
 import {
   verifySignature,
   getDraftERC712Hash,
@@ -25,7 +30,9 @@ import {
   getMessagesByAction,
   getProposalVotes,
   getProposalByDraft,
-  getAllDraftsExceptSponsored
+  getAllProposalsAndVotes,
+  getAllDraftsExceptSponsored,
+  findVotesForProposals
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 /**
@@ -110,10 +117,14 @@ router.get('/:space/draft/:id', async (req, res) => {
 
 router.get('/:space/proposals', async (req, res) => {
   const { space } = req.params;
-  console.log('GET /:space/proposals', space);
-  getMessages(space, msgTypes.PROPOSAL)
-    .then(toMessageJson)
-    .then(obj => res.json(obj));
+  const includeVotes = req.query.includeVotes;
+  console.log('GET /:space/proposals?includeVotes', space, includeVotes);
+
+  const resultsPromise = includeVotes
+    ? getAllProposalsAndVotes(space).then(toProposalWithVotesMessageJson)
+    : getMessages(space, msgTypes.PROPOSAL).then(toMessageJson);
+
+  resultsPromise.then(obj => res.json(obj));
 });
 
 router.get('/:space/proposals/:actionId', async (req, res) => {
@@ -127,12 +138,10 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
 router.get('/:space/proposal/:id', async (req, res) => {
   const { space, id } = req.params;
   const searchUniqueDraftId = req.query.searchUniqueDraftId;
+  const includeVotes = req.query.includeVotes;
 
   console.log(
-    'GET /:space/proposal/:id?searchUniqueDraftId=',
-    space,
-    id,
-    searchUniqueDraftId
+    `GET /${space}/proposal/:id? searchUniqueDraftId=${searchUniqueDraftId} &  includeVotes=${includeVotes}`
   );
 
   const resultsPromise = searchUniqueDraftId
@@ -142,7 +151,11 @@ router.get('/:space/proposal/:id', async (req, res) => {
       })
     : getMessagesById(space, id, msgTypes.PROPOSAL);
 
-  resultsPromise.then(toMessageJson).then(obj => res.json(obj));
+  resultsPromise
+    .then(proposals =>
+      includeVotes ? findVotesForProposals(space, proposals) : proposals
+    )
+    .then(obj => res.json(obj));
 });
 
 router.get('/:space/proposal/:id/votes', async (req, res) => {

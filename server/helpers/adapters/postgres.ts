@@ -1,4 +1,5 @@
 import db from '../postgres';
+import { toMessageJson, toVoteMessageJson } from '../utils';
 
 const format = (
   erc712Hash: string,
@@ -158,6 +159,25 @@ export const getProposalVotes = async (space: string, id: string) => {
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;
+};
+
+export const findVotesForProposals = (space, proposals) =>
+  Promise.all(
+    proposals.map(p =>
+      getProposalVotes(space, p.id)
+        .then(votes => votes.map(toVoteMessageJson))
+        .then(votes => {
+          p['votes'] = votes;
+          return p;
+        })
+    )
+  );
+
+export const getAllProposalsAndVotes = async (space: string) => {
+  const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1`;
+  const proposalsResult = await db.query(queryProposals, [space]);
+  console.log(proposalsResult.rows.length);
+  return await findVotesForProposals(space, proposalsResult.rows);
 };
 
 export const getAllDraftsExceptSponsored = async (space: string) => {
