@@ -95,6 +95,7 @@ export const toMessageJson = (messages: any): any =>
         message.type === 'vote' ? message.address : message.id,
         {
           address: message.address,
+          data: message.data,
           msg: {
             version: message.version,
             timestamp: message.timestamp.toString(),
@@ -116,6 +117,7 @@ export const toVoteMessageJson = (message: any): any => {
     [message.address]: {
       id: message.id,
       address: message.address,
+      data: message.data,
       msg: {
         version: message.version,
         timestamp: message.timestamp.toString(),
