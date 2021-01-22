@@ -8,7 +8,8 @@ import {
   jsonParse,
   sendError,
   toMessageJson,
-  toProposalWithVotesMessageJson
+  toProposalWithVotesMessageJson,
+  toVotesMessageJson
 } from './helpers/utils';
 import {
   verifySignature,
@@ -176,7 +177,7 @@ router.get('/:space/proposal/:id/votes', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/proposal/:id/votes', space, id);
   getProposalVotes(space, id)
-    .then(toMessageJson)
+    .then(toVotesMessageJson)
     .then(obj => res.json(obj));
 });
 
