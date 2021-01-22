@@ -450,6 +450,73 @@ Response
 }
 ```
 
+#### Get All Proposals by Action Id, including Votes
+
+Request
+
+```
+GET {{baseUrl}}/api/:space/proposals/:actionId?includeVotes=true HTTP/1.1
+```
+
+Response
+
+```
+{
+  "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736856",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "SSS",
+        "choices": ["Yes", "No"],
+        "end": 1610740456,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "general",
+          "subType": "general"
+        },
+        "name": "SSS",
+        "start": 1610736856,
+        "snapshot": 1222
+      }
+    },
+    "votes": [
+      {
+        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+          "id": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
+          "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "msg": {
+	    "version": "0.2.0",
+	    "timestamp": "1611091343",
+	    "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+	    "type": "vote",
+	    "payload": {
+	      "choice": 1,
+	      "proposalHash": "0x1433749efa5a3c2ef89aa0962159fb88cbd834681386e230d07f4a443c931682",
+	      "metadata": {
+	        "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+	      }
+	    }
+          },
+          "sig": "0x42199c5e99a31e22989e820c673583b3a9c7a4895daa4ccd2473c2c613e72fb07b0d6f54fc96c02d894bcfd1dc4b1d17fcce2d80cb71622293ebfd90f172dde71b",
+          "authorIpfsHash": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
+          "relayerIpfsHash": "Qmb4FAM3eKAChQytihnH89FNd8ogQLAAfHDo2g4BsJxFCb",
+          "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+        }
+      }
+    ],
+    "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+    "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+    "relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  },
+}
+```
+
 #### Get Proposal by Id
 
 Request
