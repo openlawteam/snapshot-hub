@@ -486,7 +486,7 @@ Response
     },
     "votes": [
       {
-        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+        "0xed7b3f2902f2e1b17b027bd0c125b674d293bda0": {
           "id": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
           "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
           "msg": {
@@ -639,7 +639,7 @@ Response
     },
     "votes": [
       {
-        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+        "0xed7b3f2902f2e1b17b027bd0c125b674d293bda0": {
           "id": "0xe18a1928663c9f242c6630027f3647cdcbe481e05a65f97610276cae1cee7485",
           "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
           "msg": {
@@ -715,7 +715,7 @@ Response
     },
     "votes": [
       {
-        0xed7b3f2902f2e1b17b027bd0c125b674d293bda0: {
+        "0xed7b3f2902f2e1b17b027bd0c125b674d293bda0": {
           "id": "0x8d5d95a56c1324b76e17b88dc5acf785feb89c5cd1b977f255a935e727af98e2",
           "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
           "msg": {
@@ -774,8 +774,6 @@ Response
     "relayerIpfsHash": "QmSxbsjgpGUzKRoURFbhhvcp3dyJzFLh8UjfATfyN4brRj",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
-}, {
-  ...
 }]
 ```
 
