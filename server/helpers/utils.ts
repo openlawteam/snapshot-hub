@@ -133,6 +133,9 @@ export const toVoteMessageJson = (message: any): any => {
   };
 };
 
+export const toVotesMessageJson = (messages: any): any =>
+  messages.map(m => toVoteMessageJson(m));
+
 export const toProposalWithVotesMessageJson = (messages: any): any =>
   Object.fromEntries(
     messages.map(message => {
