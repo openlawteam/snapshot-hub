@@ -165,7 +165,9 @@ export const findVotesForProposals = (space, proposals) =>
   Promise.all(
     proposals.map(p =>
       getProposalVotes(space, p.id)
-        .then(votes => votes.map(toVoteMessageJson))
+        .then(votes =>
+          votes && votes.length > 0 ? toVoteMessageJson(votes) : {}
+        )
         .then(votes => {
           p['votes'] = votes;
           return p;
