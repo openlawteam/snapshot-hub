@@ -32,7 +32,8 @@ import {
   getProposalByDraft,
   getAllProposalsAndVotes,
   getAllDraftsExceptSponsored,
-  findVotesForProposals
+  findVotesForProposals,
+  getAllProposalsAndVotesByAction
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 /**
@@ -128,11 +129,24 @@ router.get('/:space/proposals', async (req, res) => {
 });
 
 router.get('/:space/proposals/:actionId', async (req, res) => {
+  const includeVotes = req.query.includeVotes;
   const { space, actionId } = req.params;
-  console.log('GET /:space/proposals/:actionId', space, actionId);
-  getMessagesByAction(space, actionId, msgTypes.PROPOSAL)
-    .then(toMessageJson)
-    .then(obj => res.json(obj));
+  console.log(
+    'GET /:space/proposals/:actionId?includeVotes',
+    space,
+    actionId,
+    includeVotes
+  );
+
+  const resultsPromise = includeVotes
+    ? getAllProposalsAndVotesByAction(space, actionId).then(
+        toProposalWithVotesMessageJson
+      )
+    : getMessagesByAction(space, actionId, msgTypes.PROPOSAL).then(
+        toMessageJson
+      );
+
+  resultsPromise.then(obj => res.json(obj));
 });
 
 router.get('/:space/proposal/:id', async (req, res) => {
