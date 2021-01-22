@@ -184,7 +184,7 @@ export const getAllProposalsAndVotesByAction = async (
   space: string,
   actionId: string
 ) => {
-  const queryProposals = `SELECT * FROM messages WHERE space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
+  const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
   const proposalsResult = await db.query(queryProposals, [space, actionId]);
   console.log(proposalsResult.rows.length);
   return await findVotesForProposals(space, proposalsResult.rows);
