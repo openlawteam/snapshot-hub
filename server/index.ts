@@ -170,6 +170,7 @@ router.get('/:space/proposal/:id', async (req, res) => {
     .then(proposals =>
       includeVotes ? findVotesForProposals(space, proposals) : proposals
     )
+    .then(toMessageJson)
     .then(obj => res.json(obj));
 });
 
