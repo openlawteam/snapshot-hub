@@ -180,6 +180,16 @@ export const getAllProposalsAndVotes = async (space: string) => {
   return await findVotesForProposals(space, proposalsResult.rows);
 };
 
+export const getAllProposalsAndVotesByAction = async (
+  space: string,
+  actionId: string
+) => {
+  const queryProposals = `SELECT * FROM messages WHERE space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
+  const proposalsResult = await db.query(queryProposals, [space, actionId]);
+  console.log(proposalsResult.rows.length);
+  return await findVotesForProposals(space, proposalsResult.rows);
+};
+
 export const getAllDraftsExceptSponsored = async (space: string) => {
   const query = `SELECT * FROM messages WHERE type = 'draft' AND space = $1 AND data ->> 'sponsored' = 'false' ORDER BY timestamp ASC`;
   const result = await db.query(query, [space]);
