@@ -753,7 +753,7 @@ GET {{baseUrl}}/api/:space/proposal/:id/votes HTTP/1.1
 Response
 
 ```json
-{
+[{
   "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
     "msg": {
@@ -774,7 +774,9 @@ Response
     "relayerIpfsHash": "QmSxbsjgpGUzKRoURFbhhvcp3dyJzFLh8UjfATfyN4brRj",
     "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
   }
-}
+}, {
+  ...
+}]
 ```
 
 #### Get All Available Spaces
