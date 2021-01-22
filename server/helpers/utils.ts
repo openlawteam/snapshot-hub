@@ -140,6 +140,7 @@ export const toProposalWithVotesMessageJson = (messages: any): any =>
         message.id,
         {
           address: message.address,
+          data: message.data,
           msg: {
             version: message.version,
             timestamp: message.timestamp.toString(),
