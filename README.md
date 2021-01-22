@@ -322,62 +322,72 @@ GET {{baseUrl}}/api/:space/proposals HTTP/1.1
 
 Response
 
-```
+```js
 {
-	"0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610736856",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "proposal",
-			"payload": {
-				"body": "SSS",
-				"choices": ["Yes", "No"],
-				"end": 1610740456,
-				"metadata": {
-					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-					"private": 0,
-					"type": "general",
-					"subType": "general"
-				},
-				"name": "SSS",
-				"start": 1610736856,
-				"snapshot": 1222
-			}
-		},
-		"sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
-		"authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
-		"relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	},
-	"0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610736470",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "proposal",
-			"payload": {
-				"body": "aaaaaaaa",
-				"choices": ["Yes", "No"],
-				"end": 1610740070,
-				"metadata": {
-					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-					"private": 0,
-					"type": "governance",
-					"subType": "governance"
-				},
-				"name": "aaaa",
-				"start": 1610736470,
-				"snapshot": 1222
-			}
-		},
-		"sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
-		"authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
-		"relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	},
+  "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736856",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "SSS",
+        "choices": ["Yes", "No"],
+        "end": 1610740456,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "general",
+          "subType": "general"
+        },
+        "name": "SSS",
+        "start": 1610736856,
+        "snapshot": 1222
+      }
+    },
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e5775",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c"
+    },
+    "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+    "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+    "relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  },
+  "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736470",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "aaaaaaaa",
+        "choices": ["Yes", "No"],
+        "end": 1610740070,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "aaaa",
+        "start": 1610736470,
+        "snapshot": 1222
+      }
+    },
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa0330"
+    },
+    "sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
+    "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+    "relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
 }
 ```
 
@@ -391,62 +401,72 @@ GET {{baseUrl}}/api/:space/proposals/:actionId HTTP/1.1
 
 Response
 
-```
+```js
 {
-	"0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610736856",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "proposal",
-			"payload": {
-				"body": "SSS",
-				"choices": ["Yes", "No"],
-				"end": 1610740456,
-				"metadata": {
-					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-					"private": 0,
-					"type": "general",
-					"subType": "general"
-				},
-				"name": "SSS",
-				"start": 1610736856,
-				"snapshot": 1222
-			}
-		},
-		"sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
-		"authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
-		"relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	},
-	"0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
-		"address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-		"msg": {
-			"version": "0.2.0",
-			"timestamp": "1610736470",
-			"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-			"type": "proposal",
-			"payload": {
-				"body": "aaaaaaaa",
-				"choices": ["Yes", "No"],
-				"end": 1610740070,
-				"metadata": {
-					"uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-					"private": 0,
-					"type": "governance",
-					"subType": "governance"
-				},
-				"name": "aaaa",
-				"start": 1610736470,
-				"snapshot": 1222
-			}
-		},
-		"sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
-		"authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
-		"relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
-		"actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
-	},
+  "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa0330"
+    },
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736856",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "SSS",
+        "choices": ["Yes", "No"],
+        "end": 1610740456,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "general",
+          "subType": "general"
+        },
+        "name": "SSS",
+        "start": 1610736856,
+        "snapshot": 1222
+      }
+    },
+    "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+    "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+    "relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  },
+  "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336": {
+    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa0330"
+    },
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736470",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "aaaaaaaa",
+        "choices": ["Yes", "No"],
+        "end": 1610740070,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "governance",
+          "subType": "governance"
+        },
+        "name": "aaaa",
+        "start": 1610736470,
+        "snapshot": 1222
+      }
+    },
+    "sig": "0x332ecb1e0695a11ccb16f2625110ac6aad1e1a0732dea49f71cea8c97d8cb3e27b0a7650c1c4277a8c3c91c8a1f66c1b31d16d258a6797083133136f73331d951b",
+    "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+    "relayerIpfsHash": "QmVizXvbaHMK4D6WWxPvsXD8UFAUc927TpDcPy9HjHLC5k",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+  }
 }
 ```
 
@@ -460,10 +480,15 @@ GET {{baseUrl}}/api/:space/proposals/:actionId?includeVotes=true HTTP/1.1
 
 Response
 
-```
+```js
 {
   "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e1336",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa0330"
+    },
     "msg": {
       "version": "0.2.0",
       "timestamp": "1610736856",
@@ -527,7 +552,7 @@ GET {{baseUrl}}/api/:space/proposal/:id HTTP/1.1
 
 Response
 
-```json
+```js
 {
   "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
@@ -550,6 +575,11 @@ Response
         "start": 1610736856,
         "snapshot": 1222
       }
+    },
+    "data": {
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e5775",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c"
     },
     "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
     "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
@@ -680,39 +710,39 @@ GET {{baseUrl}}/api/:space/proposal/:id?includeVotes=true
 
 Response
 
-```json
-[
-  {
-    "id": "0xe16c4630ceddb2de33f423255fd8ce55488f6c541699ef51541a5cfe5a8d5ec7",
+```js
+{
+  "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c": {
     "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-    "version": "0.2.0",
-    "timestamp": "1611249380",
-    "space": "thelao",
-    "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-    "type": "proposal",
-    "payload": {
-      "body": "Test",
-      "choices": ["Yes", "No"],
-      "end": 1611252980,
-      "metadata": {
-        "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-        "private": 0,
-        "type": "general",
-        "subType": "general"
-      },
-      "name": "Test",
-      "start": 1611249380,
-      "snapshot": 1
+    "msg": {
+      "version": "0.2.0",
+      "timestamp": "1610736856",
+      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+      "type": "proposal",
+      "payload": {
+        "body": "SSS",
+        "choices": ["Yes", "No"],
+        "end": 1610740456,
+        "metadata": {
+          "uuid": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+          "private": 0,
+          "type": "general",
+          "subType": "general"
+        },
+        "name": "SSS",
+        "start": 1610736856,
+        "snapshot": 1222
+      }
     },
-    "sig": "0x837f60248b78f18d87a6849bd9737722e85b0651a0cc16512eb79144e89d51727ba16ff2172b4adfaa87aff85cd73d243513a1d2b61140e864156e854ee1a1881c",
-    "metadata": {
-      "relayerIpfsHash": "QmXNJMJzcVg6zXgoJPp7gpLyMauZakZ1Fe96mD22XsyZSz"
-    },
-    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce",
     "data": {
-      "authorIpfsHash": "Qmdxnihpn3iQmAguvzc3pW93rJhkkTNh5HBDZ79FhgAkMA",
-      "erc712DraftHash": "0x4c7ac6b3494903b26ed8d6f3d68e404405e8a48f37a60280eaf87290aec1d4e9"
+      "authorIpfsHash": "0x200bc675bc55672f49401857255776026be86d8a1f2dc0b9d7b2bee8eb3e5775",
+      // Note: Will not be present if no Draft was created for a Proposal
+      "erc712DraftHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c"
     },
+    "sig": "0x2ccd27c8906051ae113bd913d78d16fa03e0f5662c39052069ec1baa8ad5fc2a73360f58f688390935837105e40b62f34fe18b76c7b0c95e35e5a6f9ca1dd94a1b",
+    "authorIpfsHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+    "relayerIpfsHash": "QmbgiYmo93sJi4KmB6DtN9YCL4XQCUWrxDt53mknkw1MYW",
+    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce",
     "votes": [
       {
         "0xed7b3f2902f2e1b17b027bd0c125b674d293bda0": {
@@ -739,7 +769,7 @@ Response
       }
     ]
   }
-]
+}
 ```
 
 #### Get All Proposal Votes by Proposal Id
