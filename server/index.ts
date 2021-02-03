@@ -185,24 +185,37 @@ router.get('/:space/proposal/:id/votes', async (req, res) => {
 router.post('/message', async (req, res) => {
   const body = req.body;
   const msg = jsonParse(body.msg);
+  const erc712Data = jsonParse(body.erc712Data);
   const ts = (Date.now() / 1e3).toFixed();
   console.log('POST /message ', msg.type);
   // const minBlock = (3600 * 24) / 15;
 
-  if (!body || !body.address || !body.msg || !body.sig)
+  if (!body || !body.address || !body.msg || !body.sig || !body.erc712Data)
     return sendError(res, 'wrong message body');
 
   console.log(msg);
 
   if (
-    //[payload, timestamp, token, space, type, actionId,
-    // version, chainId, verifyingContract] == 9
-    Object.keys(msg).length !== 9 ||
+    //[payload, timestamp, token, space, type, version] == 6
+    Object.keys(msg).length !== 6 ||
     !msg.token ||
     !msg.payload ||
     Object.keys(msg.payload).length === 0
   )
-    return sendError(res, 'wrong signed message');
+    return sendError(res, 'wrong `body.msg`');
+
+  console.log('sig data:', erc712Data);
+
+  if (
+    //[actionId, chainId, verifyingContract, message] == 4
+    Object.keys(erc712Data).length !== 4 ||
+    !erc712Data.actionId ||
+    !erc712Data.chainId ||
+    !erc712Data.verifyingContract ||
+    !erc712Data.message ||
+    Object.keys(erc712Data.message).length === 0
+  )
+    return sendError(res, 'wrong erc712Data');
 
   const space = tokens[msg.token];
   if (!space) return sendError(res, 'unknown space');
@@ -226,13 +239,13 @@ router.post('/message', async (req, res) => {
     return sendError(res, 'wrong message type');
 
   let isValidSignature = false;
-  if (msg.verifyingContract && msg.chainId) {
+  if (erc712Data.verifyingContract && erc712Data.chainId) {
     isValidSignature = verifySignature(
-      msg,
+      { ...erc712Data.message, type: msg.type },
       body.address,
-      msg.verifyingContract,
-      msg.actionId,
-      msg.chainId,
+      erc712Data.verifyingContract,
+      erc712Data.actionId,
+      erc712Data.chainId,
       body.sig
     );
   }
@@ -344,10 +357,10 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'draft') {
     const erc712Hash = getMessageERC712Hash(
-      msg,
-      msg.verifyingContract,
-      msg.actionId,
-      msg.chainId
+      { ...msg, type: msg.type },
+      erc712Data.verifyingContract,
+      erc712Data.actionId,
+      erc712Data.chainId
     );
     await storeDraft(
       space,
@@ -356,7 +369,7 @@ router.post('/message', async (req, res) => {
       body,
       authorIpfsRes,
       relayerIpfsRes,
-      msg.actionId
+      erc712Data.actionId
     );
     return res.json({
       uniqueId: erc712Hash
@@ -365,16 +378,16 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'proposal') {
     const erc712Hash = getMessageERC712Hash(
-      msg,
-      msg.verifyingContract,
-      msg.actionId,
-      msg.chainId
+      { ...msg, type: msg.type },
+      erc712Data.verifyingContract,
+      erc712Data.actionId,
+      erc712Data.chainId
     );
     const erc712DraftHash = getDraftERC712Hash(
-      msg,
-      msg.verifyingContract,
-      msg.actionId,
-      msg.chainId
+      { ...msg, type: msg.type },
+      erc712Data.verifyingContract,
+      erc712Data.actionId,
+      erc712Data.chainId
     );
     await storeProposal(
       space,
@@ -384,7 +397,7 @@ router.post('/message', async (req, res) => {
       body,
       authorIpfsRes,
       relayerIpfsRes,
-      msg.actionId
+      erc712Data.actionId
     );
 
     await sponsorDraftIfAny(space, erc712DraftHash);
@@ -397,10 +410,10 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'vote') {
     const erc712Hash = getMessageERC712Hash(
-      msg,
-      msg.verifyingContract,
-      msg.actionId,
-      msg.chainId
+      { ...msg, type: msg.type },
+      erc712Data.verifyingContract,
+      erc712Data.actionId,
+      erc712Data.chainId
     );
     await storeVote(
       space,
@@ -409,7 +422,7 @@ router.post('/message', async (req, res) => {
       body,
       authorIpfsRes,
       relayerIpfsRes,
-      msg.actionId
+      erc712Data.actionId
     );
 
     return res.json({ uniqueId: erc712Hash });
@@ -420,7 +433,7 @@ router.post('/message', async (req, res) => {
     `Token "${msg.token}"\n`,
     `Type "${msg.type}"\n`,
     `IPFS hash "${authorIpfsRes}",\n`,
-    `ActionId: ${msg.actionId}`
+    `ActionId: ${erc712Data.actionId}`
   );
 });
 
