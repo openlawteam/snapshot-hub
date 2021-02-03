@@ -196,7 +196,7 @@ router.post('/message', async (req, res) => {
   console.log(msg);
 
   if (
-    //[payload, timestamp, token, space, type, version] == 9
+    //[payload, timestamp, token, space, type, version] == 6
     Object.keys(msg).length !== 6 ||
     !msg.token ||
     !msg.payload ||
