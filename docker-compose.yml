@@ -11,6 +11,7 @@ services:
       PORT: 8080
       ENV: "local" # local | dev | prod
       JAWSDB_URL: postgres://admin:admin@snapshot-postgres:5432/snapshot-db
+      USE_IPFS: "false"
     depends_on:
       - snapshot-postgres
     ports:

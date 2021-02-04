@@ -1,5 +1,5 @@
 import db from '../postgres';
-import { toMessageJson, toVoteMessageJson, toVotesMessageJson } from '../utils';
+import { toVotesMessageJson } from '../utils';
 
 const format = (
   erc712Hash: string,

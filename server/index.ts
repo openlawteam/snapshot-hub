@@ -44,6 +44,12 @@ import pkg from '../package.json';
 const network = process.env.NETWORK || 'testnet';
 
 /**
+ * If true, the IPFS pinning service will be used to store the message content, and get a pinning hash to
+ * save for lookup.
+ */
+const useIPFSPinnig = process.env.USE_IPFS === 'true';
+
+/**
  * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
  * Since this implementation is used by OpenLaw only, that dependency was removed and the spaces are loaded from the
  * ./spaces folder based on the environment: prod or dev.
@@ -340,20 +346,24 @@ router.post('/message', async (req, res) => {
       return sendError(res, 'not in voting window');
   }
 
-  const authorIpfsRes = await pinJson(`snapshot/${body.sig}`, {
-    address: body.address,
-    msg: body.msg,
-    sig: body.sig,
-    version: '2'
-  });
+  const authorIpfsRes = useIPFSPinnig
+    ? await pinJson(`snapshot/${body.sig}`, {
+        address: body.address,
+        msg: body.msg,
+        sig: body.sig,
+        version: '2'
+      })
+    : '';
 
   const relayerSig = await relayer.signMessage(authorIpfsRes);
-  const relayerIpfsRes = await pinJson(`snapshot/${relayerSig}`, {
-    address: relayer.address,
-    msg: authorIpfsRes,
-    sig: relayerSig,
-    version: '2'
-  });
+  const relayerIpfsRes = useIPFSPinnig
+    ? await pinJson(`snapshot/${relayerSig}`, {
+        address: relayer.address,
+        msg: authorIpfsRes,
+        sig: relayerSig,
+        version: '2'
+      })
+    : '';
 
   if (msg.type === 'draft') {
     const erc712Hash = getMessageERC712Hash(
