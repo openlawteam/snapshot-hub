@@ -30,6 +30,7 @@ import {
   getMessagesById,
   getMessagesByAction,
   getProposalVotes,
+  getVoteBySender,
   getProposalByDraft,
   getAllProposalsAndVotes,
   getAllDraftsExceptSponsored,
@@ -344,6 +345,13 @@ router.post('/message', async (req, res) => {
     const payload = jsonParse(proposals[0].payload);
     if (ts > payload.end || payload.start > ts)
       return sendError(res, 'not in voting window');
+
+    const votes = await getVoteBySender(
+      space,
+      body.address,
+      msg.payload.proposalHash
+    );
+    if (votes && votes.length > 0) return sendError(res, 'already voted');
   }
 
   const authorIpfsRes = useIPFSPinnig
