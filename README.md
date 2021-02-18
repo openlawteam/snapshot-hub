@@ -9,6 +9,9 @@ PORT=8080
 # To indicate in which environment it is being executed: local, dev, or prod
 ENV=local
 
+# To indicated the pinning service on IPFS should be enabled/disabled (if enabled cause delay in the responses) 
+USE_IPFS="false"
+
 # The PK of the account that will be used to sign the messages, for example:
 RELAYER_PK=0x49b803c4495fbedafbfbb9399fcc212286b4bc21caafe06e609762d913ed0ef7
 
@@ -875,3 +878,17 @@ Response
   }
 }
 ```
+
+### Changelog
+
+- Added Postgres Database Connector
+- Added allowed list of domains (ALLOWED_DOMAINS) which can send request to Snapshot-Hub API
+- Migration script https://github.com/openlawteam/snapshot-hub/blob/master/server/helpers/migration/migrate.ts to migrate messages from old Redis DB to SQL DB
+- Message pinning on IPFS is optional (USE_IPFS)
+- Added support to ERC712
+- The same client address can not vote more than once
+- Added a new message type: Draft 
+- Added different types of API queries for drafts, proposals, and votes
+- Disabled Discord, MySQL, Redis connectors
+- Added Docker image and Docker-Compose
+- Updated schema.sql to be compatible with Postgres
