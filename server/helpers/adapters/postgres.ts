@@ -41,8 +41,7 @@ const insert = async (params: Array<object>) => {
 export const sponsorDraftIfAny = async (space, erc712DraftHash) => {
   const update = `UPDATE messages SET data=data||'{"sponsored": true}' WHERE type = 'draft' AND id = $1 AND space = $2`;
   const result = await db.query(update, [erc712DraftHash, space]);
-  console.log(result.rows.length);
-  return result.rows;
+  return result;
 };
 
 export const storeDraft = async (

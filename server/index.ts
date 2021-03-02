@@ -411,7 +411,7 @@ router.post('/message', async (req, res) => {
     const sponsorDraftResult = await sponsorDraftIfAny(space, erc712DraftHash);
 
     const erc712DraftHashToSet =
-      sponsorDraftResult.length > 0 ? erc712DraftHash : '';
+      sponsorDraftResult.rowCount > 0 ? erc712DraftHash : '';
 
     await storeProposal(
       space,
