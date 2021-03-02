@@ -407,10 +407,16 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId,
       erc712Data.chainId
     );
+
+    const sponsorDraftResult = await sponsorDraftIfAny(space, erc712DraftHash);
+
+    const erc712DraftHashToSet =
+      sponsorDraftResult.length > 0 ? erc712DraftHash : '';
+
     await storeProposal(
       space,
       erc712Hash,
-      erc712DraftHash,
+      erc712DraftHashToSet,
       msg.token,
       body,
       authorIpfsRes,
@@ -418,11 +424,9 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId
     );
 
-    await sponsorDraftIfAny(space, erc712DraftHash);
-
     return res.json({
       uniqueId: erc712Hash,
-      uniqueIdDraft: erc712DraftHash
+      uniqueIdDraft: erc712DraftHashToSet
     });
   }
 
