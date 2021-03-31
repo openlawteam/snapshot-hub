@@ -9,7 +9,7 @@ PORT=8080
 # To indicate in which environment it is being executed: local, dev, or prod
 ENV=local
 
-# To indicated the pinning service on IPFS should be enabled/disabled (if enabled cause delay in the responses) 
+# To indicated the pinning service on IPFS should be enabled/disabled (if enabled cause delay in the responses)
 USE_IPFS="false"
 
 # The PK of the account that will be used to sign the messages, for example:
@@ -786,28 +786,30 @@ GET {{baseUrl}}/api/:space/proposal/:id/votes HTTP/1.1
 Response
 
 ```json
-[{
-  "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0": {
-    "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
-    "msg": {
-      "version": "0.2.0",
-      "timestamp": "1610737020",
-      "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-      "type": "vote",
-      "payload": {
-        "choice": 2,
-        "proposalHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
-        "metadata": {
-          "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+[
+  {
+    "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0": {
+      "address": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+      "msg": {
+        "version": "0.2.0",
+        "timestamp": "1610737020",
+        "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+        "type": "vote",
+        "payload": {
+          "choice": 2,
+          "proposalHash": "0xfaa09abe714291de6d3b5a6daa0330e5d4367188680b02cbc042243269fa050c",
+          "metadata": {
+            "memberAddress": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0"
+          }
         }
-      }
-    },
-    "sig": "0x2f2eeda5e5fce7ff2cd53a2c98b9d32a325b83a1e2c9b80f7f14773a0d5347cb604c711ec9b024f985c413667f9410b610213892629c5bff779e764139c36d051b",
-    "authorIpfsHash": "0x0a7abbbfbad762379af65b5dcc51a513983b9ce5e927843310927a01841daf5c",
-    "relayerIpfsHash": "QmSxbsjgpGUzKRoURFbhhvcp3dyJzFLh8UjfATfyN4brRj",
-    "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+      },
+      "sig": "0x2f2eeda5e5fce7ff2cd53a2c98b9d32a325b83a1e2c9b80f7f14773a0d5347cb604c711ec9b024f985c413667f9410b610213892629c5bff779e764139c36d051b",
+      "authorIpfsHash": "0x0a7abbbfbad762379af65b5dcc51a513983b9ce5e927843310927a01841daf5c",
+      "relayerIpfsHash": "QmSxbsjgpGUzKRoURFbhhvcp3dyJzFLh8UjfATfyN4brRj",
+      "actionId": "0x4539Bac77398aF6d582842F174464b29cf3887ce"
+    }
   }
-}]
+]
 ```
 
 #### Get All Available Spaces
@@ -875,6 +877,48 @@ Response
       }
     ],
     "filters": { "defaultTab": "all", "minScore": 1 }
+  },
+  "tribute": {
+    "token": "0x83eA12d54D5DCF88FeD2fB80dcEa1336A8Ac8924",
+    "name": "Tribute DAO",
+    "network": "1",
+    "symbol": "TRIBE",
+    "skin": "tribute",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x83eA12d54D5DCF88FeD2fB80dcEa1336A8Ac8924",
+          "symbol": "TRIBE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "museo": {
+    "token": "0xA673c822C533E143e58f3181a5ea638cEA98ddbc",
+    "name": "Museo DAO",
+    "network": "1",
+    "symbol": "MUSEO",
+    "skin": "museo",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xA673c822C533E143e58f3181a5ea638cEA98ddbc",
+          "symbol": "MUSEO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
 ```
@@ -887,7 +931,7 @@ Response
 - Message pinning on IPFS is optional (USE_IPFS)
 - Added support to ERC712
 - The same client address can not vote more than once
-- Added a new message type: Draft 
+- Added a new message type: Draft
 - Added different types of API queries for drafts, proposals, and votes
 - Disabled Discord, MySQL, Redis connectors
 - Added Docker image and Docker-Compose
