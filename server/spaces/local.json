@@ -63,7 +63,7 @@
     }
   },
   "tribute": {
-    "token": "0x83eA12d54D5DCF88FeD2fB80dcEa1336A8Ac8924",
+    "token": "0x83ea12d54d5dcf88fed2fb80dcea1336a8ac8924",
     "name": "Tribute DAO",
     "network": "1",
     "symbol": "TRIBE",
@@ -72,7 +72,7 @@
       {
         "name": "moloch",
         "params": {
-          "address": "0x83eA12d54D5DCF88FeD2fB80dcEa1336A8Ac8924",
+          "address": "0x83ea12d54d5dcf88fed2fb80dcea1336a8ac8924",
           "symbol": "TRIBE",
           "decimals": 18
         }
@@ -84,7 +84,7 @@
     }
   },
   "museo": {
-    "token": "0xA673c822C533E143e58f3181a5ea638cEA98ddbc",
+    "token": "0xa673c822c533e143e58f3181a5ea638cea98ddbc",
     "name": "Museo DAO",
     "network": "1",
     "symbol": "MUSEO",
@@ -93,7 +93,7 @@
       {
         "name": "moloch",
         "params": {
-          "address": "0xA673c822C533E143e58f3181a5ea638cEA98ddbc",
+          "address": "0xa673c822c533e143e58f3181a5ea638cea98ddbc",
           "symbol": "MUSEO",
           "decimals": 18
         }
