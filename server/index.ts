@@ -32,6 +32,14 @@ import { migrateProposals } from './helpers/migration/migrate';
 const network = process.env.NETWORK || 'testnet';
 
 /**
+ * Any message signed and sent to snapshot-hub api must be within the timeout defined by this variable.
+ * If the message timestamp is higher than the current time plus the timeout, the message is considered invalid
+ * and the request fails. By default the timeout is set to 10 minutes if none is specified.
+ */
+const messageTimeoutSec = process.env.MSG_TIMEOUT_SEC || 60 * 10;
+console.log(`Message timeout in seconds: ${messageTimeoutSec}`);
+
+/**
  * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
  * Since this implementation is used by OpenLaw only, that dependency was removed and the spaces are loaded from the
  * ./spaces folder based on the environment: prod or dev.
@@ -160,7 +168,7 @@ router.post('/message', async (req, res) => {
   if (
     !msg.timestamp ||
     typeof msg.timestamp !== 'string' ||
-    msg.timestamp > ts + 30
+    msg.timestamp > ts + messageTimeoutSec
   )
     return sendError(res, 'wrong timestamp');
 
