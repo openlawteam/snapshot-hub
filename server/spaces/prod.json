@@ -38,7 +38,7 @@
 		}
 	},
 	"neptune": {
-		"token": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+		"token": "0xa3cf824160e5ec3dccccb44c2552eee45a44aaeb",
 		"name": "Liquidity DAO",
 		"network": "1",
 		"symbol": "NEP",
@@ -46,7 +46,7 @@
 		"strategies": [{
 			"name": "moloch",
 			"params": {
-				"address": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+				"address": "0xa3cf824160e5ec3dccccb44c2552eee45a44aaeb",
 				"symbol": "NEP",
 				"decimals": 18
 			}
