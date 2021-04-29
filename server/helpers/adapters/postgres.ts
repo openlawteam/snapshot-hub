@@ -209,3 +209,21 @@ export const getAllDraftsExceptSponsored = async (space: string) => {
   console.log(result.rows.length);
   return result.rows;
 };
+
+export const saveOffchainProof = async (
+  space: string,
+  merkleRoot: string,
+  steps: object
+) => {
+  const insert = `INSERT INTO merkle_proofs (space, merkle_root, steps) VALUES ($1, $2, $3);`;
+  const result = await db.query(insert, [space, merkleRoot, steps]);
+  console.log(result.rows.length);
+  return result.rows;
+};
+
+export const getOffchainProof = async (space: string, merkleRoot: string) => {
+  const select = `SELECT * FROM merkle_proofs WHERE space = $1 AND merkle_root = $2;`;
+  const result = await db.query(select, [space, merkleRoot]);
+  console.log(result.rows.length);
+  return result.rows;
+};

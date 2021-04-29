@@ -14,7 +14,9 @@ import {
 import {
   verifySignature,
   getDraftERC712Hash,
-  getMessageERC712Hash
+  getMessageERC712Hash,
+  MerkleTree,
+  buildVoteLeafHashForMerkleTree
 } from '@openlaw/snapshot-js-erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
@@ -35,7 +37,9 @@ import {
   getAllProposalsAndVotes,
   getAllDraftsExceptSponsored,
   findVotesForProposals,
-  getAllProposalsAndVotesByAction
+  getAllProposalsAndVotesByAction,
+  saveOffchainProof,
+  getOffchainProof
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 /**
@@ -187,6 +191,51 @@ router.get('/:space/proposal/:id/votes', async (req, res) => {
   getProposalVotes(space, id)
     .then(toVotesMessageJson)
     .then(obj => res.json(obj));
+});
+
+router.post('/:space/offchain_proofs', async (req, res) => {
+  const space = req.params.space;
+  const verifyingContract = req.body.verifyingContract;
+  const actionId = req.body.actionId;
+  const chainId = req.body.chainId;
+  const merkleRoot = req.body.merkleRoot;
+  const steps = req.body.steps;
+
+  if (
+    !space ||
+    !verifyingContract ||
+    !actionId ||
+    !chainId ||
+    !merkleRoot ||
+    !steps ||
+    steps.length === 0
+  )
+    return res.status(400).send({
+      error: 'invalid request parameters'
+    });
+
+  const merkleTree = new MerkleTree(
+    steps.map(s =>
+      buildVoteLeafHashForMerkleTree(s, verifyingContract, actionId, chainId)
+    )
+  );
+
+  if (merkleTree.getHexRoot() === merkleRoot) {
+    await saveOffchainProof(space, merkleRoot, steps);
+    return res.status(201).send();
+  }
+
+  return res.status(403).send({ error: 'invalid merkle root' });
+});
+
+router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
+  const { space, merkleRoot } = req.params;
+  return getOffchainProof(space, merkleRoot)
+    .then(p => res.status(200).send(p))
+    .catch(e => {
+      console.error(e);
+      return res.status(404).send();
+    });
 });
 
 router.post('/message', async (req, res) => {
