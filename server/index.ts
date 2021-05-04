@@ -208,7 +208,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
     !chainId ||
     !merkleRoot ||
     !steps ||
-    steps.length < 1 // must have at least 2 steps
+    steps.length < 2 // must have at least 2 steps
   )
     return res.status(400).send({
       error: 'invalid request parameters'
@@ -243,16 +243,19 @@ router.post('/:space/offchain_proofs', async (req, res) => {
     return res.status(201).send();
   }
 
-  return res.status(403).send({ error: 'invalid merkle root' });
+  return res.status(400).send({ error: 'invalid merkle root' });
 });
 
 router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
   const { space, merkleRoot } = req.params;
   return getOffchainProof(space, merkleRoot)
-    .then(p => res.status(200).send(p))
+    .then(p => {
+      if (p && p.length > 0) return res.status(200).send(p);
+      return res.status(404).send([]);
+    })
     .catch(e => {
       console.error(e);
-      return res.status(404).send();
+      return res.status(500).send();
     });
 });
 

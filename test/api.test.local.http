@@ -1,7 +1,7 @@
 
 # REST Client tests on http://localhost:8080/ server
 # Use docker-composer up --build to launch the test server 
-@baseUrl = http://localhost:8080
+@baseUrl = http://localhost:3000
 ### dev
 #@token = 0x8276d5e4133eba2043a2a9fccc55284c1243f1d4
 ### prod thelao
@@ -59,3 +59,32 @@ GET {{baseUrl}}/api/{{space}}/proposal/QmYWyqesuVTvngwKFhhmAzDrLbJTJYav4d3P21swF
 "QmWWDM8rcrSjXVo4ygFg9jgqvjvq7AdrF66spACeaLgBpH" -> "QmYWyqesuVTvngwKFhhmAzDrLbJTJYav4d3P21swF4HiYd"
 
 GET {{baseUrl}}/api/{{space}}/proposal/QmTdejAMkvSGaYJf345rnN5tG6jHdMyXjrRZY6Bu8UXeVr  HTTP/1.1
+
+### Create proof
+POST {{baseUrl}}/api/{{space}}/offchain_proofs HTTP/1.1
+Content-Type: application/json
+
+{
+  "verifyingContract": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+  "actionId": "test",
+  "chainId": "4",
+  "merkleRoot": "1",
+  "steps": [
+   {
+        "nbYes": 4, 
+        "nbNo": 1,
+        "account": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+        "choice": "2",
+        "proposalHash": "QmeTLYqnrnxR9q4vskShMhkgmUiaX23FGeNLgRcwzCoXiR",
+        "index": 0
+    },
+    {
+        "nbYes": 4, 
+        "nbNo": 1,
+        "account": "0xEd7B3f2902f2E1B17B027bD0c125B674d293bDA0",
+        "choice": "2",
+        "proposalHash": "QmeTLYqnrnxR9q4vskShMhkgmUiaX23FGeNLgRcwzCoXiR",
+        "index": 1
+    }
+  ]
+}
