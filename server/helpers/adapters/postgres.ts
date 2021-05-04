@@ -215,14 +215,14 @@ export const saveOffchainProof = async (
   merkleRoot: string,
   steps: object
 ) => {
-  const insert = `INSERT INTO merkle_proofs (space, merkle_root, steps) VALUES ($1, $2, $3);`;
-  const result = await db.query(insert, [space, merkleRoot, steps]);
+  const insert = `INSERT INTO offchain_proofs (merkle_root, space, steps) VALUES ($1, $2, $3);`;
+  const result = await db.query(insert, [merkleRoot, space, steps]);
   console.log(result.rows.length);
   return result.rows;
 };
 
 export const getOffchainProof = async (space: string, merkleRoot: string) => {
-  const select = `SELECT * FROM merkle_proofs WHERE space = $1 AND merkle_root = $2;`;
+  const select = `SELECT * FROM offchain_proofs WHERE space = $1 AND merkle_root = $2 LIMIT 1;`;
   const result = await db.query(select, [space, merkleRoot]);
   console.log(result.rows.length);
   return result.rows;

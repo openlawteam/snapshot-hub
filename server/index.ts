@@ -250,8 +250,8 @@ router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
   const { space, merkleRoot } = req.params;
   return getOffchainProof(space, merkleRoot)
     .then(p => {
-      if (p && p.length > 0) return res.status(200).send(p);
-      return res.status(404).send([]);
+      if (p && p.length === 1) return res.status(200).send(p[0]);
+      return res.sendStatus(400);
     })
     .catch(e => {
       console.error(e);
