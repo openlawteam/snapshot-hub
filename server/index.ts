@@ -223,7 +223,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
   let current = indexes[0];
   if (current !== 0)
     return res.status(400).send({ error: 'invalid initial index' });
-    
+
   // each step must have the index provided in an incremental order by 1 unit only
   for (let i = 1; i < indexes.length; i++) {
     if (indexes[i] - current !== 1) {
