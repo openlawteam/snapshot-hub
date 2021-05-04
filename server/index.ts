@@ -214,7 +214,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
       error: 'invalid request parameters'
     });
 
-  const indexes = steps.map(s => s.index).filter(s => s.index);
+  const indexes = steps.map(s => s.index).filter(s => s >= 0);
   if (indexes.length !== steps.length) {
     return res.status(400).send({ error: 'invalid merkle root' });
   }
