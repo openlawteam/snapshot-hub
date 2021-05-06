@@ -208,7 +208,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
     !chainId ||
     !merkleRoot ||
     !steps ||
-    steps.length < 2 // must have at least 2 steps
+    steps.length < 1 // must have at least 1 steps
   )
     return res.status(400).send({
       error: 'invalid request parameters'
