@@ -32,3 +32,10 @@ CREATE TABLE IF NOT EXISTS hubs (
 
 CREATE INDEX IF NOT EXISTS hubs_address_idx on hubs (address);
 CREATE INDEX IF NOT EXISTS hubs_is_self_idx on hubs (is_self);
+
+CREATE TABLE IF NOT EXISTS offchain_proofs (
+  merkle_root VARCHAR(66) NOT NULL,
+  space VARCHAR(64) NOT NULL,
+  steps JSONB,
+  PRIMARY KEY (merkle_root)
+);

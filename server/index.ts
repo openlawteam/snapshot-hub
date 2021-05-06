@@ -14,7 +14,9 @@ import {
 import {
   verifySignature,
   getDraftERC712Hash,
-  getMessageERC712Hash
+  getMessageERC712Hash,
+  MerkleTree,
+  buildVoteLeafHashForMerkleTree
 } from '@openlaw/snapshot-js-erc712';
 /**
  * OpenLaw uses Postgres to store the proposals and votes, so a new adapter was created to
@@ -35,7 +37,9 @@ import {
   getAllProposalsAndVotes,
   getAllDraftsExceptSponsored,
   findVotesForProposals,
-  getAllProposalsAndVotesByAction
+  getAllProposalsAndVotesByAction,
+  saveOffchainProof,
+  getOffchainProof
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 /**
@@ -187,6 +191,84 @@ router.get('/:space/proposal/:id/votes', async (req, res) => {
   getProposalVotes(space, id)
     .then(toVotesMessageJson)
     .then(obj => res.json(obj));
+});
+
+router.post('/:space/offchain_proofs', async (req, res) => {
+  const space = req.params.space;
+  const verifyingContract = req.body.verifyingContract;
+  const actionId = req.body.actionId;
+  const chainId = req.body.chainId;
+  const merkleRoot = req.body.merkleRoot;
+  const steps = req.body.steps;
+
+  if (
+    !space ||
+    !verifyingContract ||
+    !actionId ||
+    !chainId ||
+    !merkleRoot ||
+    !steps ||
+    steps.length < 1 // must have at least 1 steps
+  )
+    return res.status(400).send({
+      error: 'invalid request parameters'
+    });
+
+  const indexes = steps.map(s => s.index).filter(s => s >= 0);
+  if (indexes.length !== steps.length) {
+    return res.status(400).send({ error: 'invalid merkle root' });
+  }
+
+  // the initial index should be always 0
+  let current = indexes[0];
+  if (current !== 0)
+    return res.status(400).send({ error: 'invalid initial index' });
+
+  // each step must have the index provided in an incremental order by 1 unit only
+  for (let i = 1; i < indexes.length; i++) {
+    // if there's only 1 index, exit before the increment check.
+    if (indexes.length === 1) {
+      return;
+    }
+
+    if (indexes[i] - current !== 1) {
+      return res.status(400).send({ error: 'invalid indexes' });
+    }
+
+    current = indexes[i];
+  }
+
+  const merkleTree = new MerkleTree(
+    steps.map(s =>
+      buildVoteLeafHashForMerkleTree(s, verifyingContract, actionId, chainId)
+    )
+  );
+
+  if (merkleTree.getHexRoot() === merkleRoot) {
+    try {
+      await saveOffchainProof(space, merkleRoot, steps);
+      return res.sendStatus(201);
+    } catch (error) {
+      return res.status(500).send({
+        error: 'something went wrong while storing the off-chain proof'
+      });
+    }
+  }
+
+  return res.status(400).send({ error: 'invalid merkle root' });
+});
+
+router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
+  const { space, merkleRoot } = req.params;
+  return getOffchainProof(space, merkleRoot)
+    .then(p => {
+      if (p && p.length === 1) return res.status(200).send(p[0]);
+      return res.sendStatus(404);
+    })
+    .catch(e => {
+      console.error(e);
+      return res.sendStatus(500);
+    });
 });
 
 router.post('/message', async (req, res) => {
