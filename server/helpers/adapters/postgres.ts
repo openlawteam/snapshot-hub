@@ -213,10 +213,14 @@ export const getAllDraftsExceptSponsored = async (space: string) => {
 export const saveOffchainProof = async (
   space: string,
   merkleRoot: string,
-  steps: object
+  steps: Record<string, any>[]
 ) => {
   const insert = `INSERT INTO offchain_proofs (merkle_root, space, steps) VALUES ($1, $2, $3);`;
-  const result = await db.query(insert, [merkleRoot, space, steps]);
+  const result = await db.query(insert, [
+    merkleRoot,
+    space,
+    JSON.stringify(steps)
+  ]);
   console.log(result.rows.length);
   return result.rows;
 };
