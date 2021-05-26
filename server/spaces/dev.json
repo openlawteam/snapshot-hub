@@ -103,5 +103,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "alien": {
+    "token": "0xf9ffd96db7d6b684f7f87c71b96e856bbc129203",
+    "name": "Alien DAO",
+    "network": "1",
+    "symbol": "ALIEN",
+    "skin": "alien",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xf9ffd96db7d6b684f7f87c71b96e856bbc129203",
+          "symbol": "ALIEN",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
