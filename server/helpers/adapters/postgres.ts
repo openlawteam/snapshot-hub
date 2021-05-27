@@ -149,11 +149,11 @@ export const getMessagesById = async (
 export const getVoteBySender = async (
   space: string,
   address: string,
-  proposalHash: string
+  proposalId: string
 ) => {
-  console.log([space, address, proposalHash]);
-  const query = `SELECT * FROM messages WHERE space = $1 AND address = $2 AND payload ->> 'proposalHash' = $3 AND type = 'vote'`;
-  const result = await db.query(query, [space, address, proposalHash]);
+  console.log([space, address, proposalId]);
+  const query = `SELECT * FROM messages WHERE space = $1 AND address = $2 AND payload ->> 'proposalId' = $3 AND type = 'vote'`;
+  const result = await db.query(query, [space, address, proposalId]);
   console.log(result.rows.length);
   return result.rows;
 };
@@ -166,7 +166,7 @@ export const getProposalByDraft = async (space: string, id: string) => {
 };
 
 export const getProposalVotes = async (space: string, id: string) => {
-  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalHash' = $2 ORDER BY timestamp ASC`;
+  const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalId' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;

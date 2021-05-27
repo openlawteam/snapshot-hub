@@ -402,9 +402,9 @@ router.post('/message', async (req, res) => {
 
   if (msg.type === 'vote') {
     if (
-      //[choice, metadata, proposalHash] == 3
+      //[choice, metadata, proposalId] == 3
       Object.keys(msg.payload).length !== 3 ||
-      !msg.payload.proposalHash ||
+      !msg.payload.proposalId ||
       !msg.payload.choice ||
       !msg.payload.metadata
     )
@@ -418,7 +418,7 @@ router.post('/message', async (req, res) => {
 
     const proposals = await getMessagesById(
       space,
-      msg.payload.proposalHash,
+      msg.payload.proposalId,
       msgTypes.PROPOSAL
     );
     if (!proposals || proposals.length == 0)
@@ -431,7 +431,7 @@ router.post('/message', async (req, res) => {
     const votes = await getVoteBySender(
       space,
       body.address,
-      msg.payload.proposalHash
+      msg.payload.proposalId
     );
     if (votes && votes.length > 0) return sendError(res, 'already voted');
   }
