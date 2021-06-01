@@ -124,5 +124,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "darkhorse": {
+    "token": "0x81c9626A259b8A20bcCb347BeC0B594D59DF63C6",
+    "name": "Dark Horse DAO",
+    "network": "1",
+    "symbol": "HORSE",
+    "skin": "darkhorse",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x81c9626A259b8A20bcCb347BeC0B594D59DF63C6",
+          "symbol": "HORSE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
