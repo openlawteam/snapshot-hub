@@ -126,7 +126,7 @@
     }
   },
   "darkhorse": {
-    "token": "0x81c9626A259b8A20bcCb347BeC0B594D59DF63C6",
+    "token": "0x81c9626a259b8a20bccb347bec0b594d59df63c6",
     "name": "Dark Horse DAO",
     "network": "1",
     "symbol": "HORSE",
@@ -135,7 +135,7 @@
       {
         "name": "moloch",
         "params": {
-          "address": "0x81c9626A259b8A20bcCb347BeC0B594D59DF63C6",
+          "address": "0x81c9626a259b8a20bccb347bec0b594d59df63c6",
           "symbol": "HORSE",
           "decimals": 18
         }
