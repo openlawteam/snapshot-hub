@@ -306,7 +306,7 @@ router.post('/message', async (req, res) => {
   )
     return sendError(res, 'wrong erc712Data');
 
-  const space = tokens[msg.token];
+  const space = tokens[msg.token.toLowerCase()];
   if (!space) return sendError(res, 'unknown space');
 
   if (
