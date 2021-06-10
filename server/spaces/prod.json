@@ -84,18 +84,18 @@
     }
   },
   "museo": {
-    "token": "0xa673c822c533e143e58f3181a5ea638cea98ddbc",
+    "token": "0x7c8B281C56f7ef9b8099D3F491AF24DC2C2e3ee0",
     "name": "Museo DAO",
     "network": "1",
     "symbol": "MUSEO",
     "skin": "museo",
     "strategies": [
       {
-        "name": "moloch",
+        "name": "muse0",
         "params": {
-          "address": "0xa673c822c533e143e58f3181a5ea638cea98ddbc",
-          "symbol": "MUSEO",
-          "decimals": 18
+          "address": "0xf75527cd04dda2816453552fec2fd43e4affac0c",
+          "symbol": "MUSE0",
+          "decimals": 0
         }
       }
     ],
