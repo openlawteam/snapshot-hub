@@ -55,6 +55,13 @@ const network = process.env.NETWORK || 'testnet';
 const useIPFSPinnig = process.env.USE_IPFS === 'true';
 
 /**
+ * If true, the proposal's voting end time constraint will not be enforced.
+ * This allows an external time period to be used (i.e. DAO's on-chain proposal's voting period).
+ */
+const ignoreVoteEndConstraint: boolean =
+  process.env.IGNORE_VOTE_END_CONSTRAINT === 'true';
+
+/**
  * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
  * Since this implementation is used by OpenLaw only, that dependency was removed and the spaces are loaded from the
  * ./spaces folder based on the environment: prod or dev.
@@ -425,8 +432,10 @@ router.post('/message', async (req, res) => {
       return sendError(res, 'unknown proposal');
 
     const payload = jsonParse(proposals[0].payload);
-    if (ts > payload.end || payload.start > ts)
-      return sendError(res, 'not in voting window');
+    const isNotInVotingWindow: boolean = ignoreVoteEndConstraint
+      ? payload.start > ts
+      : ts > payload.end || payload.start > ts;
+    if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
     const votes = await getVoteBySender(
       space,
