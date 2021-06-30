@@ -28,4 +28,4 @@ COPY --chown=node:node . .
 EXPOSE 8080
 
 # Start the aplication
-CMD ["npm", "run", "express"]
+CMD ["npm", "start"]
