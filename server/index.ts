@@ -431,10 +431,13 @@ router.post('/message', async (req, res) => {
     if (!proposals || proposals.length == 0)
       return sendError(res, 'unknown proposal');
 
-    const payload = jsonParse(proposals[0].payload);
+    const { payload: payloadToParse } = proposals[0];
+    const payload = jsonParse(payloadToParse, payloadToParse);
+
     const isNotInVotingWindow: boolean = ignoreVoteEndConstraint
       ? payload.start > ts
       : ts > payload.end || payload.start > ts;
+
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
     const votes = await getVoteBySender(
