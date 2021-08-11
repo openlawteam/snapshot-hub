@@ -1,59 +1,86 @@
 {
-	"thelao": {
-		"token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-		"name": "The LAO",
-		"network": "1",
-		"symbol": "LAO",
-		"skin": "thelao",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
-				"symbol": "LAO",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	},
-	"flamingo": {
-		"token": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
-		"name": "Flamingo DAO",
-		"network": "1",
-		"symbol": "FLA-C",
-		"skin": "flamingo",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
-				"symbol": "FLA",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	},
-	"neptune": {
-		"token": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
-		"name": "Liquidity DAO",
-		"network": "1",
-		"symbol": "NEP",
-		"skin": "neptune",
-		"strategies": [{
-			"name": "moloch",
-			"params": {
-				"address": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
-				"symbol": "NEP",
-				"decimals": 18
-			}
-		}],
-		"filters": {
-			"defaultTab": "all",
-			"minScore": 1
-		}
-	}
+  "thelao": {
+    "token": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+    "name": "The LAO",
+    "network": "1",
+    "symbol": "LAO",
+    "skin": "thelao",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x8f56682a50becb1df2fb8136954f2062871bc7fc",
+          "symbol": "LAO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "flamingo": {
+    "token": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
+    "name": "Flamingo DAO",
+    "network": "1",
+    "symbol": "FLA-C",
+    "skin": "flamingo",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x43310bd1c8f261ee7b9025662207ed95329aa193",
+          "symbol": "FLA",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "neptune": {
+    "token": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+    "name": "Liquidity DAO",
+    "network": "1",
+    "symbol": "NEP",
+    "skin": "neptune",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x95cb0a05f638999d26e97f9a2173ca30067a8009",
+          "symbol": "NEP",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "metaverse": {
+    "token": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+    "name": "NEON DAO",
+    "network": "1",
+    "symbol": "NEON",
+    "skin": "metaverse",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+          "symbol": "NEON",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  }
 }
