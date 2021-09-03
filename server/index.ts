@@ -201,19 +201,22 @@ router.get('/:space/proposal/:id/votes', async (req, res) => {
 });
 
 router.post('/:space/offchain_proofs', async (req, res) => {
-  const space = req.params.space;
-  const verifyingContract = req.body.verifyingContract;
-  const actionId = req.body.actionId;
+  const space: string = req.params.space;
+  const verifyingContract: string = req.body.verifyingContract;
+  const actionId: string = req.body.actionId;
   const chainId = req.body.chainId;
-  const merkleRoot = req.body.merkleRoot;
+  const merkleRoot: string = req.body.merkleRoot;
   const steps = req.body.steps;
+  console.log('POST /:space/offchain_proofs', space, merkleRoot);
 
   if (
     !space ||
+    space.length > 64 ||
     !verifyingContract ||
     !actionId ||
     !chainId ||
     !merkleRoot ||
+    merkleRoot.length !== 66 ||
     !steps ||
     steps.length < 1 // must have at least 1 steps
   )
@@ -267,6 +270,8 @@ router.post('/:space/offchain_proofs', async (req, res) => {
 
 router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
   const { space, merkleRoot } = req.params;
+  console.log('GET /:space/offchain_proofs/:merkleRoot', space, merkleRoot);
+
   return getOffchainProof(space, merkleRoot)
     .then(p => {
       if (p && p.length === 1) return res.status(200).send(p[0]);
@@ -336,14 +341,19 @@ router.post('/message', async (req, res) => {
 
   let isValidSignature = false;
   if (erc712Data.verifyingContract && erc712Data.chainId) {
-    isValidSignature = verifySignature(
-      { ...erc712Data.message, type: msg.type },
-      body.address,
-      erc712Data.verifyingContract,
-      erc712Data.actionId,
-      erc712Data.chainId,
-      body.sig
-    );
+    try {
+      // The signature verification may fail if it is missing any message attribute.
+      isValidSignature = verifySignature(
+        { ...erc712Data.message, type: msg.type },
+        body.address,
+        erc712Data.verifyingContract,
+        erc712Data.actionId,
+        erc712Data.chainId,
+        body.sig
+      );
+    } catch (e) {
+      return sendError(res, e.message, 400);
+    }
   }
 
   if (!isValidSignature) return sendError(res, 'wrong signature', 400);
@@ -483,6 +493,7 @@ router.post('/message', async (req, res) => {
       relayerIpfsRes,
       erc712Data.actionId
     );
+    console.log(`New Draft: ${erc712Hash}`);
     return res.json({
       uniqueId: erc712Hash
     });
@@ -518,6 +529,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId
     );
 
+    console.log(`New Proposal: ${erc712Hash}`);
     return res.json({
       uniqueId: erc712Hash,
       uniqueIdDraft: erc712DraftHashToSet
@@ -541,6 +553,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId
     );
 
+    console.log(`New Vote: ${erc712Hash}`);
     return res.json({ uniqueId: erc712Hash });
   }
 
