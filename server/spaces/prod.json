@@ -82,5 +82,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "loot": {
+    "token": "0xcf4ef4e2a6ECced4F3919eF0E4650223Ab11185E",
+    "name": "Loot DAO",
+    "network": "1",
+    "symbol": "LOOT",
+    "skin": "loot",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xcf4ef4e2a6ECced4F3919eF0E4650223Ab11185E",
+          "symbol": "LOOT",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
