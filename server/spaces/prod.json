@@ -83,18 +83,18 @@
       "minScore": 1
     }
   },
-  "loot": {
-    "token": "0xcf4ef4e2a6ECced4F3919eF0E4650223Ab11185E",
-    "name": "Loot DAO",
+  "rogue": {
+    "token": "0x8e810B4467E78FBAe131bf2B7Aa07AE6654a87C4",
+    "name": "Rogue DAO",
     "network": "1",
-    "symbol": "LOOT",
-    "skin": "loot",
+    "symbol": "ROGUE",
+    "skin": "rogue",
     "strategies": [
       {
         "name": "moloch",
         "params": {
-          "address": "0xcf4ef4e2a6ECced4F3919eF0E4650223Ab11185E",
-          "symbol": "LOOT",
+          "address": "0x8e810B4467E78FBAe131bf2B7Aa07AE6654a87C4",
+          "symbol": "ROGUE",
           "decimals": 18
         }
       }
