@@ -104,18 +104,18 @@
       "minScore": 1
     }
   },
-  "rogue": {
-    "token": "0x8e810B4467E78FBAe131bf2B7Aa07AE6654a87C4",
-    "name": "Rogue DAO",
+  "fashion": {
+    "token": "0xeE2873D8E5380405eAF079491f7A6322fd35Db1f",
+    "name": "Red DAO",
     "network": "1",
-    "symbol": "ROGUE",
-    "skin": "rogue",
+    "symbol": "RED",
+    "skin": "red",
     "strategies": [
       {
         "name": "moloch",
         "params": {
-          "address": "0x8e810B4467E78FBAe131bf2B7Aa07AE6654a87C4",
-          "symbol": "ROGUE",
+          "address": "0xeE2873D8E5380405eAF079491f7A6322fd35Db1f",
+          "symbol": "RED",
           "decimals": 18
         }
       }
