@@ -103,5 +103,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "gaming": {
+    "token": "0xEB2a287F29040eC98926C4b37a736898D1862f51",
+    "name": "Ready Player DAO",
+    "network": "1",
+    "symbol": "RPD",
+    "skin": "gaming",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xEB2a287F29040eC98926C4b37a736898D1862f51",
+          "symbol": "RPD",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
