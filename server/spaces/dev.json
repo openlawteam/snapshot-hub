@@ -124,5 +124,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "metaverse": {
+    "token": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+    "name": "NEON DAO",
+    "network": "1",
+    "symbol": "NEON",
+    "skin": "metaverse",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+          "symbol": "NEON",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }

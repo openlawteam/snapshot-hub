@@ -83,27 +83,6 @@
       "minScore": 1
     }
   },
-  "metaverse": {
-    "token": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
-    "name": "NEON DAO",
-    "network": "1",
-    "symbol": "NEON",
-    "skin": "metaverse",
-    "strategies": [
-      {
-        "name": "moloch",
-        "params": {
-          "address": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
-          "symbol": "NEON",
-          "decimals": 18
-        }
-      }
-    ],
-    "filters": {
-      "defaultTab": "all",
-      "minScore": 1
-    }
-  },
   "fashion": {
     "token": "0xeE2873D8E5380405eAF079491f7A6322fd35Db1f",
     "name": "Red DAO",
@@ -137,6 +116,27 @@
         "params": {
           "address": "0xEB2a287F29040eC98926C4b37a736898D1862f51",
           "symbol": "RPD",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "metaverse": {
+    "token": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+    "name": "NEON DAO",
+    "network": "1",
+    "symbol": "NEON",
+    "skin": "metaverse",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x4ffbe8b2f78db9f6feaaad47bca1794a62a2ef5e",
+          "symbol": "NEON",
           "decimals": 18
         }
       }
