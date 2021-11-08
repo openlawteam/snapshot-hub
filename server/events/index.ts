@@ -8,7 +8,6 @@
  */
 
 import fetch from 'cross-fetch';
-import { QueryResult, QueryResultRow } from 'pg';
 
 import db from '../helpers/postgres';
 
@@ -35,7 +34,11 @@ const SERVICE_EVENTS_ACTIVE = parseInt(process.env.SERVICE_EVENTS || '0');
  * @returns `Subscribers`
  */
 const getSubscribersFromFile = async (): Promise<Subscribers> => {
-  return await import(`./subscribers/${process.env.ENV}.json`);
+  const { default: subscribers } = await import(
+    `./subscribers/${process.env.ENV}.json`
+  );
+
+  return subscribers;
 };
 
 async function sendEvent(event, to) {
@@ -49,8 +52,9 @@ async function sendEvent(event, to) {
 
 async function processEvents() {
   const ts = parseInt((Date.now() / 1e3).toFixed()) - DELAY;
-  const events = await db.query<EventsDB>(
-    'SELECT * FROM events WHERE expire <= ?',
+
+  const events = await db.query<EventsDB, [number]>(
+    'SELECT * FROM events WHERE expire <= $1',
     [ts]
   );
 
@@ -63,18 +67,18 @@ async function processEvents() {
       subscribers
         .filter(
           subscriber =>
-            !subscriber?.spaces || subscriber?.spaces.includes(event.space)
+            !subscriber.spaces || subscriber.spaces.includes(event.space)
         )
-        .map(subscriber => sendEvent(event, subscriber?.url))
+        .map(subscriber => sendEvent(event, subscriber.url))
     )
       .then(() => console.log('Process event done'))
       .catch(e => console.log('Process event failed', e));
 
     try {
-      await db.query('DELETE FROM events WHERE id = ? AND event = ? LIMIT 1', [
-        event.id,
-        event.event
-      ]);
+      await db.query<any, [string, string]>(
+        'DELETE FROM events WHERE id = $1 AND event = $2',
+        [event.id, event.event]
+      );
 
       console.log(`Event sent ${event.id} ${event.event}`);
     } catch (e) {
