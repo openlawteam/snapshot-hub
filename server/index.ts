@@ -42,6 +42,15 @@ import {
   getOffchainProof
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
+import db from './helpers/postgres';
+
+/**
+ * Values to insert into the `events` database.
+ *
+ * [id, event, space, expire]
+ */
+type EventInsertValuesTuple = [string, string, string, number];
+
 /**
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
  * to trigger the migration process via a PUT call. The migration happens async and gets logged to the server logs.
@@ -76,7 +85,7 @@ const spaces = JSON.parse(
   fs.readFileSync(path.join(__dirname, `./spaces/${env}.json`)).toString()
 );
 const tokens = Object.entries(spaces)
-  .map(space => [getAddress(space[1].token).toLowerCase(), space[0]])
+  .map(space => [getAddress((space[1] as any).token).toLowerCase(), space[0]])
   .reduce((p, c) => {
     p[c[0]] = c[1];
     return p;
@@ -528,6 +537,41 @@ router.post('/message', async (req, res) => {
       relayerIpfsRes,
       erc712Data.actionId
     );
+
+    // Store events in database
+
+    const EVENT_ID: string = `proposal/${erc712Hash}`;
+
+    const EVENTS_INSERT_STATEMENT: string =
+      'INSERT INTO events (id, event, space, expire) ' +
+      'VALUES ($1, $2, $3, $4) ' +
+      'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
+
+    // Insert `proposal/created`
+    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/created',
+      space,
+      Number(ts)
+    ]);
+
+    // Insert `proposal/start`
+    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/start',
+      space,
+      msg.payload.start
+    ]);
+
+    // Insert `proposal/end`
+    if (msg.payload.end > ts) {
+      await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+        EVENT_ID,
+        'proposal/end',
+        space,
+        msg.payload.end
+      ]);
+    }
 
     console.log(`New Proposal: ${erc712Hash}`);
     return res.json({
