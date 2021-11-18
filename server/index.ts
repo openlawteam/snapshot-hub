@@ -540,7 +540,7 @@ router.post('/message', async (req, res) => {
 
     // Store events in database
 
-    const EVENT_ID: string = `proposal/${erc712Hash}`;
+    const EVENT_ID = `proposal/${erc712Hash}`;
 
     const EVENTS_INSERT_STATEMENT: string =
       'INSERT INTO events (id, event, space, expire) ' +
