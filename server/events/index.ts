@@ -47,7 +47,13 @@ async function sendEvent(event, to) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(event)
   });
-  return res.json();
+
+  // Attempt to get any JSON response
+  try {
+    return await res.json();
+  } catch (error) {
+    return undefined;
+  }
 }
 
 async function processEvents() {
