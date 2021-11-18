@@ -7,7 +7,7 @@
  * @see https://github.com/snapshot-labs/snapshot-hub/tree/master/src/events
  */
 
-import fetch from 'cross-fetch';
+import axios from 'axios';
 
 import db from '../helpers/postgres';
 
@@ -42,15 +42,11 @@ const getSubscribersFromFile = async (): Promise<Subscribers> => {
 };
 
 async function sendEvent(event, to) {
-  const res = await fetch(to, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(event)
-  });
+  const res = await axios.post(to, event);
 
   // Attempt to get any JSON response
   try {
-    return await res.json();
+    return await res;
   } catch (error) {
     return undefined;
   }
