@@ -22,4 +22,4 @@ pnpm-debug.log*
 *.sw?
 
 # webhook subscribers
-**/subscribers/local.json
+**/events/subscribers/local.json
