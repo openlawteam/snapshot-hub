@@ -1,5 +1,5 @@
 [
   {
-    "url": "http://localhost:3001/api/snapshot-webhook"
+    "url": "http://docker-host:3001/api/snapshot-webhook"
   }
 ]
