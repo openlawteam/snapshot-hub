@@ -37,6 +37,9 @@ ALLOWED_DOMAINS=http://localhost:3000
 
 # The relayer API (alternative to Infura)
 ALCHEMY_API_URL=https://eth-rinkeby.alchemyapi.io/v2/<your-api-key>
+
+# Enables events to run for processing webhook requests. Set to `1` for `true`, `0` for `false`.
+SERVICE_EVENTS=1
 ```
 
 ### Running

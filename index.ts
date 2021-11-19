@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import frameguard from 'frameguard';
 import cors from 'cors';
 import api from './server';
+import './server/events';
 
 const allowedDomains = process.env.ALLOWED_DOMAINS
   ? process.env.ALLOWED_DOMAINS.split(',')
