@@ -39,3 +39,14 @@ CREATE TABLE IF NOT EXISTS offchain_proofs (
   steps JSONB,
   PRIMARY KEY (merkle_root)
 );
+
+CREATE TABLE IF NOT EXISTS events (
+  id VARCHAR(128) NOT NULL,
+  event VARCHAR(64) NOT NULL,
+  space VARCHAR(64) NOT NULL,
+  expire INT NOT NULL,
+  PRIMARY KEY (id, event)
+);
+
+CREATE INDEX IF NOT EXISTS event_space_idx on events (space);
+CREATE INDEX IF NOT EXISTS event_expire_idx on events (expire);

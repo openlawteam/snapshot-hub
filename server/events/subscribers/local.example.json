@@ -1,0 +1,5 @@
+[
+  {
+    "url": "http://docker-host:3001/api/snapshot-webhook"
+  }
+]
