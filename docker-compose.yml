@@ -50,6 +50,21 @@ services:
     depends_on:
       - snapshot-postgres
 
+  ##
+  # This container will forward any traffic to your host machine.
+  # For example, this is helpful to access a separate docker container/app
+  # running from another `Dockerfile` or `docker-compose.yml`.
+  #
+  # @see https://github.com/qoomon/docker-host
+  # @see https://sam-ngu.medium.com/connecting-to-docker-host-mysql-from-docker-container-linux-ubuntu-766e526542fd
+  ##
+  docker-host:
+    image: qoomon/docker-host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: on-failure
+
 networks:
     default:
       name: snapshot-network
