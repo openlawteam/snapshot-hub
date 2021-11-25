@@ -486,6 +486,11 @@ router.post('/message', async (req, res) => {
       })
     : '';
 
+  const EVENTS_INSERT_STATEMENT: string =
+    'INSERT INTO events (id, event, space, expire) ' +
+    'VALUES ($1, $2, $3, $4) ' +
+    'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
+
   if (msg.type === 'draft') {
     const erc712Hash = getMessageERC712Hash(
       { ...msg, type: msg.type },
@@ -502,6 +507,17 @@ router.post('/message', async (req, res) => {
       relayerIpfsRes,
       erc712Data.actionId
     );
+
+    const EVENT_ID = `proposal/${erc712Hash}`;
+
+    // Insert `proposal/created`
+    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/created',
+      space,
+      Number(ts)
+    ]);
+
     console.log(`New Draft: ${erc712Hash}`);
     return res.json({
       uniqueId: erc712Hash
@@ -541,11 +557,6 @@ router.post('/message', async (req, res) => {
     // Store events in database
 
     const EVENT_ID = `proposal/${erc712Hash}`;
-
-    const EVENTS_INSERT_STATEMENT: string =
-      'INSERT INTO events (id, event, space, expire) ' +
-      'VALUES ($1, $2, $3, $4) ' +
-      'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
 
     // Insert `proposal/created`
     await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
