@@ -145,5 +145,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "music": {
+    "token": "0x5dE4a43819D427ceB060eC55206Bbb4f46405BE2",
+    "name": "Noise DAO",
+    "network": "1",
+    "symbol": "NOISE",
+    "skin": "music",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x5dE4a43819D427ceB060eC55206Bbb4f46405BE2",
+          "symbol": "NOISE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
