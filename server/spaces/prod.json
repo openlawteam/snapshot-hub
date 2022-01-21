@@ -166,5 +166,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "spaceship": {
+    "token": "0xB6d271Ad2d8673418AD794503E0dd48bBdeD1448",
+    "name": "Spaceship DAO",
+    "network": "1",
+    "symbol": "SPACE",
+    "skin": "spaceship",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xB6d271Ad2d8673418AD794503E0dd48bBdeD1448",
+          "symbol": "SPACE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
