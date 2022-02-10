@@ -208,5 +208,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "unicorn": {
+    "token": "0x9DC9151e86141C278Dd019FEFd05937c199ef0Ad",
+    "name": "Unicorn DAO",
+    "network": "1",
+    "symbol": "UNICORN",
+    "skin": "unicorn",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x9DC9151e86141C278Dd019FEFd05937c199ef0Ad",
+          "symbol": "UNICORN",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
