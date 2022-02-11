@@ -208,5 +208,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "punks": {
+    "token": "0x87F43D3CdC3c2c692D661fFD6450A8e5b75b0eff",
+    "name": "Punks DAO",
+    "network": "1",
+    "symbol": "PUNKS",
+    "skin": "punks",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x87F43D3CdC3c2c692D661fFD6450A8e5b75b0eff",
+          "symbol": "PUNKS",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
