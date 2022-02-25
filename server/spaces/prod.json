@@ -229,5 +229,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "bright": {
+    "token": "0x8c876063FE202842a51459cA15B249926BBDdC76",
+    "name": "Bright Opportunities DAO",
+    "network": "1",
+    "symbol": "BRIGHT",
+    "skin": "bright",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x8c876063FE202842a51459cA15B249926BBDdC76",
+          "symbol": "BRIGHT",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
