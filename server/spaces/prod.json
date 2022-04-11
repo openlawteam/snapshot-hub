@@ -250,5 +250,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "science": {
+    "token": "0x4A2CE92d5372949eE232660b06520a28Ef281073",
+    "name": "Beaker DAO",
+    "network": "1",
+    "symbol": "DESCI",
+    "skin": "science",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x4A2CE92d5372949eE232660b06520a28Ef281073",
+          "symbol": "DESCI",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
