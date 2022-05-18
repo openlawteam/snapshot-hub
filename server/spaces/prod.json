@@ -271,5 +271,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "cc0": {
+    "token": "0x8C343BF0E0A5941d51853423F6403B823E8c0CE8",
+    "name": "C0C0 DAO",
+    "network": "1",
+    "symbol": "C0C0",
+    "skin": "cc0",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x8C343BF0E0A5941d51853423F6403B823E8c0CE8",
+          "symbol": "C0C0",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
