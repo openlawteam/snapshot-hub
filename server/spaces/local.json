@@ -313,5 +313,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "si": {
+    "token": "0x0dEA82387F67BCebBB408938B2d20723eAa93aCE",
+    "name": "Si DAO",
+    "network": "1",
+    "symbol": "SI",
+    "skin": "si",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x0dEA82387F67BCebBB408938B2d20723eAa93aCE",
+          "symbol": "SI",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
