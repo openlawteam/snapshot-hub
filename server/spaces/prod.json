@@ -334,5 +334,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "glimmer": {
+    "token": "0x1D3c434bA8F5c17b5083bDCdCc77860a70B577c6",
+    "name": "Glimmer DAO",
+    "network": "1",
+    "symbol": "GLIMMER",
+    "skin": "glimmer",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x1D3c434bA8F5c17b5083bDCdCc77860a70B577c6",
+          "symbol": "GLIMMER",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
