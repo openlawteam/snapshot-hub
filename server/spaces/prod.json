@@ -230,18 +230,18 @@
       "minScore": 1
     }
   },
-  "punks": {
-    "token": "0x87F43D3CdC3c2c692D661fFD6450A8e5b75b0eff",
-    "name": "Punks DAO",
+  "punk": {
+    "token": "0x3518480Ca09593C72C81e5888b7057236161E24b",
+    "name": "Punk DAO",
     "network": "1",
-    "symbol": "PUNKS",
-    "skin": "punks",
+    "symbol": "PUNK",
+    "skin": "punk",
     "strategies": [
       {
         "name": "moloch",
         "params": {
-          "address": "0x87F43D3CdC3c2c692D661fFD6450A8e5b75b0eff",
-          "symbol": "PUNKS",
+          "address": "0x3518480Ca09593C72C81e5888b7057236161E24b",
+          "symbol": "PUNK",
           "decimals": 18
         }
       }
