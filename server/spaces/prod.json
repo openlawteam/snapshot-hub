@@ -379,7 +379,7 @@
   },
   "testv2": {
     "token": "0x1455D0F1107b3b317Ae65aC46801f93f9Df6447B",
-    "name": "Test DAO v2",
+    "name": "Test v2 DAO",
     "network": "1",
     "symbol": "TESTv2",
     "skin": "test",
