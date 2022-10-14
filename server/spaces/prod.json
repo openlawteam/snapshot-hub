@@ -376,5 +376,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "testv2": {
+    "token": "0x1455D0F1107b3b317Ae65aC46801f93f9Df6447B",
+    "name": "Test v2 DAO",
+    "network": "1",
+    "symbol": "TESTv2",
+    "skin": "test",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x1455D0F1107b3b317Ae65aC46801f93f9Df6447B",
+          "symbol": "TESTv2",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
