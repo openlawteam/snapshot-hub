@@ -1,5 +1,8 @@
 [
   {
     "url": "https://discord.thelao.io/api/snapshot-webhook"
+  },
+  {
+    "url": "https://send-governance-email-pxstrudtoq-uk.a.run.app"
   }
 ]
