@@ -418,5 +418,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "urbit": {
+    "token": "0x6894878b3844EBc01BA64E1db50089CFAE2D34F6",
+    "name": "Labyrinth DAO",
+    "network": "1",
+    "symbol": "LABYRINTH",
+    "skin": "urbit",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x6894878b3844EBc01BA64E1db50089CFAE2D34F6",
+          "symbol": "LABYRINTH",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
