@@ -397,5 +397,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "university": {
+    "token": "0xA998868a0234867891DFf16b994AB05D61a7b3dA",
+    "name": "Dorm DAO",
+    "network": "1",
+    "symbol": "DORM",
+    "skin": "university",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xA998868a0234867891DFf16b994AB05D61a7b3dA",
+          "symbol": "DORM",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
