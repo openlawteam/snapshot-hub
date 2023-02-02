@@ -379,16 +379,16 @@
   },
   "ai": {
     "token": "0x547cD2BE6D959BDdcaBBF2bF4B87A8853ed30d9A",
-    "name": "AI DAO",
+    "name": "Metropolis DAO",
     "network": "1",
-    "symbol": "AI",
+    "symbol": "METROPOLIS",
     "skin": "ai",
     "strategies": [
       {
         "name": "moloch",
         "params": {
           "address": "0x547cD2BE6D959BDdcaBBF2bF4B87A8853ed30d9A",
-          "symbol": "AI",
+          "symbol": "METROPOLIS",
           "decimals": 18
         }
       }
