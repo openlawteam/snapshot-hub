@@ -439,5 +439,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "krpdm": {
+    "token": "0xc770aFB7E8CCDBd04c0703521f31c0647a014bdb",
+    "name": "KRPDM DAO",
+    "network": "1",
+    "symbol": "KRPDM",
+    "skin": "krpdm",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xc770aFB7E8CCDBd04c0703521f31c0647a014bdb",
+          "symbol": "KRPDM",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
