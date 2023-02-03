@@ -481,5 +481,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "zk": {
+    "token": "0x33204391931add6325413f82Af98b71d90B02aC1",
+    "name": "Zero DAO",
+    "network": "1",
+    "symbol": "ZERO",
+    "skin": "zk",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x33204391931add6325413f82Af98b71d90B02aC1",
+          "symbol": "ZERO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
