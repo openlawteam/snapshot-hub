@@ -481,5 +481,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "university-oregon": {
+    "token": "0xfd9358fda21641634f5f7838C62419b3f8c51112",
+    "name": "OREGON",
+    "network": "1",
+    "symbol": "OREGON",
+    "skin": "university-oregon",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xfd9358fda21641634f5f7838C62419b3f8c51112",
+          "symbol": "OREGON",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
