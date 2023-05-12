@@ -523,5 +523,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "thelaov2": {
+    "token": "0x9b9EFadaB735AEf622abb157Df1ee701D2E46062",
+    "name": "The LAO",
+    "network": "1",
+    "symbol": "LAO",
+    "skin": "thelaov2",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x9b9EFadaB735AEf622abb157Df1ee701D2E46062",
+          "symbol": "LAO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
