@@ -523,5 +523,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "nftv2": {
+    "token": "0x13f72b06f975ed314f35301b0b67dbedef0fe6e1",
+    "name": "Flamingo DAO",
+    "network": "1",
+    "symbol": "FLAMINGO",
+    "skin": "nftv2",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x13f72b06f975ed314f35301b0b67dbedef0fe6e1",
+          "symbol": "FLAMINGO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
