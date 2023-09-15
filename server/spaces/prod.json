@@ -504,17 +504,17 @@
     }
   },
   "university-oregon": {
-    "token": "0xfd9358fda21641634f5f7838C62419b3f8c51112",
-    "name": "OREGON",
+    "token": "0xc89985a47aa935fa5564cc865ebebbfb6d35541d",
+    "name": "Dorm DAO - Oregon",
     "network": "1",
-    "symbol": "OREGON",
+    "symbol": "DORM-Oregon",
     "skin": "university-oregon",
     "strategies": [
       {
         "name": "moloch",
         "params": {
-          "address": "0xfd9358fda21641634f5f7838C62419b3f8c51112",
-          "symbol": "OREGON",
+          "address": "0xc89985a47aa935fa5564cc865ebebbfb6d35541d",
+          "symbol": "DORM-Oregon",
           "decimals": 18
         }
       }
@@ -557,6 +557,174 @@
         "params": {
           "address": "0x13f72b06f975ed314f35301b0b67dbedef0fe6e1",
           "symbol": "FLAMINGO",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-illinois": {
+    "token": "0x743fad269c410bc51ec30cdace10466566befe99",
+    "name": "Dorm DAO - Illinois",
+    "network": "1",
+    "symbol": "DORM-Illinois",
+    "skin": "university-illinois",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x743fad269c410bc51ec30cdace10466566befe99",
+          "symbol": "DORM-Illinois",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-virginia": {
+    "token": "0x91d72be5466fc34369c6715bd87133081179b6bb",
+    "name": "Dorm DAO - UVA",
+    "network": "1",
+    "symbol": "DORM-UVA",
+    "skin": "university-virginia",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x91d72be5466fc34369c6715bd87133081179b6bb",
+          "symbol": "DORM-UVA",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-cornell": {
+    "token": "0xb7b58cb8726f4ec97da9c17b160618417d8fef8d",
+    "name": "Dorm DAO - Cornell",
+    "network": "1",
+    "symbol": "DORM-Cornell",
+    "skin": "university-cornell",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xb7b58cb8726f4ec97da9c17b160618417d8fef8d",
+          "symbol": "DORM-Cornell",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-texas": {
+    "token": "0x48fdef2c11bb1b05a6c26922317923cc27e62821",
+    "name": "Dorm DAO - Texas",
+    "network": "1",
+    "symbol": "DORM-Texas",
+    "skin": "university-texas",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x48fdef2c11bb1b05a6c26922317923cc27e62821",
+          "symbol": "DORM-Texas",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-franklin": {
+    "token": "0xbc7a885c376b8a11863b3224423a4c7b0e451cf0",
+    "name": "Dorm DAO - Franklin",
+    "network": "1",
+    "symbol": "DORM-Franklin",
+    "skin": "university-franklin",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xbc7a885c376b8a11863b3224423a4c7b0e451cf0",
+          "symbol": "DORM-Franklin",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-vox": {
+    "token": "0xff688f3119ceb45e63fdf62f209bc3dee3a41e7c",
+    "name": "Dorm DAO - Vox",
+    "network": "1",
+    "symbol": "DORM-Vox",
+    "skin": "university-vox",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xff688f3119ceb45e63fdf62f209bc3dee3a41e7c",
+          "symbol": "DORM-Vox",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-michigan": {
+    "token": "0xfdbdb60c7a0e9ab37b5bbb4c20aeabbb205a6a57",
+    "name": "Dorm DAO - Michigan",
+    "network": "1",
+    "symbol": "DORM-Michigan",
+    "skin": "university-michigan",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xfdbdb60c7a0e9ab37b5bbb4c20aeabbb205a6a57",
+          "symbol": "DORM-Michigan",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-new-york": {
+    "token": "0xd1e37f533a7009d51cdc0615851f464299555b52",
+    "name": "Dorm DAO - NYU",
+    "network": "1",
+    "symbol": "DORM-NYU",
+    "skin": "university-new-york",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xd1e37f533a7009d51cdc0615851f464299555b52",
+          "symbol": "DORM-NYU",
           "decimals": 18
         }
       }
