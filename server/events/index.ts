@@ -7,7 +7,7 @@
  * @see https://github.com/snapshot-labs/snapshot-hub/tree/master/src/events
  */
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import db from '../helpers/postgres';
 
@@ -43,17 +43,12 @@ const getSubscribersFromFile = async (): Promise<Subscribers> => {
 
 async function sendEvent(event, to) {
   try {
-    const { data } = await axios.post(to, event);
-
-    return data;
+    await axios.post(to, event);
   } catch (error) {
-    // Attempt to print error from Axios
     console.error(
       `Failed to send event to ${to}`,
-      error.response ? error.repsonse.data : error.message
+      error instanceof AxiosError ? error.toJSON() : error
     );
-
-    return undefined;
   }
 }
 
@@ -76,7 +71,7 @@ async function processEvents() {
           subscriber =>
             !subscriber.spaces || subscriber.spaces.includes(event.space)
         )
-        .map(subscriber => sendEvent(event, subscriber.url))
+        .map(async subscriber => await sendEvent(event, subscriber.url))
     )
       .then(() => console.log('Process event done'))
       .catch(e => console.log('Process event failed', e));
