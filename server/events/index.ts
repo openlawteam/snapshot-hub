@@ -7,7 +7,7 @@
  * @see https://github.com/snapshot-labs/snapshot-hub/tree/master/src/events
  */
 
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios/dist/node/axios.cjs';
 
 import db from '../helpers/postgres';
 
@@ -45,10 +45,16 @@ async function sendEvent(event, to) {
   try {
     await axios.post(to, event);
   } catch (error) {
-    console.error(
-      `Failed to send event to ${to}`,
-      error instanceof AxiosError ? error.toJSON() : error
-    );
+    const BASE_ERROR = `Failed to send event to`;
+
+    if (error instanceof AxiosError) {
+      console.error(
+        BASE_ERROR,
+        error.response ? error.response.data : error.toJSON()
+      );
+    } else {
+      console.error(BASE_ERROR, error);
+    }
   }
 }
 
