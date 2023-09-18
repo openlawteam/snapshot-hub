@@ -43,7 +43,9 @@ const getSubscribersFromFile = async (): Promise<Subscribers> => {
 
 async function sendEvent(event, to) {
   try {
-    return await axios.post(to, event);
+    const { data } = await axios.post(to, event);
+
+    return data;
   } catch (error) {
     // Attempt to print error from Axios
     console.error(
