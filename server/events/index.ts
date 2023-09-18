@@ -45,7 +45,7 @@ async function sendEvent(event, to) {
   try {
     await axios.post(to, event);
   } catch (error) {
-    const BASE_ERROR = `Failed to send event to`;
+    const BASE_ERROR = `Failed to send event to ${to}`;
 
     if (error instanceof AxiosError) {
       console.error(
