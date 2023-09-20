@@ -1,6 +1,7 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
 
+
 const format = (
   erc712Hash: string,
   body: any,
@@ -117,6 +118,20 @@ export const storeVote = async (
   );
 };
 
+export type EventsDB = {
+  event: string;
+  expire: number;
+  id: string;
+  space: string;
+};
+
+export const getExpiredEvents: (timestamp: number) => Promise<EventsDB[]> = (timestamp) => {
+  return db
+    .query<EventsDB, [number]>('SELECT * FROM events WHERE expire <= $1', [
+      timestamp
+    ])
+    .then(result => result.rows);
+};
 export const getMessages = async (space: string, msgType: string) => {
   const query = `SELECT * FROM messages WHERE type = $1 AND space = $2 ORDER BY timestamp DESC`;
   const result = await db.query(query, [msgType, space]);
