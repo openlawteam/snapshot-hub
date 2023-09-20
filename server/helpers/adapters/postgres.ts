@@ -246,3 +246,10 @@ export const getOffchainProof = async (space: string, merkleRoot: string) => {
   console.log(result.rows.length);
   return result.rows;
 };
+
+export const deleteProcessedEvent = (event: EventsDB) => {
+  return db.query<any, [string, string]>(
+    'DELETE FROM events WHERE id = $1 AND event = $2',
+    [event.id, event.event]
+  );
+}
