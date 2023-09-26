@@ -8,10 +8,7 @@
  */
 
 import axios, { AxiosError } from 'axios/dist/node/axios.cjs';
-import {
-  deleteProcessedEvent,
-  getExpiredEvents
-} from '../helpers/adapters/postgres';
+import { eventsRepository } from '../repositories/events-repository';
 
 type Subscribers = {
   url: string;
@@ -56,7 +53,7 @@ async function sendEvent(event, to) {
 async function processEvents() {
   const ts = parseInt((Date.now() / 1e3).toFixed()) - DELAY;
 
-  const events = await getExpiredEvents(ts);
+  const events = await eventsRepository.getExpiredEvents(ts);
 
   const subscribers = await getSubscribersFromFile();
 
@@ -75,7 +72,7 @@ async function processEvents() {
       .catch(e => console.log('Process event failed', e));
 
     try {
-      await deleteProcessedEvent(event);
+      await eventsRepository.deleteProcessedEvent(event);
 
       console.log(`Event sent ${event.id} ${event.event}`);
     } catch (e) {

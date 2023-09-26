@@ -23,28 +23,10 @@ import {
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
  * is a bit different for each database.
  */
-import {
-  storeDraft,
-  storeProposal,
-  storeVote,
-  sponsorDraftIfAny,
-  getMessages,
-  getMessagesById,
-  getMessagesByAction,
-  getProposalVotes,
-  getVoteBySender,
-  getProposalByDraft,
-  getAllProposalsAndVotes,
-  getAllDraftsExceptSponsored,
-  findVotesForProposals,
-  getAllProposalsAndVotesByAction,
-  saveOffchainProof,
-  getOffchainProof,
-  insertCreatedProposal,
-  insertStartedProposal,
-  insertProposalEnd
-} from './helpers/adapters/postgres';
 import pkg from '../package.json';
+import { messagesRepository } from './repositories/messages-repository';
+import { offchainProofsRepository } from './repositories/offchain-proofs-repository';
+import { eventsRepository } from './repositories/events-repository';
 
 /**
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
@@ -118,7 +100,7 @@ router.get('/spaces/:key?', (req, res) => {
 router.get('/:space/drafts', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/drafts', space);
-  getAllDraftsExceptSponsored(space)
+  messagesRepository.getAllDraftsExceptSponsored(space)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -126,7 +108,7 @@ router.get('/:space/drafts', async (req, res) => {
 router.get('/:space/drafts/:actionId', async (req, res) => {
   const { space, actionId } = req.params;
   console.log('GET /:space/drafts/:actionId', space, actionId);
-  getMessagesByAction(space, actionId, msgTypes.DRAFT)
+  messagesRepository.getMessagesByAction(space, actionId, msgTypes.DRAFT)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -134,7 +116,7 @@ router.get('/:space/drafts/:actionId', async (req, res) => {
 router.get('/:space/draft/:id', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/drafts/:id', space, id);
-  getMessagesById(space, id, msgTypes.DRAFT)
+  messagesRepository.getMessagesById(space, id, msgTypes.DRAFT)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -145,8 +127,8 @@ router.get('/:space/proposals', async (req, res) => {
   console.log('GET /:space/proposals?includeVotes', space, includeVotes);
 
   const resultsPromise = includeVotes
-    ? getAllProposalsAndVotes(space).then(toProposalWithVotesMessageJson)
-    : getMessages(space, msgTypes.PROPOSAL).then(toMessageJson);
+    ? messagesRepository.getAllProposalsAndVotes(space).then(toProposalWithVotesMessageJson)
+    : messagesRepository.getMessages(space, msgTypes.PROPOSAL).then(toMessageJson);
 
   resultsPromise.then(obj => res.json(obj));
 });
@@ -162,10 +144,10 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
   );
 
   const resultsPromise = includeVotes
-    ? getAllProposalsAndVotesByAction(space, actionId).then(
+    ? messagesRepository.getAllProposalsAndVotesByAction(space, actionId).then(
         toProposalWithVotesMessageJson
       )
-    : getMessagesByAction(space, actionId, msgTypes.PROPOSAL).then(
+    : messagesRepository.getMessagesByAction(space, actionId, msgTypes.PROPOSAL).then(
         toMessageJson
       );
 
@@ -182,15 +164,15 @@ router.get('/:space/proposal/:id', async (req, res) => {
   );
 
   const resultsPromise = searchUniqueDraftId
-    ? getProposalByDraft(space, id).then(results => {
+    ? messagesRepository.getProposalByDraft(space, id).then(results => {
         if (results && results.length > 0) return results;
-        else return getMessagesById(space, id, msgTypes.PROPOSAL);
+        else return messagesRepository.getMessagesById(space, id, msgTypes.PROPOSAL);
       })
-    : getMessagesById(space, id, msgTypes.PROPOSAL);
+    : messagesRepository.getMessagesById(space, id, msgTypes.PROPOSAL);
 
   resultsPromise
     .then(proposals =>
-      includeVotes ? findVotesForProposals(space, proposals) : proposals
+      includeVotes ? messagesRepository.findVotesForProposals(space, proposals) : proposals
     )
     .then(toProposalWithVotesMessageJson)
     .then(obj => res.json(obj));
@@ -199,7 +181,7 @@ router.get('/:space/proposal/:id', async (req, res) => {
 router.get('/:space/proposal/:id/votes', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/proposal/:id/votes', space, id);
-  getProposalVotes(space, id)
+  messagesRepository.getProposalVotes(space, id)
     .then(toVotesMessageJson)
     .then(obj => res.json(obj));
 });
@@ -260,7 +242,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
 
   if (merkleTree.getHexRoot() === merkleRoot) {
     try {
-      await saveOffchainProof(space, merkleRoot, steps);
+      await offchainProofsRepository.saveOffchainProof(space, merkleRoot, steps);
       return res.sendStatus(201);
     } catch (error) {
       return res.status(500).send({
@@ -276,7 +258,7 @@ router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
   const { space, merkleRoot } = req.params;
   console.log('GET /:space/offchain_proofs/:merkleRoot', space, merkleRoot);
 
-  return getOffchainProof(space, merkleRoot)
+  return offchainProofsRepository.getOffchainProof(space, merkleRoot)
     .then(p => {
       if (p && p.length === 1) return res.status(200).send(p[0]);
       return res.sendStatus(404);
@@ -437,7 +419,7 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const proposals = await getMessagesById(
+    const proposals = await messagesRepository.getMessagesById(
       space,
       msg.payload.proposalId,
       msgTypes.PROPOSAL
@@ -454,7 +436,7 @@ router.post('/message', async (req, res) => {
 
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
-    const votes = await getVoteBySender(
+    const votes = await messagesRepository.getVoteBySender(
       space,
       body.address,
       msg.payload.proposalId
@@ -488,7 +470,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId,
       erc712Data.chainId
     );
-    await storeDraft(
+    await messagesRepository.storeDraft(
       space,
       erc712Hash,
       msg.token,
@@ -501,7 +483,7 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await insertCreatedProposal(EVENT_ID, space, Number(timestamp));
+    await eventsRepository.insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     console.log(`New Draft: ${erc712Hash}`);
     return res.json({
@@ -523,12 +505,15 @@ router.post('/message', async (req, res) => {
       erc712Data.chainId
     );
 
-    const sponsorDraftResult = await sponsorDraftIfAny(space, erc712DraftHash);
+    const sponsorDraftResult = await messagesRepository.sponsorDraftIfAny(
+      space,
+      erc712DraftHash
+    );
 
     const erc712DraftHashToSet =
       sponsorDraftResult.rowCount > 0 ? erc712DraftHash : '';
 
-    await storeProposal(
+    await messagesRepository.storeProposal(
       space,
       erc712Hash,
       erc712DraftHashToSet,
@@ -544,14 +529,14 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await insertCreatedProposal(EVENT_ID, space, Number(timestamp));
+    await eventsRepository.insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     // Insert `proposal/start`
-    await insertStartedProposal(EVENT_ID, space, msg.payload.start);
+    await eventsRepository.insertStartedProposal(EVENT_ID, space, msg.payload.start);
 
     // Insert `proposal/end`
     if (msg.payload.end > timestamp) {
-      await insertProposalEnd(EVENT_ID, space, msg.payload.end);
+      await eventsRepository.insertProposalEnd(EVENT_ID, space, msg.payload.end);
     }
 
     console.log(`New Proposal: ${erc712Hash}`);
@@ -568,7 +553,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId,
       erc712Data.chainId
     );
-    await storeVote(
+    await messagesRepository.storeVote(
       space,
       erc712Hash,
       msg.token,
