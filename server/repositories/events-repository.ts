@@ -1,8 +1,11 @@
-import {
-  EventsDB,
-  postgresEventsRepository
-} from '../helpers/adapters/postgres';
+import { postgresEventsRepository } from '../helpers/adapters/postgres';
 
+export type EventsDB = {
+  event: string;
+  expire: number;
+  id: string;
+  space: string;
+};
 export type EventsRepository = {
   getExpiredEvents: (timestamp: number) => Promise<EventsDB[]>;
   deleteProcessedEvent: (event: EventsDB) => Promise<any>;

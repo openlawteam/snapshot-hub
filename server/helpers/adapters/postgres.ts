@@ -1,6 +1,6 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
-import { EventsRepository } from '../../repositories/events-repository.js';
+import { EventsDB, EventsRepository } from '../../repositories/events-repository.js';
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
 
@@ -130,13 +130,6 @@ const storeVote = async (
       { authorIpfsHash: authorIpfsHash }
     )
   );
-};
-
-export type EventsDB = {
-  event: string;
-  expire: number;
-  id: string;
-  space: string;
 };
 
 const getExpiredEvents: (timestamp: number) => Promise<EventsDB[]> = (timestamp) => {
