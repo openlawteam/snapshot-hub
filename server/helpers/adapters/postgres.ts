@@ -1,5 +1,8 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
+import { EventsRepository } from '../../repositories/events-repository.js';
+import { MessagesRepository } from '../../repositories/messages-repository.js';
+import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
 
 /**
  * Values to insert into the `events` database.
@@ -300,4 +303,31 @@ export function insertProposalEnd(
     space,
     timestamp
   ]);
+}
+export const postgresEventsRepository: EventsRepository = {
+  deleteProcessedEvent,
+  getExpiredEvents,
+  insertCreatedProposal,
+  insertStartedProposal,
+  insertProposalEnd
+};
+export const postgresMessagesRepository: MessagesRepository = {
+  getAllDraftsExceptSponsored,
+  getAllProposalsAndVotes,
+  getAllProposalsAndVotesByAction,
+  getMessages,
+  getMessagesByAction,
+  getMessagesById,
+  getVoteBySender,
+  getProposalByDraft,
+  getProposalVotes,
+  storeDraft,
+  storeProposal,
+  storeVote,
+  sponsorDraftIfAny,
+  findVotesForProposals
+};
+export const postgresOffchainProofsRepository: OffchainProofsRepository = {
+  getOffchainProof,
+  saveOffchainProof
 }
