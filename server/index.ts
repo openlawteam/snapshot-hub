@@ -39,17 +39,12 @@ import {
   findVotesForProposals,
   getAllProposalsAndVotesByAction,
   saveOffchainProof,
-  getOffchainProof
+  getOffchainProof,
+  insertCreatedProposal,
+  insertStartedProposal,
+  insertProposalEnd
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
-import db from './helpers/postgres';
-
-/**
- * Values to insert into the `events` database.
- *
- * [id, event, space, expire]
- */
-type EventInsertValuesTuple = [string, string, string, number];
 
 /**
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
@@ -296,7 +291,7 @@ router.post('/message', async (req, res) => {
   const body = req.body;
   const msg = jsonParse(body.msg);
   const erc712Data = jsonParse(body.erc712Data);
-  const ts = (Date.now() / 1e3).toFixed();
+  const timestamp = (Date.now() / 1e3).toFixed();
   console.log('POST /message ', msg.type);
   // const minBlock = (3600 * 24) / 15;
 
@@ -333,7 +328,7 @@ router.post('/message', async (req, res) => {
   if (
     !msg.timestamp ||
     typeof msg.timestamp !== 'string' ||
-    msg.timestamp > ts + 30
+    msg.timestamp > timestamp + 30
   )
     return sendError(res, 'wrong timestamp');
 
@@ -454,8 +449,8 @@ router.post('/message', async (req, res) => {
     const payload = jsonParse(payloadToParse, payloadToParse);
 
     const isNotInVotingWindow: boolean = ignoreVoteEndConstraint
-      ? payload.start > ts
-      : ts > payload.end || payload.start > ts;
+      ? payload.start > timestamp
+      : timestamp > payload.end || payload.start > timestamp;
 
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
@@ -486,11 +481,6 @@ router.post('/message', async (req, res) => {
       })
     : '';
 
-  const EVENTS_INSERT_STATEMENT: string =
-    'INSERT INTO events (id, event, space, expire) ' +
-    'VALUES ($1, $2, $3, $4) ' +
-    'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
-
   if (msg.type === 'draft') {
     const erc712Hash = getMessageERC712Hash(
       { ...msg, type: msg.type },
@@ -511,12 +501,7 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/created',
-      space,
-      Number(ts)
-    ]);
+    await insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     console.log(`New Draft: ${erc712Hash}`);
     return res.json({
@@ -559,29 +544,14 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/created',
-      space,
-      Number(ts)
-    ]);
+    await insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     // Insert `proposal/start`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/start',
-      space,
-      msg.payload.start
-    ]);
+    await insertStartedProposal(EVENT_ID, space, msg.payload.start);
 
     // Insert `proposal/end`
-    if (msg.payload.end > ts) {
-      await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-        EVENT_ID,
-        'proposal/end',
-        space,
-        msg.payload.end
-      ]);
+    if (msg.payload.end > timestamp) {
+      await insertProposalEnd(EVENT_ID, space, msg.payload.end);
     }
 
     console.log(`New Proposal: ${erc712Hash}`);

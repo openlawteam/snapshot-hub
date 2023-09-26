@@ -1,6 +1,17 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
 
+/**
+ * Values to insert into the `events` database.
+ *
+ * [id, event, space, expire]
+ */
+type EventInsertValuesTuple = [string, string, string, number];
+
+const EVENTS_INSERT_STATEMENT: string =
+  'INSERT INTO events (id, event, space, expire) ' +
+  'VALUES ($1, $2, $3, $4) ' +
+  'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
 
 const format = (
   erc712Hash: string,
@@ -252,4 +263,41 @@ export const deleteProcessedEvent = (event: EventsDB) => {
     'DELETE FROM events WHERE id = $1 AND event = $2',
     [event.id, event.event]
   );
+}
+
+export function insertCreatedProposal(
+  EVENT_ID: string,
+  space: string,
+  timestamp: number
+) {
+  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+    EVENT_ID,
+    'proposal/created',
+    space,
+    timestamp
+  ]);
+}
+export function insertStartedProposal(
+  EVENT_ID: string,
+  space: string,
+  timestamp: number
+) {
+  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+    EVENT_ID,
+    'proposal/start',
+    space,
+    timestamp
+  ]);
+}
+export function insertProposalEnd(
+  EVENT_ID: string,
+  space: string,
+  timestamp: number
+) {
+  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+    EVENT_ID,
+    'proposal/end',
+    space,
+    timestamp
+  ]);
 }
