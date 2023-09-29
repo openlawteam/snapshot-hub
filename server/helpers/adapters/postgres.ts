@@ -1,6 +1,9 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
-import { EventsDB, EventsRepository } from '../../repositories/events-repository.js';
+import {
+  EventsDB,
+  EventsRepository
+} from '../../repositories/events-repository.js';
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
 
@@ -59,7 +62,7 @@ const sponsorDraftIfAny = async (space, erc712DraftHash) => {
   return result;
 };
 
- const storeDraft = async (
+const storeDraft = async (
   space,
   erc712Hash,
   token,
@@ -132,7 +135,9 @@ const storeVote = async (
   );
 };
 
-const getExpiredEvents: (timestamp: number) => Promise<EventsDB[]> = (timestamp) => {
+const getExpiredEvents: (
+  timestamp: number
+) => Promise<EventsDB[]> = timestamp => {
   return db
     .query<EventsDB, [number]>('SELECT * FROM events WHERE expire <= $1', [
       timestamp
@@ -157,11 +162,7 @@ const getMessagesByAction = async (
   return result.rows;
 };
 
-const getMessagesById = async (
-  space: string,
-  id: string,
-  msgType: string
-) => {
+const getMessagesById = async (space: string, id: string, msgType: string) => {
   const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = $3`;
   const result = await db.query(query, [space, id, msgType]);
   console.log(result.rows.length);
@@ -232,9 +233,7 @@ const getAllDraftsExceptSponsored = async (space: string) => {
   return result.rows;
 };
 
-const saveOffchainProof = async (
-offchainProof: OffchainProof
-) => {
+const saveOffchainProof = async (offchainProof: OffchainProof) => {
   const insert = `INSERT INTO offchain_proofs (merkle_root, space, steps) VALUES ($1, $2, $3);`;
   const result = await db.query(insert, [
     offchainProof.merkleRoot,
@@ -245,9 +244,9 @@ offchainProof: OffchainProof
 };
 
 export type OffchainProof = {
-  space: string,
-  merkleRoot: string,
-  steps: Record<string, any>[]
+  space: string;
+  merkleRoot: string;
+  steps: Record<string, any>[];
 };
 
 const getOffchainProof = async (
@@ -261,47 +260,51 @@ const getOffchainProof = async (
 };
 
 const deleteProcessedEvent = (event: EventsDB) => {
-  return db.query<any, [string, string]>(
-    'DELETE FROM events WHERE id = $1 AND event = $2',
-    [event.id, event.event]
-  );
-}
+  return db
+    .query<any, [string, string]>(
+      'DELETE FROM events WHERE id = $1 AND event = $2',
+      [event.id, event.event]
+    )
+    .then(() => undefined);
+};
 
 function insertCreatedProposal(
   EVENT_ID: string,
   space: string,
   timestamp: number
 ) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/created',
-    space,
-    timestamp
-  ]);
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/created',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
 function insertStartedProposal(
   EVENT_ID: string,
   space: string,
   timestamp: number
 ) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/start',
-    space,
-    timestamp
-  ]);
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/start',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
-function insertProposalEnd(
-  EVENT_ID: string,
-  space: string,
-  timestamp: number
-) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/end',
-    space,
-    timestamp
-  ]);
+function insertProposalEnd(EVENT_ID: string, space: string, timestamp: number) {
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/end',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
 export const postgresEventsRepository: EventsRepository = {
   deleteProcessedEvent,
@@ -329,4 +332,4 @@ export const postgresMessagesRepository: MessagesRepository = {
 export const postgresOffchainProofsRepository: OffchainProofsRepository = {
   getOffchainProof,
   saveOffchainProof
-}
+};

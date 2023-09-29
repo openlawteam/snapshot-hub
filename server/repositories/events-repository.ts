@@ -8,22 +8,22 @@ export type EventsDB = {
 };
 export type EventsRepository = {
   getExpiredEvents: (timestamp: number) => Promise<EventsDB[]>;
-  deleteProcessedEvent: (event: EventsDB) => Promise<any>;
+  deleteProcessedEvent: (event: EventsDB) => Promise<void>;
   insertCreatedProposal: (
     EVENT_ID: string,
     space: string,
     timestamp: number
-  ) => Promise<any>,
+  ) => Promise<void>,
   insertStartedProposal: (
     EVENT_ID: string,
     space: string,
     timestamp: number
-  ) => Promise<any>
+  ) => Promise<void>
   insertProposalEnd: (
     EVENT_ID: string,
     space: string,
     timestamp: number
-  ) => Promise<any>
+  ) => Promise<void>
 };
 
 export const eventsRepository: EventsRepository = postgresEventsRepository;
