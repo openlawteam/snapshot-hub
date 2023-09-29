@@ -244,7 +244,6 @@ const saveOffchainProof = async (
     JSON.stringify(steps)
   ]);
   console.log(result.rows.length);
-  return result.rows;
 };
 
 const getOffchainProof = async (space: string, merkleRoot: string) => {

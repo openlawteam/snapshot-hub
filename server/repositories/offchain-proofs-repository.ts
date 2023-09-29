@@ -6,6 +6,6 @@ export type OffchainProofsRepository = {
     space: string,
     merkleRoot: string,
     steps: Record<string, any>[]
-  ) => Promise<any[]>;
+  ) => Promise<void>;
 };
 export const offchainProofsRepository: OffchainProofsRepository = postgresOffchainProofsRepository;
