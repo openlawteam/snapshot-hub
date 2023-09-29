@@ -1,11 +1,15 @@
-import { postgresOffchainProofsRepository } from '../helpers/adapters/postgres';
+import {
+  OffchainProof,
+  postgresOffchainProofsRepository
+} from '../helpers/adapters/postgres';
 
 export type OffchainProofsRepository = {
-  getOffchainProof: (space: string, merkleRoot: string) => Promise<any[]>;
-  saveOffchainProof: (
+  getOffchainProof: (
     space: string,
-    merkleRoot: string,
-    steps: Record<string, any>[]
+    merkleRoot: string
+  ) => Promise<OffchainProof[]>;
+  saveOffchainProof: (
+    offchainProof: OffchainProof
   ) => Promise<void>;
 };
 export const offchainProofsRepository: OffchainProofsRepository = postgresOffchainProofsRepository;

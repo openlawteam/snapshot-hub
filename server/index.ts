@@ -242,7 +242,11 @@ router.post('/:space/offchain_proofs', async (req, res) => {
 
   if (merkleTree.getHexRoot() === merkleRoot) {
     try {
-      await offchainProofsRepository.saveOffchainProof(space, merkleRoot, steps);
+      await offchainProofsRepository.saveOffchainProof({
+        space,
+        merkleRoot,
+        steps
+      });
       return res.sendStatus(201);
     } catch (error) {
       return res.status(500).send({

@@ -233,20 +233,27 @@ const getAllDraftsExceptSponsored = async (space: string) => {
 };
 
 const saveOffchainProof = async (
-  space: string,
-  merkleRoot: string,
-  steps: Record<string, any>[]
+offchainProof: OffchainProof
 ) => {
   const insert = `INSERT INTO offchain_proofs (merkle_root, space, steps) VALUES ($1, $2, $3);`;
   const result = await db.query(insert, [
-    merkleRoot,
-    space,
-    JSON.stringify(steps)
+    offchainProof.merkleRoot,
+    offchainProof.space,
+    JSON.stringify(offchainProof.steps)
   ]);
   console.log(result.rows.length);
 };
 
-const getOffchainProof = async (space: string, merkleRoot: string) => {
+export type OffchainProof = {
+  space: string,
+  merkleRoot: string,
+  steps: Record<string, any>[]
+};
+
+const getOffchainProof = async (
+  space: string,
+  merkleRoot: string
+): Promise<OffchainProof[]> => {
   const select = `SELECT * FROM offchain_proofs WHERE space = $1 AND merkle_root = $2 LIMIT 1;`;
   const result = await db.query(select, [space, merkleRoot]);
   console.log(result.rows.length);
