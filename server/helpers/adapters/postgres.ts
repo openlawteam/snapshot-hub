@@ -6,6 +6,7 @@ import {
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
 import { Event } from '../../models/event.js';
+import { Message } from '../../models/message.js';
 
 /**
  * Values to insert into the `events` database.
@@ -69,8 +70,8 @@ const storeDraft = async (
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -94,8 +95,8 @@ const storeProposal = async (
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -118,8 +119,8 @@ const storeVote = async (
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -225,7 +226,7 @@ const getAllProposalsAndVotesByAction = async (
   return await findVotesForProposals(space, proposalsResult.rows);
 };
 
-const getAllDraftsExceptSponsored = async (space: string) => {
+const getAllDraftsExceptSponsored = async (space: string): Promise<Message[]> => {
   const query = `SELECT * FROM messages WHERE type = 'draft' AND space = $1 AND data ->> 'sponsored' = 'false' ORDER BY timestamp ASC`;
   const result = await db.query(query, [space]);
   console.log(result.rows.length);
