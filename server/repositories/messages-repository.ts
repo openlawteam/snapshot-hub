@@ -1,5 +1,5 @@
 import { postgresMessagesRepository } from '../helpers/adapters/postgres';
-import { Message } from '../models/message.js';
+import { Message, MessageWithVotes } from '../models/message.js';
 
 export type MessagesRepository = {
   getMessages: (spaces: string, msgType: string) => Promise<Message[]>;
@@ -20,11 +20,11 @@ export type MessagesRepository = {
   ) => Promise<Message[]>;
   getProposalByDraft: (space: string, id: string) => Promise<Message[]>;
   getProposalVotes: (space: string, id: string) => Promise<Message[]>;
-  getAllProposalsAndVotes: (space: string) => Promise<any[]>;
+  getAllProposalsAndVotes: (space: string) => Promise<MessageWithVotes[]>;
   getAllProposalsAndVotesByAction: (
     space: string,
     actionId: string
-  ) => Promise<any[]>;
+  ) => Promise<MessageWithVotes[]>;
   getAllDraftsExceptSponsored: (space: string) => Promise<Message[]>;
   storeDraft: (
     space,
@@ -55,6 +55,9 @@ export type MessagesRepository = {
     actionId
   ) => Promise<void>
   sponsorDraftIfAny: (space, erc712DraftHash) => Promise<number>,
-  findVotesForProposals: (space, proposals) => Promise<any[]>
+  findVotesForProposals: (space, proposals) => Promise<MessageWithVotes[]>
 };
+
+
+
 export const messagesRepository: MessagesRepository = postgresMessagesRepository;

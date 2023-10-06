@@ -6,7 +6,7 @@ import {
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
 import { Event } from '../../models/event.js';
-import { Message } from '../../models/message.js';
+import { Message, MessageWithVotes, VoteMessage } from '../../models/message.js';
 
 /**
  * Values to insert into the `events` database.
@@ -188,28 +188,28 @@ const getProposalByDraft = async (space: string, id: string) => {
   return result.rows;
 };
 
-const getProposalVotes = async (space: string, id: string) => {
+const getProposalVotes = async (space: string, id: string): Promise<Message[]> => {
   const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalId' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;
 };
 
-const findVotesForProposals = (space, proposals) =>
+const findVotesForProposals: (space: string, proposals: Message[]) => Promise<MessageWithVotes[]> = (space, proposals) =>
   Promise.all(
     proposals.map(p =>
       getProposalVotes(space, p.id)
         .then(votes =>
           votes && votes.length > 0 ? toVotesMessageJson(votes) : []
         )
-        .then(votes => {
-          p['votes'] = votes;
-          return p;
-        })
+        .then(votes => ({
+          ...p,
+          votes
+        }))
     )
   );
 
-const getAllProposalsAndVotes = async (space: string) => {
+const getAllProposalsAndVotes = async (space: string): Promise<MessageWithVotes[]> => {
   const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1`;
   const proposalsResult = await db.query(queryProposals, [space]);
   console.log(proposalsResult.rows.length);
@@ -219,7 +219,7 @@ const getAllProposalsAndVotes = async (space: string) => {
 const getAllProposalsAndVotesByAction = async (
   space: string,
   actionId: string
-) => {
+) : Promise<MessageWithVotes[]>=> {
   const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
   const proposalsResult = await db.query(queryProposals, [space, actionId]);
   console.log(proposalsResult.rows.length);
@@ -282,6 +282,7 @@ function insertCreatedProposal(
     ])
     .then(() => undefined);
 }
+
 function insertStartedProposal(
   EVENT_ID: string,
   space: string,
@@ -296,6 +297,7 @@ function insertStartedProposal(
     ])
     .then(() => undefined);
 }
+
 function insertProposalEnd(EVENT_ID: string, space: string, timestamp: number) {
   return db
     .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
@@ -306,6 +308,7 @@ function insertProposalEnd(EVENT_ID: string, space: string, timestamp: number) {
     ])
     .then(() => undefined);
 }
+
 export const postgresEventsRepository: EventsRepository = {
   deleteProcessedEvent,
   getExpiredEvents,

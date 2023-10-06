@@ -3,6 +3,12 @@ import { providers } from 'ethers';
 import { convertUtf8ToHex } from '@walletconnect/utils';
 import * as ethUtil from 'ethereumjs-util';
 import { isValidSignature } from './eip1271';
+import {
+  Message,
+  MessageWithVotes,
+  ProposalWithVotesMessage,
+  VoteMessage
+} from '../models/message.js';
 
 export const jsonParse = (input, fallback?) => {
   try {
@@ -88,31 +94,31 @@ export const hashPersonalMessage = (msg: string): string => {
   return ethUtil.bufferToHex(hash);
 };
 
-export const toMessageJson = (messages: any): any =>
-  Object.fromEntries(
-    messages.map(message => {
-      return [
-        message.type === 'vote' ? message.address : message.id,
-        {
-          address: message.address,
-          data: message.data,
-          msg: {
-            version: message.version,
-            timestamp: message.timestamp.toString(),
-            token: message.token,
-            type: message.type,
-            payload: message.payload
-          },
-          sig: message.sig,
-          authorIpfsHash: message.id,
-          relayerIpfsHash: message.metadata.relayerIpfsHash,
-          actionId: message.actionId
+export const toMessageJson = (messages: Message[]): ProposalWithVotesMessage =>
+  messages.reduce((proposal, message) => {
+    return {
+      ...proposal,
+      [message.type === 'vote' ? message.address : message.id]: {
+        address: message.address,
+        data: message.data,
+        msg: {
+          version: message.version,
+          timestamp: message.timestamp.toString(),
+          token: message.token,
+          type: message.type,
+          payload: message.payload
         },
-      ];
-    })
-  );
+        sig: message.sig,
+        authorIpfsHash: message.id,
+        relayerIpfsHash: message.metadata
+          ? message.metadata.relayerIpfsHash
+          : undefined,
+        actionId: message.actionId
+      }
+    };
+  }, {});
 
-export const toVoteMessageJson = (message: any): any => {
+export const toVoteMessageJson = (message: Message): VoteMessage => {
   return {
     [message.address]: {
       id: message.id,
@@ -127,36 +133,40 @@ export const toVoteMessageJson = (message: any): any => {
       },
       sig: message.sig,
       authorIpfsHash: message.id,
-      relayerIpfsHash: message.metadata.relayerIpfsHash,
+      relayerIpfsHash: message.metadata
+        ? message.metadata.relayerIpfsHash
+        : undefined,
       actionId: message.actionId
     }
   };
 };
 
-export const toVotesMessageJson = (messages: any): any =>
+export const toVotesMessageJson = (messages: Message[]): VoteMessage[] =>
   messages.map(m => toVoteMessageJson(m));
 
-export const toProposalWithVotesMessageJson = (messages: any): any =>
-  Object.fromEntries(
-    messages.map(message => {
-      return [
-        message.id,
-        {
-          address: message.address,
-          data: message.data,
-          msg: {
-            version: message.version,
-            timestamp: message.timestamp.toString(),
-            token: message.token,
-            type: message.type,
-            payload: message.payload
-          },
-          votes: message.votes,
-          sig: message.sig,
-          authorIpfsHash: message.id,
-          relayerIpfsHash: message.metadata.relayerIpfsHash,
-          actionId: message.actionId
-        }
-      ];
-    })
-  );
+export const toProposalWithVotesMessageJson = (
+  messages: MessageWithVotes[]
+): ProposalWithVotesMessage =>
+  messages.reduce((proposal, message) => {
+    return {
+      ...proposal,
+      [message.id]: {
+        address: message.address,
+        data: message.data,
+        msg: {
+          version: message.version,
+          timestamp: message.timestamp.toString(),
+          token: message.token,
+          type: message.type,
+          payload: message.payload
+        },
+        votes: message.votes,
+        sig: message.sig,
+        authorIpfsHash: message.id,
+        relayerIpfsHash: message.metadata
+          ? message.metadata.relayerIpfsHash
+          : undefined,
+        actionId: message.actionId
+      }
+    };
+  }, {});

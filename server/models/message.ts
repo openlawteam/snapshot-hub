@@ -8,7 +8,31 @@ export type Message = {
   type: string;
   payload?: string;
   sig: string;
-  metadata?: string;
+  metadata?: {
+    relayerIpfsHash: string;
+  };
   actionId: string;
   data?: string;
+};
+export type VoteMessage = {
+  [address: string]: {
+    id: string;
+    address: string;
+    data?: string;
+    msg: {
+      version: string;
+      timestamp: string;
+      token?: string;
+      type: string;
+      payload?: string;
+    };
+    sig: string;
+    authorIpfsHash: string;
+    relayerIpfsHash?: string;
+    actionId: string;
+  };
+};
+export type MessageWithVotes = Message & { votes: VoteMessage[] };
+export type ProposalWithVotesMessage = {
+  [id: string]: MessageWithVotes;
 };
