@@ -56,10 +56,9 @@ const insert = async (params: Array<object>) => {
   return await db.query(cmd, params);
 };
 
-const sponsorDraftIfAny = async (space, erc712DraftHash) => {
+const sponsorDraftIfAny = async (space, erc712DraftHash): Promise<number> => {
   const update = `UPDATE messages SET data=data||'{"sponsored": true}' WHERE type = 'draft' AND id = $1 AND space = $2`;
-  const result = await db.query(update, [erc712DraftHash, space]);
-  return result;
+  return await db.query(update, [erc712DraftHash, space]).then((result) => result.rowCount);
 };
 
 const storeDraft = async (

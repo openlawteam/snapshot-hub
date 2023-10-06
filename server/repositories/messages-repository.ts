@@ -53,7 +53,7 @@ export type MessagesRepository = {
     relayerIpfsHash,
     actionId
   ) => Promise<any>
-  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<any>,
+  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<number>,
   findVotesForProposals: (space, proposals) => Promise<any[]>
 };
 export const messagesRepository: MessagesRepository = postgresMessagesRepository;
