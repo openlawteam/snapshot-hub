@@ -1,11 +1,11 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
 import {
-  EventsDB,
   EventsRepository
 } from '../../repositories/events-repository.js';
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
+import { EventsDB } from '../../models/event.js';
 
 /**
  * Values to insert into the `events` database.
