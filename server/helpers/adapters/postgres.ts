@@ -5,7 +5,7 @@ import {
 } from '../../repositories/events-repository.js';
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
-import { EventsDB } from '../../models/event.js';
+import { Event } from '../../models/event.js';
 
 /**
  * Values to insert into the `events` database.
@@ -137,9 +137,9 @@ const storeVote = async (
 
 const getExpiredEvents: (
   timestamp: number
-) => Promise<EventsDB[]> = timestamp => {
+) => Promise<Event[]> = timestamp => {
   return db
-    .query<EventsDB, [number]>('SELECT * FROM events WHERE expire <= $1', [
+    .query<Event, [number]>('SELECT * FROM events WHERE expire <= $1', [
       timestamp
     ])
     .then(result => result.rows);
@@ -259,7 +259,7 @@ const getOffchainProof = async (
   return result.rows;
 };
 
-const deleteProcessedEvent = (event: EventsDB) => {
+const deleteProcessedEvent = (event: Event) => {
   return db
     .query<any, [string, string]>(
       'DELETE FROM events WHERE id = $1 AND event = $2',

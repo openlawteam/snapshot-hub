@@ -1,4 +1,4 @@
-export type EventsDB = {
+export type Event = {
   event: string;
   expire: number;
   id: string;
