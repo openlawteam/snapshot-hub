@@ -4,7 +4,6 @@ import {
   VoteMessage
 } from '../../models/message.js';
 import { snapshotHubMongoDb } from '../../index.js';
-import { OffchainProofsRepository } from '../offchain-proofs-repository.js';
 import { MessagesRepository } from '../messages-repository.js';
 import { toVotesMessageJson } from '../../helpers/utils.js';
 
