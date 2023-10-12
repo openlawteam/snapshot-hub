@@ -64,6 +64,8 @@ export const snapshotHubMongoDb = new MongoClient(
     );
   });
 
+export const useMongoPersistence = false; // replace with launchdarkly flag
+
 /**
  * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
  * Since this implementation is used by OpenLaw only, that dependency was removed and the spaces are loaded from the

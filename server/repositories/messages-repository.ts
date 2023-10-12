@@ -1,5 +1,7 @@
 import { postgresMessagesRepository } from '../helpers/adapters/postgres';
 import { Message, MessageWithVotes } from '../models/message.js';
+import { useMongoPersistence } from '../index.js';
+import { mongoMessagesRepository } from './mongo/mongo-messages-repository.js';
 
 export type MessagesRepository = {
   getMessages: (spaces: string, msgType: string) => Promise<Message[]>;
@@ -34,7 +36,7 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<void>,
+  ) => Promise<void>;
   storeProposal: (
     space,
     erc712Hash,
@@ -44,8 +46,8 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<void>,
-  storeVote:(
+  ) => Promise<void>;
+  storeVote: (
     space,
     erc712Hash,
     token,
@@ -53,11 +55,11 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<void>
-  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<number>,
-  findVotesForProposals: (space, proposals) => Promise<MessageWithVotes[]>
+  ) => Promise<void>;
+  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<number>;
+  findVotesForProposals: (space, proposals) => Promise<MessageWithVotes[]>;
 };
 
-
-
-export const messagesRepository: MessagesRepository = postgresMessagesRepository;
+export const messagesRepository: MessagesRepository = useMongoPersistence
+  ? mongoMessagesRepository
+  : postgresMessagesRepository;
