@@ -27,7 +27,7 @@ import pkg from '../package.json';
 import { messagesRepository } from './repositories/messages-repository';
 import { offchainProofsRepository } from './repositories/offchain-proofs-repository';
 import { eventsRepository } from './repositories/events-repository';
-
+import { MongoClient } from 'mongodb';
 /**
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
  * to trigger the migration process via a PUT call. The migration happens async and gets logged to the server logs.
@@ -46,6 +46,23 @@ const useIPFSPinnig = process.env.USE_IPFS === 'true';
  */
 const ignoreVoteEndConstraint: boolean =
   process.env.IGNORE_VOTE_END_CONSTRAINT === 'true';
+
+/**
+ * We need to ensure there's at most 1 mongo connection for the lifespan of this service.
+ * Creating this connection here allows the connection logic to be isolated to this file.
+ */
+const mongoConnectionURI = process.env.MONGODB_TRIBUTE_DAOS_URI;
+console.log('Connecting to mongo...')
+export const snapshotHubMongoDb = new MongoClient(
+  mongoConnectionURI
+)
+  .connect()
+  .then((connectedClient: MongoClient) => {
+    console.log('Mongo Connection successful');
+    return connectedClient.db(
+      process.env.MONGODB_TRIBUTE_DAOS_SNAPSHOT_HUB_DB_NAME
+    );
+  });
 
 /**
  * The upstream implementation relies on @snapshot-labs/snapshot-spaces npm lib to fetch all the available spaces.
