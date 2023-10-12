@@ -1,8 +1,12 @@
 import db from '../postgres';
 import { toVotesMessageJson } from '../utils';
-import { EventsDB, EventsRepository } from '../../repositories/events-repository.js';
+import {
+  EventsRepository
+} from '../../repositories/events-repository.js';
 import { MessagesRepository } from '../../repositories/messages-repository.js';
 import { OffchainProofsRepository } from '../../repositories/offchain-proofs-repository.js';
+import { Event } from '../../models/event.js';
+import { Message, MessageWithVotes, VoteMessage } from '../../models/message.js';
 
 /**
  * Values to insert into the `events` database.
@@ -53,13 +57,12 @@ const insert = async (params: Array<object>) => {
   return await db.query(cmd, params);
 };
 
-const sponsorDraftIfAny = async (space, erc712DraftHash) => {
+const sponsorDraftIfAny = async (space, erc712DraftHash): Promise<number> => {
   const update = `UPDATE messages SET data=data||'{"sponsored": true}' WHERE type = 'draft' AND id = $1 AND space = $2`;
-  const result = await db.query(update, [erc712DraftHash, space]);
-  return result;
+  return await db.query(update, [erc712DraftHash, space]).then((result) => result.rowCount);
 };
 
- const storeDraft = async (
+const storeDraft = async (
   space,
   erc712Hash,
   token,
@@ -67,8 +70,8 @@ const sponsorDraftIfAny = async (space, erc712DraftHash) => {
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -92,8 +95,8 @@ const storeProposal = async (
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -116,8 +119,8 @@ const storeVote = async (
   authorIpfsHash,
   relayerIpfsHash,
   actionId
-) => {
-  return await insert(
+): Promise<void> => {
+  await insert(
     format(
       erc712Hash,
       body,
@@ -132,9 +135,11 @@ const storeVote = async (
   );
 };
 
-const getExpiredEvents: (timestamp: number) => Promise<EventsDB[]> = (timestamp) => {
+const getExpiredEvents: (
+  timestamp: number
+) => Promise<Event[]> = timestamp => {
   return db
-    .query<EventsDB, [number]>('SELECT * FROM events WHERE expire <= $1', [
+    .query<Event, [number]>('SELECT * FROM events WHERE expire <= $1', [
       timestamp
     ])
     .then(result => result.rows);
@@ -157,11 +162,7 @@ const getMessagesByAction = async (
   return result.rows;
 };
 
-const getMessagesById = async (
-  space: string,
-  id: string,
-  msgType: string
-) => {
+const getMessagesById = async (space: string, id: string, msgType: string) => {
   const query = `SELECT * FROM messages WHERE space = $1 AND id = $2 AND type = $3`;
   const result = await db.query(query, [space, id, msgType]);
   console.log(result.rows.length);
@@ -187,28 +188,28 @@ const getProposalByDraft = async (space: string, id: string) => {
   return result.rows;
 };
 
-const getProposalVotes = async (space: string, id: string) => {
+const getProposalVotes = async (space: string, id: string): Promise<Message[]> => {
   const query = `SELECT * FROM messages WHERE type = 'vote' AND space = $1 AND payload ->> 'proposalId' = $2 ORDER BY timestamp ASC`;
   const result = await db.query(query, [space, id]);
   console.log(result.rows.length);
   return result.rows;
 };
 
-const findVotesForProposals = (space, proposals) =>
+const findVotesForProposals: (space: string, proposals: Message[]) => Promise<MessageWithVotes[]> = (space, proposals) =>
   Promise.all(
     proposals.map(p =>
       getProposalVotes(space, p.id)
         .then(votes =>
           votes && votes.length > 0 ? toVotesMessageJson(votes) : []
         )
-        .then(votes => {
-          p['votes'] = votes;
-          return p;
-        })
+        .then(votes => ({
+          ...p,
+          votes
+        }))
     )
   );
 
-const getAllProposalsAndVotes = async (space: string) => {
+const getAllProposalsAndVotes = async (space: string): Promise<MessageWithVotes[]> => {
   const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1`;
   const proposalsResult = await db.query(queryProposals, [space]);
   console.log(proposalsResult.rows.length);
@@ -218,85 +219,96 @@ const getAllProposalsAndVotes = async (space: string) => {
 const getAllProposalsAndVotesByAction = async (
   space: string,
   actionId: string
-) => {
+) : Promise<MessageWithVotes[]>=> {
   const queryProposals = `SELECT * FROM messages WHERE type = 'proposal' AND space = $1 AND "actionId" = $2 ORDER BY timestamp DESC`;
   const proposalsResult = await db.query(queryProposals, [space, actionId]);
   console.log(proposalsResult.rows.length);
   return await findVotesForProposals(space, proposalsResult.rows);
 };
 
-const getAllDraftsExceptSponsored = async (space: string) => {
+const getAllDraftsExceptSponsored = async (space: string): Promise<Message[]> => {
   const query = `SELECT * FROM messages WHERE type = 'draft' AND space = $1 AND data ->> 'sponsored' = 'false' ORDER BY timestamp ASC`;
   const result = await db.query(query, [space]);
   console.log(result.rows.length);
   return result.rows;
 };
 
-const saveOffchainProof = async (
-  space: string,
-  merkleRoot: string,
-  steps: Record<string, any>[]
-) => {
+const saveOffchainProof = async (offchainProof: OffchainProof) => {
   const insert = `INSERT INTO offchain_proofs (merkle_root, space, steps) VALUES ($1, $2, $3);`;
   const result = await db.query(insert, [
-    merkleRoot,
-    space,
-    JSON.stringify(steps)
+    offchainProof.merkleRoot,
+    offchainProof.space,
+    JSON.stringify(offchainProof.steps)
   ]);
   console.log(result.rows.length);
-  return result.rows;
 };
 
-const getOffchainProof = async (space: string, merkleRoot: string) => {
+export type OffchainProof = {
+  space: string;
+  merkleRoot: string;
+  steps: Record<string, any>[];
+};
+
+const getOffchainProof = async (
+  space: string,
+  merkleRoot: string
+): Promise<OffchainProof[]> => {
   const select = `SELECT * FROM offchain_proofs WHERE space = $1 AND merkle_root = $2 LIMIT 1;`;
   const result = await db.query(select, [space, merkleRoot]);
   console.log(result.rows.length);
   return result.rows;
 };
 
-const deleteProcessedEvent = (event: EventsDB) => {
-  return db.query<any, [string, string]>(
-    'DELETE FROM events WHERE id = $1 AND event = $2',
-    [event.id, event.event]
-  );
-}
+const deleteProcessedEvent = (event: Event) => {
+  return db
+    .query<any, [string, string]>(
+      'DELETE FROM events WHERE id = $1 AND event = $2',
+      [event.id, event.event]
+    )
+    .then(() => undefined);
+};
 
 function insertCreatedProposal(
   EVENT_ID: string,
   space: string,
   timestamp: number
 ) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/created',
-    space,
-    timestamp
-  ]);
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/created',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
+
 function insertStartedProposal(
   EVENT_ID: string,
   space: string,
   timestamp: number
 ) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/start',
-    space,
-    timestamp
-  ]);
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/start',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
-function insertProposalEnd(
-  EVENT_ID: string,
-  space: string,
-  timestamp: number
-) {
-  return db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-    EVENT_ID,
-    'proposal/end',
-    space,
-    timestamp
-  ]);
+
+function insertProposalEnd(EVENT_ID: string, space: string, timestamp: number) {
+  return db
+    .query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
+      EVENT_ID,
+      'proposal/end',
+      space,
+      timestamp
+    ])
+    .then(() => undefined);
 }
+
 export const postgresEventsRepository: EventsRepository = {
   deleteProcessedEvent,
   getExpiredEvents,
@@ -323,4 +335,4 @@ export const postgresMessagesRepository: MessagesRepository = {
 export const postgresOffchainProofsRepository: OffchainProofsRepository = {
   getOffchainProof,
   saveOffchainProof
-}
+};

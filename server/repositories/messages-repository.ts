@@ -1,30 +1,31 @@
 import { postgresMessagesRepository } from '../helpers/adapters/postgres';
+import { Message, MessageWithVotes } from '../models/message.js';
 
 export type MessagesRepository = {
-  getMessages: (spaces: string, msgType: string) => Promise<any[]>;
+  getMessages: (spaces: string, msgType: string) => Promise<Message[]>;
   getMessagesByAction: (
     space: string,
     actionId: string,
     msgType: string
-  ) => Promise<any[]>;
+  ) => Promise<Message[]>;
   getMessagesById: (
     space: string,
     id: string,
     msgType: string
-  ) => Promise<any[]>;
+  ) => Promise<Message[]>;
   getVoteBySender: (
     space: string,
     address: string,
     proposalId: string
-  ) => Promise<any[]>;
-  getProposalByDraft: (space: string, id: string) => Promise<any[]>;
-  getProposalVotes: (space: string, id: string) => Promise<any[]>;
-  getAllProposalsAndVotes: (space: string) => Promise<any[]>;
+  ) => Promise<Message[]>;
+  getProposalByDraft: (space: string, id: string) => Promise<Message[]>;
+  getProposalVotes: (space: string, id: string) => Promise<Message[]>;
+  getAllProposalsAndVotes: (space: string) => Promise<MessageWithVotes[]>;
   getAllProposalsAndVotesByAction: (
     space: string,
     actionId: string
-  ) => Promise<any[]>;
-  getAllDraftsExceptSponsored: (space: string) => Promise<any[]>;
+  ) => Promise<MessageWithVotes[]>;
+  getAllDraftsExceptSponsored: (space: string) => Promise<Message[]>;
   storeDraft: (
     space,
     erc712Hash,
@@ -33,7 +34,7 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<any>,
+  ) => Promise<void>,
   storeProposal: (
     space,
     erc712Hash,
@@ -43,7 +44,7 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<any>,
+  ) => Promise<void>,
   storeVote:(
     space,
     erc712Hash,
@@ -52,8 +53,11 @@ export type MessagesRepository = {
     authorIpfsHash,
     relayerIpfsHash,
     actionId
-  ) => Promise<any>
-  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<any>,
-  findVotesForProposals: (space, proposals) => Promise<any[]>
+  ) => Promise<void>
+  sponsorDraftIfAny: (space, erc712DraftHash) => Promise<number>,
+  findVotesForProposals: (space, proposals) => Promise<MessageWithVotes[]>
 };
+
+
+
 export const messagesRepository: MessagesRepository = postgresMessagesRepository;
