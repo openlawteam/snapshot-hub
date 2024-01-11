@@ -43,7 +43,11 @@ const getSubscribersFromFile = async (): Promise<Subscribers> => {
 
 async function sendEvent(event, to) {
   try {
-    await axios.post(to, event);
+    await axios.post(to, event, {
+      headers: {
+        'x-snapshot-hub-verify': process.env.WEBHOOK_VERIFY
+      }
+    });
   } catch (error) {
     const BASE_ERROR = `Failed to send event to ${to}`;
 
