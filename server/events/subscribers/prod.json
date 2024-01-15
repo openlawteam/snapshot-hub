@@ -9,7 +9,7 @@
     "url": "https://thelao.io/api/v1/governance/replicate-proposal-to-another-dao"
   },
   {
-    "url": "https://develop.thelao.io/api/v1/governance/email-dao-on-create"
+    "url": "https://thelao.io/api/v1/governance/email-dao-on-create"
   },
   {
     "url": "https://thelao.io/api/v1/governance/email-dao-on-end"
