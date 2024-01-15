@@ -3,9 +3,6 @@
     "url": "https://discord.dev.thelao.io/api/snapshot-webhook"
   },
   {
-    "url": "https://dev-send-governance-email-pxstrudtoq-uk.a.run.app"
-  },
-  {
     "url": "https://develop.thelao.io/api/v1/governance/replicate-proposal-to-another-dao"
   },
   {
