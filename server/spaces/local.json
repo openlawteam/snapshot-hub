@@ -733,5 +733,47 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "long": {
+    "token": "0x583f619fe3c9c0bc84be4b9f3b49d1e34cbc29db",
+    "name": "AWE DAO",
+    "network": "1",
+    "symbol": "AWE",
+    "skin": "long",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x583f619fe3c9c0bc84be4b9f3b49d1e34cbc29db",
+          "symbol": "AWE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "doge": {
+    "token": "0x0b8133d4287f73cc72a9626e4a0ea1478e2e8d6d",
+    "name": "Doggy DAO",
+    "network": "1",
+    "symbol": "DOGGY",
+    "skin": "doge",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x0b8133d4287f73cc72a9626e4a0ea1478e2e8d6d",
+          "symbol": "DOGGY",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
