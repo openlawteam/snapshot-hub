@@ -15,7 +15,7 @@ USE_IPFS="false"
 # The PK of the account that will be used to sign the messages, for example:
 RELAYER_PK=0x49b803c4495fbedafbfbb9399fcc212286b4bc21caafe06e609762d913ed0ef7
 
-# The network name that will be used by the relayer (use testnet for: goerli), and mainnet for the main eth network
+# The network name that will be used by the relayer (use testnet for: polygon), and mainnet for the main eth network
 NETWORK=testnet
 
 # The postgres url: postgres://user:pwd@host:5432/db-name
@@ -36,7 +36,7 @@ FLEEK_API_SECRET=(https://fleek.co/)
 ALLOWED_DOMAINS=http://localhost:3000
 
 # The relayer API (alternative to Infura)
-ALCHEMY_API_URL=https://eth-goerli.alchemyapi.io/v2/<your-api-key>
+ALCHEMY_API_URL=https://polygon-mainnet.alchemyapi.io/v2/<your-api-key>
 
 # Enables events to run for processing webhook requests. Set to `1` for `true`, `0` for `false`.
 SERVICE_EVENTS=1
