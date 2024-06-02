@@ -23,33 +23,10 @@ import {
  * connect to Postgres DB. The Queries and Inserts were moved to the adapter file: postgres.ts, mainly because the syntax
  * is a bit different for each database.
  */
-import {
-  storeDraft,
-  storeProposal,
-  storeVote,
-  sponsorDraftIfAny,
-  getMessages,
-  getMessagesById,
-  getMessagesByAction,
-  getProposalVotes,
-  getVoteBySender,
-  getProposalByDraft,
-  getAllProposalsAndVotes,
-  getAllDraftsExceptSponsored,
-  findVotesForProposals,
-  getAllProposalsAndVotesByAction,
-  saveOffchainProof,
-  getOffchainProof
-} from './helpers/adapters/postgres';
 import pkg from '../package.json';
-import db from './helpers/postgres';
-
-/**
- * Values to insert into the `events` database.
- *
- * [id, event, space, expire]
- */
-type EventInsertValuesTuple = [string, string, string, number];
+import { messagesRepository } from './repositories/messages-repository';
+import { offchainProofsRepository } from './repositories/offchain-proofs-repository';
+import { eventsRepository } from './repositories/events-repository';
 
 /**
  * In order to migrate the data from snapshot-hub service to OpenLaw infra, we expose a new endpoint
@@ -123,7 +100,7 @@ router.get('/spaces/:key?', (req, res) => {
 router.get('/:space/drafts', async (req, res) => {
   const { space } = req.params;
   console.log('GET /:space/drafts', space);
-  getAllDraftsExceptSponsored(space)
+  messagesRepository.getAllDraftsExceptSponsored(space)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -131,7 +108,7 @@ router.get('/:space/drafts', async (req, res) => {
 router.get('/:space/drafts/:actionId', async (req, res) => {
   const { space, actionId } = req.params;
   console.log('GET /:space/drafts/:actionId', space, actionId);
-  getMessagesByAction(space, actionId, msgTypes.DRAFT)
+  messagesRepository.getMessagesByAction(space, actionId, msgTypes.DRAFT)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -139,7 +116,7 @@ router.get('/:space/drafts/:actionId', async (req, res) => {
 router.get('/:space/draft/:id', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/drafts/:id', space, id);
-  getMessagesById(space, id, msgTypes.DRAFT)
+  messagesRepository.getMessagesById(space, id, msgTypes.DRAFT)
     .then(toMessageJson)
     .then(obj => res.json(obj));
 });
@@ -150,8 +127,8 @@ router.get('/:space/proposals', async (req, res) => {
   console.log('GET /:space/proposals?includeVotes', space, includeVotes);
 
   const resultsPromise = includeVotes
-    ? getAllProposalsAndVotes(space).then(toProposalWithVotesMessageJson)
-    : getMessages(space, msgTypes.PROPOSAL).then(toMessageJson);
+    ? messagesRepository.getAllProposalsAndVotes(space).then(toProposalWithVotesMessageJson)
+    : messagesRepository.getMessages(space, msgTypes.PROPOSAL).then(toMessageJson);
 
   resultsPromise.then(obj => res.json(obj));
 });
@@ -167,10 +144,10 @@ router.get('/:space/proposals/:actionId', async (req, res) => {
   );
 
   const resultsPromise = includeVotes
-    ? getAllProposalsAndVotesByAction(space, actionId).then(
+    ? messagesRepository.getAllProposalsAndVotesByAction(space, actionId).then(
         toProposalWithVotesMessageJson
       )
-    : getMessagesByAction(space, actionId, msgTypes.PROPOSAL).then(
+    : messagesRepository.getMessagesByAction(space, actionId, msgTypes.PROPOSAL).then(
         toMessageJson
       );
 
@@ -187,15 +164,15 @@ router.get('/:space/proposal/:id', async (req, res) => {
   );
 
   const resultsPromise = searchUniqueDraftId
-    ? getProposalByDraft(space, id).then(results => {
+    ? messagesRepository.getProposalByDraft(space, id).then(results => {
         if (results && results.length > 0) return results;
-        else return getMessagesById(space, id, msgTypes.PROPOSAL);
+        else return messagesRepository.getMessagesById(space, id, msgTypes.PROPOSAL);
       })
-    : getMessagesById(space, id, msgTypes.PROPOSAL);
+    : messagesRepository.getMessagesById(space, id, msgTypes.PROPOSAL);
 
   resultsPromise
     .then(proposals =>
-      includeVotes ? findVotesForProposals(space, proposals) : proposals
+      includeVotes ? messagesRepository.findVotesForProposals(space, proposals) : proposals
     )
     .then(toProposalWithVotesMessageJson)
     .then(obj => res.json(obj));
@@ -204,7 +181,7 @@ router.get('/:space/proposal/:id', async (req, res) => {
 router.get('/:space/proposal/:id/votes', async (req, res) => {
   const { space, id } = req.params;
   console.log('GET /:space/proposal/:id/votes', space, id);
-  getProposalVotes(space, id)
+  messagesRepository.getProposalVotes(space, id)
     .then(toVotesMessageJson)
     .then(obj => res.json(obj));
 });
@@ -265,7 +242,7 @@ router.post('/:space/offchain_proofs', async (req, res) => {
 
   if (merkleTree.getHexRoot() === merkleRoot) {
     try {
-      await saveOffchainProof(space, merkleRoot, steps);
+      await offchainProofsRepository.saveOffchainProof(space, merkleRoot, steps);
       return res.sendStatus(201);
     } catch (error) {
       return res.status(500).send({
@@ -281,7 +258,7 @@ router.get('/:space/offchain_proof/:merkleRoot', async (req, res) => {
   const { space, merkleRoot } = req.params;
   console.log('GET /:space/offchain_proofs/:merkleRoot', space, merkleRoot);
 
-  return getOffchainProof(space, merkleRoot)
+  return offchainProofsRepository.getOffchainProof(space, merkleRoot)
     .then(p => {
       if (p && p.length === 1) return res.status(200).send(p[0]);
       return res.sendStatus(404);
@@ -296,7 +273,7 @@ router.post('/message', async (req, res) => {
   const body = req.body;
   const msg = jsonParse(body.msg);
   const erc712Data = jsonParse(body.erc712Data);
-  const ts = (Date.now() / 1e3).toFixed();
+  const timestamp = (Date.now() / 1e3).toFixed();
   console.log('POST /message ', msg.type);
   // const minBlock = (3600 * 24) / 15;
 
@@ -333,7 +310,7 @@ router.post('/message', async (req, res) => {
   if (
     !msg.timestamp ||
     typeof msg.timestamp !== 'string' ||
-    msg.timestamp > ts + 30
+    msg.timestamp > timestamp + 30
   )
     return sendError(res, 'wrong timestamp');
 
@@ -442,7 +419,7 @@ router.post('/message', async (req, res) => {
     )
       return sendError(res, 'wrong vote metadata');
 
-    const proposals = await getMessagesById(
+    const proposals = await messagesRepository.getMessagesById(
       space,
       msg.payload.proposalId,
       msgTypes.PROPOSAL
@@ -454,12 +431,12 @@ router.post('/message', async (req, res) => {
     const payload = jsonParse(payloadToParse, payloadToParse);
 
     const isNotInVotingWindow: boolean = ignoreVoteEndConstraint
-      ? payload.start > ts
-      : ts > payload.end || payload.start > ts;
+      ? payload.start > timestamp
+      : timestamp > payload.end || payload.start > timestamp;
 
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
-    const votes = await getVoteBySender(
+    const votes = await messagesRepository.getVoteBySender(
       space,
       body.address,
       msg.payload.proposalId
@@ -486,11 +463,6 @@ router.post('/message', async (req, res) => {
       })
     : '';
 
-  const EVENTS_INSERT_STATEMENT: string =
-    'INSERT INTO events (id, event, space, expire) ' +
-    'VALUES ($1, $2, $3, $4) ' +
-    'ON CONFLICT ON CONSTRAINT events_pkey DO NOTHING';
-
   if (msg.type === 'draft') {
     const erc712Hash = getMessageERC712Hash(
       { ...msg, type: msg.type },
@@ -498,7 +470,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId,
       erc712Data.chainId
     );
-    await storeDraft(
+    await messagesRepository.storeDraft(
       space,
       erc712Hash,
       msg.token,
@@ -511,12 +483,7 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/created',
-      space,
-      Number(ts)
-    ]);
+    await eventsRepository.insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     console.log(`New Draft: ${erc712Hash}`);
     return res.json({
@@ -538,12 +505,15 @@ router.post('/message', async (req, res) => {
       erc712Data.chainId
     );
 
-    const sponsorDraftResult = await sponsorDraftIfAny(space, erc712DraftHash);
+    const sponsorDraftResult = await messagesRepository.sponsorDraftIfAny(
+      space,
+      erc712DraftHash
+    );
 
     const erc712DraftHashToSet =
       sponsorDraftResult.rowCount > 0 ? erc712DraftHash : '';
 
-    await storeProposal(
+    await messagesRepository.storeProposal(
       space,
       erc712Hash,
       erc712DraftHashToSet,
@@ -559,29 +529,14 @@ router.post('/message', async (req, res) => {
     const EVENT_ID = `proposal/${erc712Hash}`;
 
     // Insert `proposal/created`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/created',
-      space,
-      Number(ts)
-    ]);
+    await eventsRepository.insertCreatedProposal(EVENT_ID, space, Number(timestamp));
 
     // Insert `proposal/start`
-    await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-      EVENT_ID,
-      'proposal/start',
-      space,
-      msg.payload.start
-    ]);
+    await eventsRepository.insertStartedProposal(EVENT_ID, space, msg.payload.start);
 
     // Insert `proposal/end`
-    if (msg.payload.end > ts) {
-      await db.query<any, EventInsertValuesTuple>(EVENTS_INSERT_STATEMENT, [
-        EVENT_ID,
-        'proposal/end',
-        space,
-        msg.payload.end
-      ]);
+    if (msg.payload.end > timestamp) {
+      await eventsRepository.insertProposalEnd(EVENT_ID, space, msg.payload.end);
     }
 
     console.log(`New Proposal: ${erc712Hash}`);
@@ -598,7 +553,7 @@ router.post('/message', async (req, res) => {
       erc712Data.actionId,
       erc712Data.chainId
     );
-    await storeVote(
+    await messagesRepository.storeVote(
       space,
       erc712Hash,
       msg.token,

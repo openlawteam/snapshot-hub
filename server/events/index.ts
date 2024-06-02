@@ -8,20 +8,12 @@
  */
 
 import axios, { AxiosError } from 'axios/dist/node/axios.cjs';
-
-import db from '../helpers/postgres';
+import { eventsRepository } from '../repositories/events-repository';
 
 type Subscribers = {
   url: string;
   spaces?: string[];
 }[];
-
-type EventsDB = {
-  event: string;
-  expire: number;
-  id: string;
-  space: string;
-};
 
 const DELAY = 5;
 const INTERVAL = 30;
@@ -65,16 +57,13 @@ async function sendEvent(event, to) {
 async function processEvents() {
   const ts = parseInt((Date.now() / 1e3).toFixed()) - DELAY;
 
-  const events = await db.query<EventsDB, [number]>(
-    'SELECT * FROM events WHERE expire <= $1',
-    [ts]
-  );
+  const events = await eventsRepository.getExpiredEvents(ts);
 
   const subscribers = await getSubscribersFromFile();
 
-  console.log('Process event start', ts, events.rows.length);
+  console.log('Process event start', ts, events.length);
 
-  for (const event of events.rows) {
+  for (const event of events) {
     Promise.all(
       subscribers
         .filter(
@@ -87,10 +76,7 @@ async function processEvents() {
       .catch(e => console.log('Process event failed', e));
 
     try {
-      await db.query<any, [string, string]>(
-        'DELETE FROM events WHERE id = $1 AND event = $2',
-        [event.id, event.event]
-      );
+      await eventsRepository.deleteProcessedEvent(event);
 
       console.log(`Event sent ${event.id} ${event.event}`);
     } catch (e) {
