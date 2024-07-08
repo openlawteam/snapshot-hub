@@ -775,5 +775,26 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "blue": {
+    "token": "0x83f5869d266840af13a02786cadf4b9ca38950fd",
+    "name": "Flamingo Blue",
+    "network": "1",
+    "symbol": "BLUE",
+    "skin": "blue",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x83f5869d266840af13a02786cadf4b9ca38950fd",
+          "symbol": "BLUE",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
