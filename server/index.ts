@@ -43,6 +43,7 @@ import {
 } from './helpers/adapters/postgres';
 import pkg from '../package.json';
 import db from './helpers/postgres';
+import { getProposalStatus } from './helpers/proposal-status';
 
 /**
  * Values to insert into the `events` database.
@@ -453,9 +454,13 @@ router.post('/message', async (req, res) => {
     const { payload: payloadToParse } = proposals[0];
     const payload = jsonParse(payloadToParse, payloadToParse);
 
+    const proposalStatus = await getProposalStatus(payload.proposalId, space);
+    const proposalEnd =
+      proposalStatus.length > 0 ? proposalStatus[0].proposalEnd : payload.end;
+
     const isNotInVotingWindow: boolean = ignoreVoteEndConstraint
       ? payload.start > ts
-      : ts > payload.end || payload.start > ts;
+      : ts > proposalEnd || payload.start > ts;
 
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
