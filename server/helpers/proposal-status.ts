@@ -1,30 +1,40 @@
-import fetch from 'node-fetch';
+import axios, { AxiosError } from 'axios/dist/node/axios.cjs';
 
 export async function getProposalStatus(id: string, space: string) {
-  const devUrl = 'https://develop.thelao.io/api/v1/governance/proposal-status';
-  const prodUrl = 'https://thelao.io/api/v1/governance/proposal-status';
+  const urls = {
+    dev: 'https://develop.thelao.io/api/v1/governance/proposal-status',
+    prod: 'https://thelao.io/api/v1/governance/proposal-status'
+  };
 
-  const env = process.env.ENV;
-  const endpoint = env === 'prod' ? prodUrl : devUrl;
+  const endpoint = urls[process.env.ENV || 'dev'];
 
   try {
-    const proposalStatus = await fetch(endpoint, {
-      method: 'POST',
-      body: JSON.stringify([{ id, space }]),
+    const response = await axios.post(endpoint, [{ id, space }], {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'x-snapshot-hub-verify': process.env.WEBHOOK_VERIFY
       }
     });
 
-    if (!proposalStatus.ok) {
+    if (response.status !== 200) {
       throw new Error(
         `Something went wrong while fetching the proposals status for ${id} ${space}`
       );
     }
 
-    return await proposalStatus.json();
+    return response.data;
   } catch (error) {
-    console.error(error);
+    const BASE_ERROR = `Failed to fetch proposal status for ${id} in ${space}`;
+
+    if (error instanceof AxiosError) {
+      console.error(
+        BASE_ERROR,
+        error.response ? error.response.data : error.toJSON()
+      );
+    } else {
+      console.error(BASE_ERROR, error);
+    }
+
     return [];
   }
 }
