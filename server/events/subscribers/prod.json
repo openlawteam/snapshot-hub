@@ -3,15 +3,9 @@
     "url": "https://discord.thelao.io/api/snapshot-webhook"
   },
   {
-    "url": "https://thelao.io/api/v1/governance/replicate-proposal-to-another-dao"
-  },
-  {
     "url": "https://thelao.io/api/v1/governance/email-dao-on-create"
   },
   {
-    "url": "https://thelao.io/api/v1/governance/email-dao-on-end"
-  },
-  {
-    "url": "https://thelao.io/api/v1/governance/email-sub-dao-on-end"
+    "url": "https://thelao.io/api/v1/governance/proposal-end-inngest"
   }
 ]
