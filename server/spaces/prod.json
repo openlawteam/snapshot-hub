@@ -796,5 +796,131 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "university-bc": {
+    "token": "0x361f53bcc7ffba188efc3fc96c04f30c4ccdb89e",
+    "name": "Dorm DAO - BC",
+    "network": "1",
+    "symbol": "DORM-BC",
+    "skin": "university-bc",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x361f53bcc7ffba188efc3fc96c04f30c4ccdb89e",
+          "symbol": "DORM-BC",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-vanderbilt": {
+    "token": "0x986ad624f64f494e694a798f9a43e16b4143c3c1",
+    "name": "Dorm DAO - Vanderbilt",
+    "network": "1",
+    "symbol": "DORM-Vanderbilt",
+    "skin": "university-vanderbilt",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x986ad624f64f494e694a798f9a43e16b4143c3c1",
+          "symbol": "DORM-Vanderbilt",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-purdue": {
+    "token": "0xc36f2a9073ff3d4193a315eea00aa178f0ad501e",
+    "name": "Dorm DAO - Purdue",
+    "network": "1",
+    "symbol": "DORM-Purdue",
+    "skin": "university-purdue",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xc36f2a9073ff3d4193a315eea00aa178f0ad501e",
+          "symbol": "DORM-Purdue",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-berkeley": {
+    "token": "0x4b594025fb1ca4c64b56240859bf1322e02a964c",
+    "name": "Dorm DAO - Berkeley",
+    "network": "1",
+    "symbol": "DORM-Berkeley",
+    "skin": "university-berkeley",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x4b594025fb1ca4c64b56240859bf1322e02a964c",
+          "symbol": "DORM-Berkeley",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-waterloo": {
+    "token": "0x0d197d9382f74175243928b85801b01e0e104056",
+    "name": "Dorm DAO - Waterloo",
+    "network": "1",
+    "symbol": "DORM-Waterloo",
+    "skin": "university-waterloo",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x0d197d9382f74175243928b85801b01e0e104056",
+          "symbol": "DORM-Waterloo",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-columbia": {
+    "token": "0xaf8c4ffa9dfa79c76a92d1ebd1873f0ef2a292e8",
+    "name": "Dorm DAO - Columbia",
+    "network": "1",
+    "symbol": "DORM-Columbia",
+    "skin": "university-columbia",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0xaf8c4ffa9dfa79c76a92d1ebd1873f0ef2a292e8",
+          "symbol": "DORM-Columbia",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
