@@ -12,6 +12,29 @@ const format = (
   actionId: string,
   data: any
 ) => {
+  if (messageType === 'vote') {
+    return [
+      erc712Hash,
+      // Store memberAddress from payload instead of body.address as the address can be
+      // the signer of the DAO via KMS. This will allow us to ensure that the vote is
+      // correctly attributed to the DAO member when using KMS and checking the
+      // vote history of a member via `getVoteBySender`.
+      msg.payload.metadata.memberAddress || body.address,
+      msg.version,
+      msg.timestamp,
+      space,
+      token,
+      messageType,
+      JSON.stringify(msg.payload),
+      body.sig,
+      JSON.stringify({
+        relayerIpfsHash: relayerIpfsHash
+      }),
+      actionId,
+      data
+    ];
+  }
+
   return [
     erc712Hash,
     body.address,
