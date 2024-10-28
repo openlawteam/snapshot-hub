@@ -19,7 +19,7 @@ const format = (
       // the signer of the DAO via KMS. This will allow us to ensure that the vote is
       // correctly attributed to the DAO member when using KMS and checking the
       // vote history of a member via `getVoteBySender`.
-      msg.payload.metadata.memberAddress || body.address,
+      msg.payload.metadata.memberAddress,
       msg.version,
       msg.timestamp,
       space,
