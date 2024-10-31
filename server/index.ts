@@ -467,6 +467,18 @@ router.post('/message', async (req, res) => {
 
     if (isNotInVotingWindow) return sendError(res, 'not in voting window');
 
+    console.log('checking if already voted CURRENT', [
+      space,
+      body.address,
+      msg.payload.proposalId
+    ]);
+
+    console.log('checking if already voted NEW', [
+      space,
+      msg.payload.metadata.memberAddress,
+      msg.payload.proposalId
+    ]);
+
     const votes = await getVoteBySender(
       space,
       body.address,
