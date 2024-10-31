@@ -304,7 +304,7 @@ router.post('/message', async (req, res) => {
   if (!body || !body.address || !body.msg || !body.sig || !body.erc712Data)
     return sendError(res, 'wrong message body');
 
-  console.log(msg);
+  console.log('msg:', msg);
 
   if (
     //[payload, timestamp, token, space, type, version] == 6
@@ -454,7 +454,10 @@ router.post('/message', async (req, res) => {
     const { payload: payloadToParse } = proposals[0];
     const payload = jsonParse(payloadToParse, payloadToParse);
 
-    const proposalStatus = await getProposalStatus(payload.proposalId, space);
+    const proposalStatus = await getProposalStatus(
+      msg.payload.proposalId,
+      space
+    );
     const proposalEnd =
       proposalStatus.length > 0 ? proposalStatus[0].proposalEnd : payload.end;
 
