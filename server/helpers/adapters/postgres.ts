@@ -55,6 +55,7 @@ const format = (
 
 const insert = async (params: Array<object>) => {
   if (params.length < 10) throw Error('Invalid parameters');
+  console.log('insert params', params);
   const cmd =
     'INSERT INTO messages (id, address, version, timestamp, space, token, type, payload, sig, metadata, "actionId", data) VALUES ' +
     '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) ON CONFLICT ON CONSTRAINT messages_pkey DO NOTHING';
