@@ -175,10 +175,10 @@ export const getVoteBySender = async (
   address: string,
   proposalId: string
 ) => {
-  console.log([space, address, proposalId]);
+  console.log('getVoteBySender', [space, address, proposalId]);
   const query = `SELECT * FROM messages WHERE space = $1 AND address = $2 AND payload ->> 'proposalId' = $3 AND type = 'vote'`;
   const result = await db.query(query, [space, address, proposalId]);
-  console.log(result.rows.length);
+  console.log('getVoteBySender result', result.rows.length);
   return result.rows;
 };
 
