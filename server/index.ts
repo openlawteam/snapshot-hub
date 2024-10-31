@@ -469,7 +469,7 @@ router.post('/message', async (req, res) => {
 
     console.log('checking if already voted:', [
       space,
-      body.address,
+      msg.payload.metadata.memberAddress,
       msg.payload.proposalId
     ]);
 
