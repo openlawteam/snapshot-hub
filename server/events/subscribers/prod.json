@@ -3,7 +3,7 @@
     "url": "https://discord.thelao.io/api/snapshot-webhook"
   },
   {
-    "url": "https://thelao.io/api/v1/governance/email-dao-on-create"
+    "url": "https://thelao.io/api/v1/governance/email-dao-on-create-personalized"
   },
   {
     "url": "https://thelao.io/api/v1/governance/proposal-end-inngest"
