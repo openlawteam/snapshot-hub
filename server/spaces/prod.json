@@ -922,5 +922,47 @@
       "defaultTab": "all",
       "minScore": 1
     }
+  },
+  "university-imperial": {
+    "token": "0x1028e3cceb73b07ee5c9602fe5f85489a853eaad",
+    "name": "Dorm DAO - Imperial",
+    "network": "1",
+    "symbol": "DORM-Imperial",
+    "skin": "university-imperial",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x1028e3cceb73b07ee5c9602fe5f85489a853eaad",
+          "symbol": "DORM-Imperial",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
+  },
+  "university-cambridge": {
+    "token": "0x94701d6916e135dad924b7bb5830af6983ac8dfb",
+    "name": "Dorm DAO - Cambridge",
+    "network": "1",
+    "symbol": "DORM-Cambridge",
+    "skin": "university-cambridge",
+    "strategies": [
+      {
+        "name": "moloch",
+        "params": {
+          "address": "0x94701d6916e135dad924b7bb5830af6983ac8dfb",
+          "symbol": "DORM-Cambridge",
+          "decimals": 18
+        }
+      }
+    ],
+    "filters": {
+      "defaultTab": "all",
+      "minScore": 1
+    }
   }
 }
